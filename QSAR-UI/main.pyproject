@@ -1,3 +1,3 @@
 {
-    "files": ["mainwindow2.ui","mainwindow1.ui","images.qrc","tab1.py","icons.qrc","tab2.py","main.py","mainwindow3.ui","model.py","test.py","tab3.py"]
+    "files": ["mainwindow2.ui","mainwindow1.ui","tab1.py","icons.qrc","tab2.py","main.py","mainwindow3.ui","model.py","tab3.py","test.py","images.qrc"]
 }
