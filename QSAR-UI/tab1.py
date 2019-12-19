@@ -1,58 +1,122 @@
 # This Python file uses the following encoding: utf-8
 import os
+import re
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
 from os.path import expanduser
+import numpy as np
+import pandas as pd
 
 DEFAULT_ICON = "images/stock_media-play.png"
-
 
 class Tab1(QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("mainwindow1.ui", self)
-        self.bindTab()
 
-    def bindTab(self):
-        self.dataBrowseBtn.released.connect(self.browseDataSlot)
+        # Currently Loaded Data (pandas.DataFrame)
+        self.data = None
+        # Training Params
+        self.trainingParams = {}
+
+        # Currently Opened Folder
+        self._currentDataFolder = None
+        self._currentProjectFolder = None
+
+        # object name of QtWidgets -> key of self.trainingParams
+        self._trainingParamsMap = {
+            "batchSizeSpinBox": "batchSize",
+            "dropoutDoubleSpinBox": "dropout",
+            "epochsSpinBox": "epochs",
+            "learningRateDoubleSpinBox": "learningRate",
+            "biasInitializerComboBox": "biasInitializer",
+            "weightInitializerComboBox": "weightInitializer"
+        }
+
+        self._bind()
+
+    def _bind(self):
+        self.dataBrowseBtn.released.connect(self._dataBrowseSlot)
+        self.projectBrowseBtn.released.connect(self._projectBrowseSlot)
 
         self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
-        self.openAction.triggered.connect(self.browseProjectSlot)
+        self.openAction.triggered.connect(self._projectBrowseSlot)
 
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
-        self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model(")
+        self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
+        self.modelBrowseBtn.released.connect(self._modelBrowseSlot)
 
         self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
-        self.loadModelAction.triggered.connect(self.browseModelSlot)
+        self.loadModelAction.triggered.connect(self._modelBrowseSlot)
 
-    def debugPrint(self, msg):
-        self.trainingList.addItem(msg)
+        self.dataSelectBtn.released.connect(self._dataSelectSlot)
 
-    def browseProjectSlot(self):
+        self.enterParamsBtn.released.connect(self._updateTrainingParamsSlot)
+        self.trainParamsBtn.released.connect(self.startTrainingSlot)
+
+    # Modify Training Methods Here
+    def startTrainingSlot(self):
+        self._debugPrint("Start Training")
+        pass
+
+    def _updateTrainingParamsSlot(self):
+        for (objName, key) in self._trainingParamsMap.items():
+            obj = getattr(self, objName)
+            if getattr(obj, "value", None):
+                self.trainingParams[key] = obj.value()
+            if getattr(obj, "currentText", None):
+                self.trainingParams[key] = obj.currentText()
+
+        self._debugPrint(str(self.trainingParams.items()))
+
+    def _projectBrowseSlot(self):
         folder = self._getFolder()
         if folder:
-            self.debugPrint("setting project folder: " + folder)
-            self._resetFolderList(self.projectList, folder)
+            self._debugPrint("setting project folder: " + folder)
+            self.projectLabel.setText(folder)
+            self._currentProjectFolder = folder
+            self._resetFolderList(self.projectList, folder)        
 
-    def browseModelSlot(self):
+    def _modelBrowseSlot(self):
         file = self._getFile()
         if file:
-            self.debugPrint("openning model file: " + file)
+            self._debugPrint("openning model file: " + file)
             icon = self._getIcon(os.path.join(os.getcwd(), file))
             self.modelList.addItem(QListWidgetItem(icon, file))
 
-    def browseDataSlot(self):
+    def _dataBrowseSlot(self):
         folder = self._getFolder()
         if folder:
-            self.debugPrint("setting data folder: " + folder)
+            self._debugPrint("setting data folder: " + folder)
             self.dataLabel.setText(folder)
             self._resetFolderList(self.dataList, folder)
+            self._currentDataFolder = folder
+
+    def _dataSelectSlot(self):
+        try:
+            file = self.dataList.currentItem().text()
+        except:
+            self._debugPrint("Current Data File Not Found")
+            return
+
+        selectedFile = os.path.join(self._currentDataFolder, file)
+
+        self._debugPrint(selectedFile)
+
+        if re.match(".+.csv$", file):
+            self.data = pd.read_csv(selectedFile)
+            self._debugPrint("csv file {} loaded".format(file))
+            self._debugPrint(str(self.data.head()))
+        else:
+            self._debugPrint("Not a csv file")
+
+    def _debugPrint(self, msg):
+        self.trainingList.addItem(msg)
 
     def _resetFolderList(self, List, folder):
         fileInfo = QtCore.QFileInfo(folder)
         List.clear()
-
         List.setUpdatesEnabled(False)
         for file in fileInfo.dir():
             if file in ['.', '..']:
