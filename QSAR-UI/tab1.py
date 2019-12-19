@@ -37,30 +37,36 @@ class Tab1(QMainWindow):
         self._bind()
 
     def _bind(self):
-        self.dataBrowseBtn.released.connect(self._dataBrowseSlot)
-        self.projectBrowseBtn.released.connect(self._projectBrowseSlot)
-
-        self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
-        self.openAction.triggered.connect(self._projectBrowseSlot)
-
-        self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
-        self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
-        self.modelBrowseBtn.released.connect(self._modelBrowseSlot)
-
-        self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
-        self.loadModelAction.triggered.connect(self._modelBrowseSlot)
-
-        self.dataSelectBtn.released.connect(self._dataSelectSlot)
-
-        self.enterParamsBtn.released.connect(self._updateTrainingParamsSlot)
+        self.dataSelectBtn.released.connect(self.dataSelectSlot)
+        self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
+        self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
+        self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
+
+#        self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
+#        self.projectBrowseBtn.released.connect(self._projectBrowseSlot)
+
+#        self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
+#        self.openAction.triggered.connect(self._projectBrowseSlot)
+
+#        self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
+#        self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
+#        self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
+
+#        self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
+#        self.loadModelAction.triggered.connect(self.modelBrowseSlot)
+
+#        self.dataSelectBtn.released.connect(self.dataSelectSlot)
+
+#        self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
+#        self.trainParamsBtn.released.connect(self.startTrainingSlot)
 
     # Modify Training Methods Here
     def startTrainingSlot(self):
         self._debugPrint("Start Training")
         pass
 
-    def _updateTrainingParamsSlot(self):
+    def updateTrainingParamsSlot(self):
         for (objName, key) in self._trainingParamsMap.items():
             obj = getattr(self, objName)
             if getattr(obj, "value", None):
@@ -70,22 +76,14 @@ class Tab1(QMainWindow):
 
         self._debugPrint(str(self.trainingParams.items()))
 
-    def _projectBrowseSlot(self):
-        folder = self._getFolder()
-        if folder:
-            self._debugPrint("setting project folder: " + folder)
-            self.projectLabel.setText(folder)
-            self._currentProjectFolder = folder
-            self._resetFolderList(self.projectList, folder)        
-
-    def _modelBrowseSlot(self):
+    def modelBrowseSlot(self):
         file = self._getFile()
         if file:
             self._debugPrint("openning model file: " + file)
             icon = self._getIcon(os.path.join(os.getcwd(), file))
             self.modelList.addItem(QListWidgetItem(icon, file))
 
-    def _dataBrowseSlot(self):
+    def dataBrowseSlot(self):
         folder = self._getFolder()
         if folder:
             self._debugPrint("setting data folder: " + folder)
@@ -93,7 +91,7 @@ class Tab1(QMainWindow):
             self._resetFolderList(self.dataList, folder)
             self._currentDataFolder = folder
 
-    def _dataSelectSlot(self):
+    def dataSelectSlot(self):
         try:
             file = self.dataList.currentItem().text()
         except:
