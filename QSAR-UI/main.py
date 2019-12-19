@@ -10,6 +10,9 @@ from tab1 import Tab1
 from tab2 import Tab2
 from tab3 import Tab3
 
+from utils import resetFolderList, getFolder
+
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
@@ -29,7 +32,6 @@ class MainWindow(QMainWindow):
         self._bind()
 
     def _bind(self):
-
         self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
         self.openAction.triggered.connect(self.projectBrowseSlot)
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
@@ -41,12 +43,13 @@ class MainWindow(QMainWindow):
         self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
 
     def projectBrowseSlot(self):
-        folder = self.tab1._getFolder()
+        folder = getFolder()
         if folder:
             self.tab1._debugPrint("setting project folder: " + folder)
             self.projectLabel.setText(folder)
             self._currentProjectFolder = folder
-            self.tab1._resetFolderList(self.projectList, folder)
+            resetFolderList(self.projectList, folder)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
