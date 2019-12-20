@@ -23,12 +23,18 @@ class Tab0(QMainWindow):
         self._bind()
 
     def _bind(self):
+        """
+        Bind Slots and Signals
+        """
         self.dataSelectBtn.released.connect(self.dataSelectSlot)
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
         self.outputSaveBtn.released.connect(self.outputSaveSlot)
 
     def outputBrowseSlot(self):
+        """
+        Slot Function of Browsing Output Folder
+        """
         folder = getFolder()
         if folder:
             self._debugPrint("setting data folder: " + folder)
@@ -36,6 +42,9 @@ class Tab0(QMainWindow):
             self._currentOutputFolder = folder
 
     def processData(self):
+        """
+        Process and Transform CSV Data
+        """
         if self.originalData is None:
             return
         outLierPolicy = self.outlierOperationComboBox.currentText()
@@ -47,6 +56,9 @@ class Tab0(QMainWindow):
         }.get(outLierPolicy, None)
 
     def outputSaveSlot(self):
+        """
+        Slot Function of Saving Output CSV
+        """
         self.processData()
         self.transformedDataList.addItem(str(self.transformedData.head()))
 
@@ -60,6 +72,9 @@ class Tab0(QMainWindow):
                             outputFile, shape=self.transformedData.shape))
 
     def dataBrowseSlot(self):
+        """
+        Slot Function of Opening Data Folder
+        """
         folder = getFolder()
         if folder:
             self._debugPrint("setting data folder: " + folder)
@@ -67,6 +82,9 @@ class Tab0(QMainWindow):
             self._currentDataFolder = folder
 
     def dataSelectSlot(self):
+        """
+        Slot Function of Selecting Data File in the Opened Folder
+        """
         try:
             file = self.dataList.currentItem().text()
         except:
@@ -87,4 +105,7 @@ class Tab0(QMainWindow):
             self._debugPrint("Not a csv file")
 
     def _debugPrint(self, msg):
+        """
+        Print Debug Info on the UI
+        """
         self.infoList.addItem(msg)

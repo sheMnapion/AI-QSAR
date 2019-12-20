@@ -34,22 +34,29 @@ class Tab1(QMainWindow):
             "biasInitializerComboBox": "biasInitializer",
             "weightInitializerComboBox": "weightInitializer"
         }
-
         self._bind()
 
     def _bind(self):
+        """
+        Bind Slots and Signals
+        """
         self.dataSelectBtn.released.connect(self.dataSelectSlot)
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
 
-    # Modify Training Methods Here
     def startTrainingSlot(self):
+        """
+        The Training Function Given Data and Training Parameters
+        """
         self._debugPrint("Start Training")
         pass
 
     def updateTrainingParamsSlot(self):
+        """
+        Slot Function of Updating Training Parameters
+        """
         for (objName, key) in self._trainingParamsMap.items():
             obj = getattr(self, objName)
             if getattr(obj, "value", None):
@@ -60,6 +67,9 @@ class Tab1(QMainWindow):
         self._debugPrint(str(self.trainingParams.items()))
 
     def modelBrowseSlot(self):
+        """
+        Slot Function of Loading the Model File
+        """
         file = getFile()
         if file:
             self._debugPrint("openning model file: " + file)
@@ -67,6 +77,9 @@ class Tab1(QMainWindow):
             self.modelList.addItem(QListWidgetItem(icon, file))
 
     def dataBrowseSlot(self):
+        """
+        Slot Function of Opening Data Folder
+        """
         folder = getFolder()
         if folder:
             self._debugPrint("setting data folder: " + folder)
@@ -75,6 +88,9 @@ class Tab1(QMainWindow):
             self._currentDataFolder = folder
 
     def dataSelectSlot(self):
+        """
+        Slot Function of Selecting Data File in the Opened Folder
+        """
         try:
             file = self.dataList.currentItem().text()
         except:
@@ -93,4 +109,7 @@ class Tab1(QMainWindow):
             self._debugPrint("Not a csv file")
 
     def _debugPrint(self, msg):
+        """
+        Print Debug Info on the UI
+        """
         self.trainingList.addItem(msg)

@@ -16,6 +16,7 @@ from utils import resetFolderList, getFolder
 class MainWindow(QMainWindow):
 
     def __init__(self):
+        # Load Tabs into MainWindow.tabWidget
         QtWidgets.QMainWindow.__init__(self)
         uic.loadUi("mainwindow.ui", self)
 
@@ -32,6 +33,9 @@ class MainWindow(QMainWindow):
         self._bind()
 
     def _bind(self):
+        """
+        Bind Slots and Signals & Add Buttons to ToolBar.
+        """
         self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
         self.openAction.triggered.connect(self.projectBrowseSlot)
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
@@ -39,11 +43,13 @@ class MainWindow(QMainWindow):
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
         self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
 
-        # For Tab1
         self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
         self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
 
     def projectBrowseSlot(self):
+        """
+        Slot Function of Opening the Project Folder
+        """
         folder = getFolder()
         if folder:
             self.tab1._debugPrint("setting project folder: " + folder)
