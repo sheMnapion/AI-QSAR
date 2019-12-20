@@ -39,9 +39,9 @@ class Tab1(QMainWindow):
 
     def _bind(self):
         self.dataSelectBtn.released.connect(self.dataSelectSlot)
+        self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
-        self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
 
     # Modify Training Methods Here

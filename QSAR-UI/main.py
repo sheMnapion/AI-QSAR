@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
         self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
 
+        # For Tab1
         self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
         self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
 

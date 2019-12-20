@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>868</width>
-    <height>622</height>
+    <height>678</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,44 +20,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="projectLabel">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>38</y>
-      <width>16</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dataLabel">
-    <property name="geometry">
-     <rect>
-      <x>296</x>
-      <y>38</y>
-      <width>16</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -99,31 +61,6 @@
         <number>200</number>
        </property>
        <item>
-        <widget class="QPushButton" name="dataSelectBtn">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>75</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="dataBrowseBtn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -148,10 +85,35 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="dataSelectBtn">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Select</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="modelList"/>
+      <widget class="QListWidget" name="dataList"/>
      </item>
      <item>
       <layout class="QFormLayout" name="formLayout_3">
@@ -281,17 +243,17 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="saveFolderLabel">
+        <widget class="QLabel" name="outputLabel">
          <property name="text">
           <string>Output Folder</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="saveFolderLineEdit"/>
+        <widget class="QLineEdit" name="outputLineEdit"/>
        </item>
        <item>
-        <widget class="QPushButton" name="dataSaveBrowseBtn">
+        <widget class="QPushButton" name="outputBrowseBtn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -316,7 +278,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="dataSaveBrowseBtn_2">
+        <widget class="QPushButton" name="outputSaveBtn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -370,19 +332,19 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="originTab">
        <attribute name="title">
         <string>Origin Data</string>
        </attribute>
-       <widget class="QListView" name="dataList">
+       <widget class="QListWidget" name="originalDatatList">
         <property name="geometry">
          <rect>
           <x>5</x>
           <y>11</y>
           <width>471</width>
-          <height>231</height>
+          <height>211</height>
          </rect>
         </property>
        </widget>
@@ -391,17 +353,28 @@
        <attribute name="title">
         <string>Transformed Data</string>
        </attribute>
+       <widget class="QListWidget" name="transformedDataList">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>11</y>
+          <width>471</width>
+          <height>191</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
      <widget class="QWidget" name="plotWidget" native="true">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>-1</y>
-        <width>481</width>
+        <x>10</x>
+        <y>0</y>
+        <width>471</width>
         <height>191</height>
        </rect>
       </property>
+      <layout class="QGridLayout" name="plotLayout"/>
      </widget>
     </widget>
     <widget class="QWidget" name="featureTab">
@@ -410,13 +383,13 @@
      </attribute>
     </widget>
    </widget>
-   <widget class="QListView" name="dataDescription">
+   <widget class="QListWidget" name="infoList">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>470</y>
       <width>841</width>
-      <height>101</height>
+      <height>121</height>
      </rect>
     </property>
    </widget>
@@ -431,7 +404,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
