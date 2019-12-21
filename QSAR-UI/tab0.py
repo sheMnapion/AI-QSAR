@@ -3,12 +3,13 @@ import os
 import re
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QListWidget, QFileIconProvider
 from os.path import expanduser
 import numpy as np
 import pandas as pd
+from types import MethodType
 
-from utils import resetFolderList, getFolder, getFile, getIcon
+from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent
 
 class Tab0(QMainWindow):
     def __init__(self):
@@ -20,6 +21,14 @@ class Tab0(QMainWindow):
         self._currentDataFile = None
         self.originalData = None
         self.transformedData = None
+        self.header = False
+
+        # Allowing deselection in a QListWidget by clicking off an item
+        self.originalDatatList.mousePressEvent = MethodType(mousePressEvent, self.originalDatatList)
+        self.transformedDataList.mousePressEvent = MethodType(mousePressEvent, self.transformedDataList)
+        self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
+        self.infoList.mousePressEvent = MethodType(mousePressEvent, self.infoList)
+
         self._bind()
 
     def _bind(self):
@@ -30,6 +39,7 @@ class Tab0(QMainWindow):
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
         self.outputSaveBtn.released.connect(self.outputSaveSlot)
+        self.columnSelectBtn.released.connect(self.columnSelectSlot)
 
     def outputBrowseSlot(self):
         """
@@ -41,25 +51,16 @@ class Tab0(QMainWindow):
             self.outputLineEdit.setText(folder)
             self._currentOutputFolder = folder
 
-    def processData(self):
-        """
-        Process and Transform CSV Data
-        """
-        if self.originalData is None:
-            return
-        outLierPolicy = self.outlierOperationComboBox.currentText()
-        self.transformedData = {
-            'Delete Data': self.originalData.dropna(),
-            'Zero Padding': self.originalData.fillna(0.0),
-            'Average Padding': self.originalData.fillna(self.originalData.mean()),
-            'Keep Data': self.originalData
-        }.get(outLierPolicy, None)
-
     def outputSaveSlot(self):
         """
         Slot Function of Saving Output CSV
         """
-        self.processData()
+        try:
+            self._processData()
+        except:
+            self._debugPrint("Data Processing Throw Error!")
+            return
+
         self.transformedDataList.addItem(str(self.transformedData.head()))
 
         selectedFile = os.path.join(self._currentOutputFolder, self._currentDataFile)
@@ -103,6 +104,35 @@ class Tab0(QMainWindow):
                                 file, shape=self.originalData.shape))
         else:
             self._debugPrint("Not a csv file")
+
+    def columnSelectSlot(self):
+        """
+        Slot Function of Selecting Data Column for Display
+        """
+        column = self.columnSelectComboBox.currentText()
+        self._debugPrint("Column {} selected for display".format(column))
+        pass
+
+    def _processData(self):
+        """
+        Process and Transform CSV Data
+        """
+        if self.originalData is None:
+            return
+        outLierPolicy = self.outlierOperationComboBox.currentText()
+        self.transformedData = {
+            'Delete Data': self.originalData.dropna(),
+            'Zero Padding': self.originalData.fillna(0.0),
+            'Average Padding': self.originalData.fillna(self.originalData.mean()),
+            'Keep Data': self.originalData
+        }.get(outLierPolicy, None)
+
+        if self.transformedData.columns is not None:
+            self.columnSelectComboBox.clear()
+            self.columnSelectComboBox.addItems(self.transformedData.columns)
+
+    def _updatePlot(self):
+        pass
 
     def _debugPrint(self, msg):
         """
