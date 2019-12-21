@@ -32,8 +32,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-#        QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-
     fig2 = Figure()
     ax1f2 = fig2.add_subplot(121)
     ax1f2.plot(np.random.rand(20))

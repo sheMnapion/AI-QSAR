@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import os
 import re
+import matplotlib
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QListWidget, QFileIconProvider
@@ -8,8 +9,14 @@ from os.path import expanduser
 import numpy as np
 import pandas as pd
 from types import MethodType
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt4agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar)
 
-from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent
+from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
+
+
 
 class Tab0(QMainWindow):
     def __init__(self):
@@ -40,6 +47,16 @@ class Tab0(QMainWindow):
         self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
         self.outputSaveBtn.released.connect(self.outputSaveSlot)
         self.columnSelectBtn.released.connect(self.columnSelectSlot)
+
+    def _addmpl(self, fig):
+        clearLayout(self.plotLayout)
+
+        self.canvas = FigureCanvas(fig)
+        self.plotLayout.addWidget(self.canvas)
+        self.canvas.draw()
+
+        self.plotToolBar = NavigationToolbar(self.canvas, self.plotWidget, coordinates=True)
+        self.plotLayout.addWidget(self.plotToolBar)
 
     def outputBrowseSlot(self):
         """
@@ -110,15 +127,24 @@ class Tab0(QMainWindow):
         Slot Function of Selecting Data Column for Display
         """
         column = self.columnSelectComboBox.currentText()
+        try:
+            selectedColumn = self.transformedData[column]
+        except:
+            self._debugPrint("Column Selection Error. Column not Found!")
+            return
+
+        self.transformedDataList.addItem(str(selectedColumn.describe()))
         self._debugPrint("Column {} selected for display".format(column))
-        pass
+
+        self._updatePlot(selectedColumn)
 
     def _processData(self):
         """
         Process and Transform CSV Data
         """
-        if self.originalData is None:
-            return
+        if self.originalData is None or self.originalData.columns is None:
+            raise Exception("Original data is invalid")
+
         outLierPolicy = self.outlierOperationComboBox.currentText()
         self.transformedData = {
             'Delete Data': self.originalData.dropna(),
@@ -127,12 +153,35 @@ class Tab0(QMainWindow):
             'Keep Data': self.originalData
         }.get(outLierPolicy, None)
 
-        if self.transformedData.columns is not None:
-            self.columnSelectComboBox.clear()
-            self.columnSelectComboBox.addItems(self.transformedData.columns)
+        if self.transformedData is None or self.transformedData.columns is None:
+            raise Exception("Transformed data is invalid")
 
-    def _updatePlot(self):
-        pass
+        self.columnSelectComboBox.clear()
+        self.columnSelectComboBox.addItems(self.transformedData.columns)
+
+    def _updatePlot(self, selectedColumn):
+        name = selectedColumn.name
+        if len(name) >= 20:
+            name = name[:20] + '...'
+
+        if np.issubdtype(selectedColumn.dtype, np.number):
+            fig = Figure()
+            ax1f1 = fig.add_subplot(121)
+            ax1f1.plot(np.random.rand(20))
+            ax1f1.hist(x = selectedColumn, bins = 'auto', color = '#0504aa',
+                        alpha = 0.7, rwidth = 0.85)
+            ax1f1.set_ylabel('Frequency')
+            ax1f1.set_title(name)
+
+            ax2f2 = fig.add_subplot(122)
+            selectedColumn.plot.kde(ax=ax2f2, legend=False, title='Histogram')
+            selectedColumn.plot.hist(density=True, ax=ax2f2, color = '#0504aa', alpha = 0.7, rwidth = 0.85)
+
+            ax2f2.set_title(name)
+
+            self._addmpl(fig)
+        else:
+            return
 
     def _debugPrint(self, msg):
         """

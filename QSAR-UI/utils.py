@@ -61,9 +61,23 @@ def getIcon(path):
     else:
         return icon
 
+
 def mousePressEvent(self, event):
     """
     Change Default Mouse Press Event to deselect in a ListView by clicking off an item
     """
     self.clearSelection()
     QListWidget.mousePressEvent(self, event)
+
+
+def clearLayout(layout):
+    """
+    Clear All Contents of QLayout
+    """
+    while layout.count():
+        child = layout.takeAt(0)
+        if child.widget() is not None:
+            child.widget().deleteLater()
+        elif child.layout() is not None:
+            clearLayout(child.layout())
+
