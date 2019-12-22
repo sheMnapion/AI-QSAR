@@ -8,6 +8,9 @@ from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 from sklearn.metrics import r2_score 
 import matplotlib.pyplot as plt
+from PyQt5.QtCore import pyqtSignal
+
+
 #deep neural network: in_dim,n_hidden_1,n_hidden_2,n_hidden_3,out_dim
 class DNN(nn.Module):
     def __init__(self,in_dim,n_hidden_1,n_hidden_2,n_hidden_3,out_dim):
@@ -43,7 +46,8 @@ class QSARDNN():
             self.dnn_type = 2
         self.model = DNN(property_num, property_num, property_num,property_num,self.dnn_type)
 
-    def train(self,train_set,train_label,batch_size,learning_rate,num_epoches,early_stop,max_tolerance):
+    def train(self,train_set,train_label,batch_size,learning_rate,num_epoches,early_stop,max_tolerance,
+                progress_callback):
         #self.model.train()
         train_len = int(train_set.shape[0]/batch_size)*batch_size
         train_set = train_set[0:train_len]
@@ -88,10 +92,15 @@ class QSARDNN():
                     num_nongrowth = num_nongrowth +1
                     if num_nongrowth > max_tolerance and early_stop == 1:
                         return epoch +1,self.loss_list
-            if epoch%10 == 0:
+            if epoch % 10 == 0:
                 print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
                 print('*' * 10)
                 print('loss : {}'.format(avg_loss))
+
+                progress_callback.emit('epoch [{}/{}]'.format(epoch + 10, num_epoches))
+                progress_callback.emit('*' * 10)
+                progress_callback.emit('loss : {}'.format(avg_loss))
+
         return num_epoches,self.loss_list
 
     

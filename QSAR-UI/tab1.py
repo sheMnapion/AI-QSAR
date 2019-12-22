@@ -7,6 +7,7 @@ import torch
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
+from PyQt5.QtCore import QThreadPool, QRunnable
 from os.path import expanduser
 from types import MethodType
 
@@ -14,7 +15,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent
+from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, Worker
 
 DNN_PATH = os.path.abspath('../QSAR-DNN')
 sys.path.append(DNN_PATH)
@@ -51,6 +52,7 @@ class Tab1(QMainWindow):
         self.modelList.mousePressEvent = MethodType(mousePressEvent, self.modelList)
         self.trainingList.mousePressEvent = MethodType(mousePressEvent, self.trainingList)
 
+        self.threadPool = QThreadPool()
         self._bind()
 
     def _bind(self):
@@ -88,13 +90,21 @@ class Tab1(QMainWindow):
 
         self._debugPrint("Start Training")
 
-        DNN.train(trainData, trainLabel, batch_size = int(self.trainingParams["batchSize"]),
-                     learning_rate = float(self.trainingParams["learningRate"]),
-                     num_epoches = int(self.trainingParams["epochs"]),
-                     early_stop = bool(self.trainingParams["earlyStop"]),
-                     max_tolerance = int(self.trainingParams["earlyStopEpochs"]))
+        worker = Worker(DNN.train, trainData, trainLabel, batch_size = int(self.trainingParams["batchSize"]),
+                         learning_rate = float(self.trainingParams["learningRate"]),
+                         num_epoches = int(self.trainingParams["epochs"]),
+                         early_stop = bool(self.trainingParams["earlyStop"]),
+                         max_tolerance = int(self.trainingParams["earlyStopEpochs"])
+                       )
+
+        worker.sig.progress.connect(self.appendDebugInfoSlot)
+
+        self.threadPool.start(worker)
 
         self._debugPrint("Finish Training")
+
+    def appendDebugInfoSlot(self, info):
+        self._debugPrint(info)
 
     def updateTrainingParamsSlot(self):
         """
