@@ -43,10 +43,8 @@ class QSARDNN():
             self.dnn_type = 2
         self.model = DNN(property_num, property_num, property_num,property_num,self.dnn_type)
 
-    def train(self,train_set,train_label):
-        batch_size = 50
-        learning_rate = 0.01
-        num_epoches = 1000
+    def train(self,train_set,train_label,batch_size,learning_rate,num_epoches,early_stop,max_tolerance):
+        #self.model.train()
         train_len = int(train_set.shape[0]/batch_size)*batch_size
         train_set = train_set[0:train_len]
         #create training data loader
@@ -60,8 +58,10 @@ class QSARDNN():
             self.loss_func = nn.CrossEntropyLoss() 
         #Create Gradient Descent Optimizer
         self.optimizer = torch.optim.SGD(self.model.parameters(), learning_rate)
+        num_nongrowth = 0
 
         for epoch in range(num_epoches):
+            avg_loss = 0
             for i, data in enumerate(train_loader, start=0):
                 train, label = data
                 train = train.float()
@@ -71,21 +71,33 @@ class QSARDNN():
                 if self.dnn_type == 1:
                     loss = self.loss_func(pred,label)
                 else:
-                    loss = self.loss_func(pred,label.squeeze())
-                if i == len(train_loader) - 1:
-                    self.loss_list.append(loss.data.numpy())
+                    loss = self.loss_func(pred,label.squeeze())    
+                avg_loss = avg_loss + (loss.data.numpy()/len(train_loader))
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
+            
+            self.loss_list.append(avg_loss)
+            if epoch == 0:
+                old_loss = avg_loss
+            else:
+                if avg_loss < old_loss:
+                    num_nongrowth = 0
+                    old_loss = avg_loss
+                else:
+                    num_nongrowth = num_nongrowth +1
+                    if num_nongrowth > max_tolerance and early_stop == 1:
+                        return epoch +1,self.loss_list
             if epoch%10 == 0:
-                print('epoch [{}/{}]'.format(epoch , num_epoches))
+                print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
                 print('*' * 10)
-                print('loss : {}'.format(loss.data.numpy()))
+                print('loss : {}'.format(avg_loss))
         return num_epoches,self.loss_list
 
     
     #test_set must be 2d --- data_num*property_num
     def test(self,test_set,test_label):
+        #self.model.eval()
         single_input = 0
         #batch normalization can not handle single input
         if test_set.shape[0] == 1:
@@ -102,6 +114,12 @@ class QSARDNN():
             return np.array([test_pred[0]])  
         else:
             return test_pred
+
+    def save(self,path):
+        torch.save(self.model.state_dict(), path)
+    
+    def load(self,path):
+        self.model.load_state_dict(torch.load(path))
 
 
 
@@ -131,8 +149,13 @@ test_set = data_set[train_len:data_set.shape[0]:1]
 data_label = np.array(label).reshape(len(label),1)
 train_label = data_label[0:train_len:1]
 test_label = data_label[train_len:data_set.shape[0]:1]
+
+batch_size = 50
+learning_rate = 0.01
+num_epoches = 1000
+
 model = QSARDNN(0,property_num)
-num_epoches , loss_list = model.train(train_set,train_label)
+num_epoches , loss_list = model.train(train_set,train_label,batch_size,learning_rate,num_epoches,0,50)
 pred = model.test(test_set,test_label)
 print('R2 score: {}'.format(r2_score(pred,test_label)))
 
