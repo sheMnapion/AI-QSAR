@@ -17,12 +17,12 @@ class SmilesRnn(nn.Module):
         """RNN with only one variable, the maximal length of a possible smiles"""
         super(SmilesRnn,self).__init__()
         self.rnn=nn.RNN(
-            input_size=10,
-            hidden_size=300,
+            input_size=maxLength,
+            hidden_size=512,
             num_layers=2,
             bidirectional=False
         )
-        self.out=nn.Linear(300,1)
+        self.out=nn.Linear(512,1)
 
     def forward(self, x, h_state):
         """pass on hidden state as well"""
@@ -47,6 +47,7 @@ class SmilesRNNPredictor(object):
         """train the RNN for [nRounds] with learning rate [lr]"""
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
+        print(self.smilesTest.shape)
         trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2)
         testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2)
         optimizer=optim.Adam(self.net.parameters(),lr=lr,weight_decay=1e-8)
@@ -56,14 +57,9 @@ class SmilesRNNPredictor(object):
         for epoch in range(nRounds):
             losses=[]
             for i, (x,y) in enumerate(trainLoader):
-                # x.unsqueeze_(1)
+                x.unsqueeze_(1)
                 y.unsqueeze_(1); y.unsqueeze_(1)
-                inputX=torch.zeros(self.maxLength,batchSize,10,requires_grad=True)
-                with torch.no_grad():
-                    for j in range(batchSize):
-                        inputX[:,j,:]=self.embedding(torch.LongTensor(x[j]))
-                print(inputX.shape)
-                prediction, hState=self.net(inputX,None)
+                prediction, hState=self.net(x,None)
                 loss=lossFunc(prediction,y)
                 losses.append(loss.item())
                 optimizer.zero_grad()
@@ -72,17 +68,27 @@ class SmilesRNNPredictor(object):
             losses=np.array(losses)
             valLosses=[]; pred=[]; true=[]
             for i, (x,y) in enumerate(testLoader):
-                # x.unsqueeze_(1)
+                x.unsqueeze_(1)
                 y.unsqueeze_(1); y.unsqueeze_(1)
                 prediction, hState=self.net(x,None)
-                for i, p in enumerate(prediction[0][0]):
+                # print(prediction,prediction.shape)
+                for j, p in enumerate(prediction[:,0,0]):
                     pred.append(p)
-                    true.append(y[0][i])
+                    true.append(y[j][0][0])
                 loss=lossFunc(prediction,y)
                 valLosses.append(loss.item())
             print("Round [%d]: {%.5f,%.5f}" % (epoch+1,np.mean(losses),np.mean(valLosses)))
             tempR2Score=r2_score(true,pred)
             print("r^2 score:",tempR2Score)
+            # import matplotlib.pyplot as plt
+            # pred=np.array(pred); true=np.array(true)
+            # print(pred.shape,true.shape)
+            # plt.scatter(pred,true)
+            # minX=min(np.min(pred),np.min(true))
+            # maxX=max(np.max(pred),np.max(true))
+            # plotX=np.linspace(minX,maxX,1000)
+            # plt.plot(plotX,plotX)
+            # plt.show()
             if tempR2Score>bestR2:
                 consecutiveRounds=0
                 bestR2=tempR2Score
@@ -113,8 +119,8 @@ class SmilesRNNPredictor(object):
         self.embedding=nn.Embedding(self.nWords,10,padding_idx=0)
         self.standardData=padData
         smilesTrain,smilesTest,propTrain,propTest=train_test_split(padData,self.origProperties,test_size=0.2,random_state=2019)
-        self.smilesTrain=torch.tensor(smilesTrain,dtype=torch.long)
-        self.smilesTest=torch.tensor(smilesTest,dtype=torch.long)
+        self.smilesTrain=torch.tensor(smilesTrain,dtype=torch.float32)
+        self.smilesTest=torch.tensor(smilesTest,dtype=torch.float32)
         self.propTrain=torch.tensor(propTrain,dtype=torch.float32)
         self.propTest=torch.tensor(propTest,dtype=torch.float32)
         print("Dataset prepared.")
@@ -122,4 +128,4 @@ class SmilesRNNPredictor(object):
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesRNNPredictor(smiles,properties)
-    predictor.train(nRounds=100,lr=3e-4)
+    predictor.train(nRounds=100,lr=1e-3)
