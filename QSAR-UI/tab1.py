@@ -24,6 +24,7 @@ class Tab1(QMainWindow):
         # Currently Opened Folder
         self._currentDataFolder = None
         self._currentProjectFolder = None
+        self._currentOutputFolder = None
 
         # object name of QtWidgets -> key of self.trainingParams
         self._trainingParamsMap = {
@@ -44,6 +45,8 @@ class Tab1(QMainWindow):
         self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
+        self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
+        self.outputSaveBtn.released.connect(self.outputSaveSlot)
 
     def startTrainingSlot(self):
         """
@@ -106,6 +109,22 @@ class Tab1(QMainWindow):
             self._debugPrint(str(self.data.head()))
         else:
             self._debugPrint("Not a csv file")
+
+    def outputBrowseSlot(self):
+        """
+        Slot Function of Browsing Output Folder
+        """
+        folder = getFolder()
+        if folder:
+            self._debugPrint("setting data folder: " + folder)
+            self.outputLineEdit.setText(folder)
+            self._currentOutputFolder = folder
+
+    def outputSaveSlot(self):
+        """
+        Slot Function of Saving Output Model
+        """
+        pass
 
     def _debugPrint(self, msg):
         """
