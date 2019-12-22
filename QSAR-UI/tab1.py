@@ -79,12 +79,15 @@ class Tab1(QMainWindow):
             testLabel = testData[labelColumn].values
             testData = testData.loc[:, testData.columns != labelColumn].values
 
-            DNN = QSARDNN(self.trainingParams["targetType"], trainData.shape[1])
+            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
+
+            DNN = QSARDNN(targetType, trainData.shape[1])
         except:
             self._debugPrint("Fail to Start DNN")
             return
 
         self._debugPrint("Start Training")
+
         DNN.train(trainData, trainLabel, batch_size = int(self.trainingParams["batchSize"]),
                      learning_rate = float(self.trainingParams["learningRate"]),
                      num_epoches = int(self.trainingParams["epochs"]),

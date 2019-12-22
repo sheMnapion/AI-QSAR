@@ -259,12 +259,12 @@
         </property>
         <item>
          <property name="text">
-          <string>Regression</string>
+          <string>regression</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Classification</string>
+          <string>classification</string>
          </property>
         </item>
        </widget>
