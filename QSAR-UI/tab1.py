@@ -28,11 +28,10 @@ class Tab1(QMainWindow):
         # object name of QtWidgets -> key of self.trainingParams
         self._trainingParamsMap = {
             "batchSizeSpinBox": "batchSize",
-            "dropoutDoubleSpinBox": "dropout",
             "epochsSpinBox": "epochs",
             "learningRateDoubleSpinBox": "learningRate",
-            "biasInitializerComboBox": "biasInitializer",
-            "weightInitializerComboBox": "weightInitializer"
+            "earlyStopCheckBox": "earlyStop",
+            "earlyStopEpochsSpinBox": "earlyStopEpochs"
         }
         self._bind()
 
@@ -61,8 +60,8 @@ class Tab1(QMainWindow):
             obj = getattr(self, objName)
             if getattr(obj, "value", None):
                 self.trainingParams[key] = obj.value()
-            if getattr(obj, "currentText", None):
-                self.trainingParams[key] = obj.currentText()
+            if getattr(obj, "checkState", None):
+                self.trainingParams[key] = obj.checkState()
 
         self._debugPrint(str(self.trainingParams.items()))
 
