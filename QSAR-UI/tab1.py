@@ -12,6 +12,7 @@ from types import MethodType
 
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent
 
@@ -26,6 +27,7 @@ class Tab1(QMainWindow):
 
         # Currently Loaded Data (pandas.DataFrame)
         self.data = None
+        self.numericData = None
         # Training Params
         self.trainingParams = {}
 
@@ -41,7 +43,8 @@ class Tab1(QMainWindow):
             "learningRateDoubleSpinBox": "learningRate",
             "earlyStopCheckBox": "earlyStop",
             "earlyStopEpochsSpinBox": "earlyStopEpochs",
-            "targetTypeComboBox": "targetType"
+            "targetTypeComboBox": "targetType",
+            "columnSelectComboBox": "targetColumn"
         }
 
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
@@ -66,14 +69,29 @@ class Tab1(QMainWindow):
         """
         The Training Function Given Data and Training Parameters
         """
+        try:
+            trainData, testData = train_test_split(self.numericData, test_size = 0.2)
+            labelColumn = self.trainingParams["targetColumn"]
+
+            trainLabel = trainData[labelColumn].values
+            trainData = trainData.loc[:, trainData.columns != labelColumn].values
+
+            testLabel = testData[labelColumn].values
+            testData = testData.loc[:, testData.columns != labelColumn].values
+
+            DNN = QSARDNN(self.trainingParams["targetType"], trainData.shape[1])
+        except:
+            self._debugPrint("Fail to Start DNN")
+            return
 
         self._debugPrint("Start Training")
+        DNN.train(trainData, trainLabel, batch_size = int(self.trainingParams["batchSize"]),
+                     learning_rate = float(self.trainingParams["learningRate"]),
+                     num_epoches = int(self.trainingParams["epochs"]),
+                     early_stop = bool(self.trainingParams["earlyStop"]),
+                     max_tolerance = int(self.trainingParams["earlyStopEpochs"]))
 
-        try:
-            DNN = QSARDNN(self.trainingParams["targetType"], self.data.shape[1])
-        except:
-            raise Exception("Fail to Start DNN")
-            return
+        self._debugPrint("Finish Training")
 
     def updateTrainingParamsSlot(self):
         """
@@ -125,7 +143,17 @@ class Tab1(QMainWindow):
         self._debugPrint(selectedFile)
 
         if re.match(".+.csv$", file):
-            self.data = pd.read_csv(selectedFile, header = (0 if (self.headerCheckBox.isChecked()) else None))
+            try:
+                self.data = pd.read_csv(selectedFile, index_col = False,
+                                            header = (0 if (self.headerCheckBox.isChecked()) else None))
+                self.numericData = self.data.select_dtypes(include = np.number)
+                self.columnSelectComboBox.addItems(self.numericData.columns)
+            except:
+                self.data = None
+                self.numericData = None
+                self._debugPrint("Load Data Error!")
+                return
+
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:

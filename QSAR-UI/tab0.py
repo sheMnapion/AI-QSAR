@@ -84,7 +84,7 @@ class Tab0(QMainWindow):
         selectedFileNoSuffix = selectedFile.rsplit('.', 1)[0]
 
         outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)
-        self.transformedData.to_csv(outputFile)
+        self.transformedData.to_csv(outputFile, index = None)
 
         self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
                             outputFile, shape=self.transformedData.shape))
@@ -115,7 +115,8 @@ class Tab0(QMainWindow):
         self._debugPrint(selectedFile)
 
         if re.match(".+.csv$", file):
-            self.originalData = pd.read_csv(selectedFile, header = (0 if (self.headerCheckBox.isChecked()) else None))
+            self.originalData = pd.read_csv(selectedFile, index_col = False,
+                                                header = (0 if (self.headerCheckBox.isChecked()) else None))
             self.originalDatatList.addItem(str(self.originalData.head()))
             self._debugPrint("csv file {} loaded: {shape[0]} lines, {shape[1]} columns".format(
                                 file, shape=self.originalData.shape))
