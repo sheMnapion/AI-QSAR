@@ -1,3 +1,3 @@
 {
-    "files": ["mainwindow2.ui","mainwindow0.ui","mainwindow1.ui","tab0.py","mainwindow.ui","images.qrc","tab1.py","icons.qrc","tab2.py","main.py","mainwindow3.ui","tab3.py","test.py","utils.py"]
+    "files": ["mainwindow2.ui","mainwindow0.ui","mainwindow1.ui","tab0.py","mainwindow.ui","images.qrc","tab1.py","icons.qrc","tab2.py","utils.py","main.py","mainwindow3.ui","tab3.py","test.py","../QSAR-DNN/QSAR-DNN.py"]
 }

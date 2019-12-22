@@ -22,25 +22,22 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,1" columnstretch="1,1">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="1,0">
       <property name="verticalSpacing">
        <number>9</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
+      <item row="6" column="0" rowspan="2" colspan="2">
+       <widget class="QListWidget" name="dataList">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
+          <verstretch>1</verstretch>
          </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Load Data</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,0,0">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -95,24 +92,31 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="dataLabel">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string> Header</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="headerCheckBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>20</height>
-           </size>
           </property>
           <property name="text">
            <string/>
@@ -121,13 +125,16 @@
         </item>
        </layout>
       </item>
-      <item row="6" column="0" rowspan="2" colspan="2">
-       <widget class="QListWidget" name="dataList">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
         </property>
        </widget>
       </item>
@@ -209,14 +216,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="learningRateLabel">
         <property name="text">
          <string>Learning Rate</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="learningRateDoubleSpinBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -247,14 +254,14 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="earlyStopLabel">
         <property name="text">
          <string>earlyStop</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="earlyStopCheckBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -264,14 +271,14 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="earlyStopEpochsLabel">
         <property name="text">
          <string>earlyStopEpochs</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="QSpinBox" name="earlyStopEpochsSpinBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -287,14 +294,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="batchSizeLabel">
         <property name="text">
          <string>Batch Size</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QSpinBox" name="batchSizeSpinBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -313,14 +320,14 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="epochsLabel">
         <property name="text">
          <string>Epochs</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="QSpinBox" name="epochsSpinBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -339,7 +346,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0" colspan="2">
+      <item row="8" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QLabel" name="outputLabel">
@@ -416,7 +423,7 @@
         </item>
        </layout>
       </item>
-      <item row="6" column="0" colspan="2">
+      <item row="7" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <spacer name="horizontalSpacer">
@@ -473,6 +480,33 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="targetTypeLabel">
+        <property name="text">
+         <string>TargetType</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="targetTypeComboBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <item>
+         <property name="text">
+          <string>Regression</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Classification</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </item>

@@ -1,15 +1,23 @@
 # This Python file uses the following encoding: utf-8
 import os
 import re
+import sys
+import torch
+
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
 from os.path import expanduser
+from types import MethodType
+
 import numpy as np
 import pandas as pd
 
-from utils import resetFolderList, getFolder, getFile, getIcon
+from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent
 
+DNN_PATH = os.path.abspath('../QSAR-DNN')
+sys.path.append(DNN_PATH)
+from QSAR_DNN import QSARDNN
 
 class Tab1(QMainWindow):
     def __init__(self):
@@ -32,8 +40,14 @@ class Tab1(QMainWindow):
             "epochsSpinBox": "epochs",
             "learningRateDoubleSpinBox": "learningRate",
             "earlyStopCheckBox": "earlyStop",
-            "earlyStopEpochsSpinBox": "earlyStopEpochs"
+            "earlyStopEpochsSpinBox": "earlyStopEpochs",
+            "targetTypeComboBox": "targetType"
         }
+
+        self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
+        self.modelList.mousePressEvent = MethodType(mousePressEvent, self.modelList)
+        self.trainingList.mousePressEvent = MethodType(mousePressEvent, self.trainingList)
+
         self._bind()
 
     def _bind(self):
@@ -52,8 +66,14 @@ class Tab1(QMainWindow):
         """
         The Training Function Given Data and Training Parameters
         """
+
         self._debugPrint("Start Training")
-        pass
+
+        try:
+            DNN = QSARDNN(self.trainingParams["targetType"], self.data.shape[1])
+        except:
+            raise Exception("Fail to Start DNN")
+            return
 
     def updateTrainingParamsSlot(self):
         """
@@ -65,6 +85,8 @@ class Tab1(QMainWindow):
                 self.trainingParams[key] = obj.value()
             if getattr(obj, "checkState", None):
                 self.trainingParams[key] = obj.checkState()
+            if getattr(obj, "currentText", None):
+                self.trainingParams[key] = obj.currentText()
 
         self._debugPrint(str(self.trainingParams.items()))
 
@@ -85,7 +107,6 @@ class Tab1(QMainWindow):
         folder = getFolder()
         if folder:
             self._debugPrint("setting data folder: " + folder)
-            self.dataLabel.setText(folder)
             resetFolderList(self.dataList, folder)
             self._currentDataFolder = folder
 
@@ -104,7 +125,7 @@ class Tab1(QMainWindow):
         self._debugPrint(selectedFile)
 
         if re.match(".+.csv$", file):
-            self.data = pd.read_csv(selectedFile)
+            self.data = pd.read_csv(selectedFile, header = (0 if (self.headerCheckBox.isChecked()) else None))
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:

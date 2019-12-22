@@ -122,47 +122,45 @@ class QSARDNN():
         self.model.load_state_dict(torch.load(path))
 
 
+if __name__ == '__main__':
+    csv_data = pd.read_csv("../datasets/delaney-processed.csv")#location of the data file
+    columns = csv_data.columns
+    device = torch.device('cpu')
+    a = []
+    label = []
+    for i in columns:
+        #i != "ESOL predicted log solubility in mols per litre" and
+        if  i != "Compound ID" and i != "smiles":
+            if i == "measured log solubility in mols per litre":
+                label = csv_data[i].to_list()
+            else:
+                a.append(csv_data[i].to_list())
 
+    data_set = np.array(a).T
+    property_num = data_set.shape[1]
 
+    train_len = 1000
+    test_len = data_set.shape[0] - train_len
+    #divide training set and test set
+    train_set = data_set[0:train_len:1]
+    test_set = data_set[train_len:data_set.shape[0]:1]
+    data_label = np.array(label).reshape(len(label),1)
+    train_label = data_label[0:train_len:1]
+    test_label = data_label[train_len:data_set.shape[0]:1]
 
-csv_data = pd.read_csv("../datasets/delaney-processed.csv")#location of the data file
-columns = csv_data.columns
-device = torch.device('cpu')
-a = []
-label = []
-for i in columns:
-    #i != "ESOL predicted log solubility in mols per litre" and
-    if  i != "Compound ID" and i != "smiles":
-        if i == "measured log solubility in mols per litre":
-            label = csv_data[i].to_list()
-        else:
-            a.append(csv_data[i].to_list())
+    batch_size = 50
+    learning_rate = 0.01
+    num_epoches = 1000
 
-data_set = np.array(a).T
-property_num = data_set.shape[1]
+    model = QSARDNN(0,property_num)
+    num_epoches , loss_list = model.train(train_set,train_label,batch_size,learning_rate,num_epoches,0,50)
+    pred = model.test(test_set,test_label)
+    print('R2 score: {}'.format(r2_score(pred,test_label)))
 
-train_len = 1000
-test_len = data_set.shape[0] - train_len
-#divide training set and test set
-train_set = data_set[0:train_len:1]
-test_set = data_set[train_len:data_set.shape[0]:1]
-data_label = np.array(label).reshape(len(label),1)
-train_label = data_label[0:train_len:1]
-test_label = data_label[train_len:data_set.shape[0]:1]
-
-batch_size = 50
-learning_rate = 0.01
-num_epoches = 1000
-
-model = QSARDNN(0,property_num)
-num_epoches , loss_list = model.train(train_set,train_label,batch_size,learning_rate,num_epoches,0,50)
-pred = model.test(test_set,test_label)
-print('R2 score: {}'.format(r2_score(pred,test_label)))
-
-#draw R2 score and L2 loss curve
-x1 = range(0,num_epoches) 
-y1 = loss_list 
-plt.plot(x1, y1, '.-') 
-plt.title('loss vs. epoches') 
-plt.ylabel('loss')
-plt.show() 
+    #draw R2 score and L2 loss curve
+    x1 = range(0,num_epoches)
+    y1 = loss_list
+    plt.plot(x1, y1, '.-')
+    plt.title('loss vs. epoches')
+    plt.ylabel('loss')
+    plt.show()
