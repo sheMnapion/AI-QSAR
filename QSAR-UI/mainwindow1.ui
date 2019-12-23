@@ -370,7 +370,7 @@
           <property name="maximumSize">
            <size>
             <width>75</width>
-            <height>16777215</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -389,7 +389,7 @@
           <property name="maximumSize">
            <size>
             <width>74</width>
-            <height>16777215</height>
+            <height>30</height>
            </size>
           </property>
           <property name="layoutDirection">
@@ -507,7 +507,7 @@
           <property name="maximumSize">
            <size>
             <width>75</width>
-            <height>16777215</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -526,7 +526,7 @@
           <property name="maximumSize">
            <size>
             <width>50</width>
-            <height>20</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -541,6 +541,12 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
           </property>
           <property name="text">
            <string/>

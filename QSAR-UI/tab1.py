@@ -77,15 +77,19 @@ class Tab1(QMainWindow):
         """
         The Training Function Given Data and Training Parameters
         """
-        self.trainer = Worker(fn = self.DNN.train,
-                         train_set = self.trainData,
-                         train_label = self.trainLabel,
-                         batch_size = int(self.trainingParams["batchSize"]),
-                         learning_rate = float(self.trainingParams["learningRate"]),
-                         num_epoches = int(self.trainingParams["epochs"]),
-                         early_stop = bool(self.trainingParams["earlyStop"]),
+        try:
+            self.trainer = Worker(fn = self.DNN.train,
+                             train_set = self.trainData,
+                             train_label = self.trainLabel,
+                             batch_size = int(self.trainingParams["batchSize"]),
+                             learning_rate = float(self.trainingParams["learningRate"]),
+                             num_epoches = int(self.trainingParams["epochs"]),
+                             early_stop = bool(self.trainingParams["earlyStop"]),
                          max_tolerance = int(self.trainingParams["earlyStopEpochs"])
                        )       
+        except:
+            self._debugPrint("DNN Fail to Start")
+            return
 
         self.trainer.sig.progress.connect(self.appendDebugInfoSlot)
         self.threadPool.start(self.trainer)
@@ -109,7 +113,8 @@ class Tab1(QMainWindow):
         self._debugPrint(str(self.trainingParams.items()))
 
         try:
-            self.trainData, self.testData = train_test_split(self.numericData, test_size = 0.2)
+            self.trainData, self.testData = train_test_split(self.numericData,
+                    test_size = 0.2, shuffle = False)
             labelColumn = self.trainingParams["targetColumn"]
 
             self.trainLabel = self.trainData[labelColumn].values
@@ -118,7 +123,7 @@ class Tab1(QMainWindow):
             self.testLabel = self.testData[labelColumn].values
             self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
 
-            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
+            targetType = {"regression": 0, "classification": 2}.get(self.trainingParams["targetType"])
 
             self.DNN = QSARDNN(targetType, self.trainData.shape[1])
 

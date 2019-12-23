@@ -17,7 +17,6 @@ from matplotlib.backends.backend_qt4agg import (
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
 
 
-
 class Tab0(QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
