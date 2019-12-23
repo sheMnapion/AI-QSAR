@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/tmpBestModel.pt" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/tmp/tmpBestModel.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,35 +23,48 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="16" />
+          <entry key="py" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="16" />
+          <entry key="Python" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="12914" />
+          <entry key="py" value="13962" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="12914" />
+          <entry key="Python" value="13962" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+            <state relative-caret-position="418">
+              <caret line="58" column="21" selection-start-line="58" selection-start-column="21" selection-end-line="58" selection-end-column="21" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <marker date="1577115257294" expanded="true" signature="150:877" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="444">
+              <caret line="39" column="7" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="7" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -82,7 +94,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="223">
@@ -121,6 +133,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>DNN</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -128,13 +145,13 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/SMILES_RNN/torchVAEExample.py" />
-        <option value="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/smilesRNN.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" />
+        <option value="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1346" />
@@ -151,6 +168,16 @@
             <path>
               <item name="AI-QSAR" type="b2602c69:ProjectViewProjectNode" />
               <item name="AI-QSAR" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AI-QSAR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AI-QSAR" type="462c0819:PsiDirectoryNode" />
+              <item name="datasets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AI-QSAR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AI-QSAR" type="462c0819:PsiDirectoryNode" />
+              <item name="QSAR-DNN" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AI-QSAR" type="b2602c69:ProjectViewProjectNode" />
@@ -209,10 +236,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -261,16 +288,6 @@
     <entry file="file://E:/python-opencv/planeSegmentation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-759">
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -335,6 +352,27 @@
             <marker date="1577085932623" expanded="true" signature="5172:8707" ph="..." />
             <marker date="1577085932623" expanded="true" signature="7287:7292" ph="..." />
             <marker date="1577085932623" expanded="true" signature="7806:8707" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="39" column="7" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="58" column="21" selection-start-line="58" selection-start-column="21" selection-end-line="58" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1577115257294" expanded="true" signature="150:877" ph="..." />
           </folding>
         </state>
       </provider>
