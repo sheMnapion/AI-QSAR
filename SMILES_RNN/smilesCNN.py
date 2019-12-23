@@ -7,6 +7,7 @@ from torch.autograd import Variable
 from dataProcess import loadEsolSmilesData
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
+from sklearn.linear_model import LinearRegression
 from torch.utils.data import DataLoader, Dataset, TensorDataset
 import time
 
@@ -29,9 +30,9 @@ class SmilesCNNVAE(nn.Module):
         self.unMaxPool4=nn.MaxUnpool2d(2)
         self.conv4=nn.ConvTranspose2d(2,1,7,dilation=1)
         self.fc1=nn.Linear(867,256)
-        self.fc21=nn.Linear(256,120)
-        self.fc22=nn.Linear(256,120)
-        self.fc3=nn.Linear(120,256)
+        self.fc21=nn.Linear(256,100)
+        self.fc22=nn.Linear(256,100)
+        self.fc3=nn.Linear(100,256)
         self.fc4=nn.Linear(256,867)
 
     def num_flat_features(self,x):
@@ -73,8 +74,7 @@ class SmilesCNNVAE(nn.Module):
     def middleRepresentation(self, x):
         """return representation in latent space"""
         mu, logVar = self.encode(x)
-        z = self.reparameterize(mu, logVar)
-        return z
+        return mu
 
 def vaeLossFunc(reconstructedX, x, mu, logvar):
     # BCE = F.mse_loss(reconstructedX, x)
@@ -200,13 +200,15 @@ class SmilesCNNPredictor(object):
     def trainLatentModel(self):
         """train the prediction model within latent space"""
         from sklearn.neural_network import MLPRegressor
+        from sklearn.ensemble import RandomForestRegressor
         import matplotlib.pyplot as plt
-        tempRegressor=MLPRegressor(hidden_layer_sizes=(200),learning_rate_init=3e-4,verbose=True,
-            tol=1e-6,max_iter=1000,batch_size=12,early_stopping=True)
+        tempRegressor=RandomForestRegressor(n_estimators=1000,n_jobs=2,verbose=True)
         npTrainLatent=self.trainRepr.detach().numpy()
         npTestLatent=self.testRepr.detach().numpy()
         npTrainLabel=self.propTrain.detach().numpy()
         npTestLabel=self.propTest.detach().numpy()
+        print(npTrainLatent.shape,npTrainLabel.shape)
+        print(npTestLatent.shape,npTestLabel.shape)
         tempRegressor.fit(npTrainLatent,npTrainLabel)
         pred=tempRegressor.predict(npTestLatent)
         print(pred.shape,npTestLabel.shape)
@@ -315,8 +317,8 @@ class SmilesCNNPredictor(object):
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesCNNPredictor(smiles,properties)
-    predictor.train(nRounds=100,lr=3e-4)
-    # predictor.trainVAE(nRounds=1000,lr=1e-3,earlyStop=True,earlyStopEpoch=10,batchSize=15)
-    # predictor.loadVAE('tmp/tmpBestModel.pt')
-    # predictor.encodeDataset()
-    # predictor.trainLatentModel()
+    # predictor.train(nRounds=100,lr=3e-4)
+    # predictor.trainVAE(nRounds=1000,lr=1e-3,earlyStop=True,earlyStopEpoch=10,batchSize=30)
+    predictor.loadVAE('tmp/tmpBestModel.pt')
+    predictor.encodeDataset()
+    predictor.trainLatentModel()
