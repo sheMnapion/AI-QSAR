@@ -101,6 +101,7 @@ class QSARDNN():
                 else:
                     num_nongrowth = num_nongrowth +1
                     if num_nongrowth > max_tolerance and early_stop == 1:
+                        progress_callback.emit('\n***********Finish Training***********\n')
                         return epoch +1,self.loss_list
             if epoch % 10 == 0:
 #                print('epoch [{}/{}]'.format(epoch + 10, num_epoches))

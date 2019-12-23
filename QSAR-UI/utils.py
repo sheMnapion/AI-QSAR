@@ -51,6 +51,16 @@ def getFile():
     return file[0]
 
 
+def saveModel():
+    options = QFileDialog.Options()
+    options |= QFileDialog.DontUseNativeDialog
+    file = QFileDialog.getSaveFileName(None,
+                                       'Save File',
+                                       expanduser("."),
+                                       "Pytorch Models (*.pxl)")
+    return file[0]
+
+
 def getIcon(path):
     """
     Get Default Icon According to File Path

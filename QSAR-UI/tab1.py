@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, Worker
+from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mousePressEvent, Worker
 
 DNN_PATH = os.path.abspath('../QSAR-DNN')
 sys.path.append(DNN_PATH)
@@ -35,7 +35,7 @@ class Tab1(QMainWindow):
         # Currently Opened Folder
         self._currentDataFolder = None
         self._currentProjectFolder = None
-        self._currentOutputFolder = None
+        self._currentOutputPath = None
 
         # object name of QtWidgets -> key of self.trainingParams
         self._trainingParamsMap = {
@@ -53,6 +53,12 @@ class Tab1(QMainWindow):
         self.trainingList.mousePressEvent = MethodType(mousePressEvent, self.trainingList)
 
         self.threadPool = QThreadPool()
+        self.trainer = None
+        self.trainData = None
+        self.trainLabel = None
+        self.testData = None
+        self.testLabel = None
+        self.DNN = None
         self._bind()
 
     def _bind(self):
@@ -64,34 +70,16 @@ class Tab1(QMainWindow):
         self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
-        self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
-        self.outputSaveBtn.released.connect(self.outputSaveSlot)
+        self.modelSelectBtn.released.connect(self.modelSelectSlot)
+        self.modelSaveBtn.released.connect(self.modelSaveSlot)
 
     def startTrainingSlot(self):
         """
         The Training Function Given Data and Training Parameters
         """
-        try:
-            trainData, testData = train_test_split(self.numericData, test_size = 0.2)
-            labelColumn = self.trainingParams["targetColumn"]
-
-            trainLabel = trainData[labelColumn].values
-            trainData = trainData.loc[:, trainData.columns != labelColumn].values
-
-            testLabel = testData[labelColumn].values
-            testData = testData.loc[:, testData.columns != labelColumn].values
-
-            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
-
-            DNN = QSARDNN(targetType, trainData.shape[1])
-        except:
-            self._debugPrint("Fail to Start DNN")
-            return
-
-
-        worker = Worker(fn = DNN.train,
-                         train_set = trainData,
-                         train_label = trainLabel,
+        self.trainer = Worker(fn = self.DNN.train,
+                         train_set = self.trainData,
+                         train_label = self.trainLabel,
                          batch_size = int(self.trainingParams["batchSize"]),
                          learning_rate = float(self.trainingParams["learningRate"]),
                          num_epoches = int(self.trainingParams["epochs"]),
@@ -99,8 +87,8 @@ class Tab1(QMainWindow):
                          max_tolerance = int(self.trainingParams["earlyStopEpochs"])
                        )       
 
-        worker.sig.progress.connect(self.appendDebugInfoSlot)
-        self.threadPool.start(worker)
+        self.trainer.sig.progress.connect(self.appendDebugInfoSlot)
+        self.threadPool.start(self.trainer)
 
     def appendDebugInfoSlot(self, info):
         self._debugPrint(info)
@@ -119,6 +107,25 @@ class Tab1(QMainWindow):
                 self.trainingParams[key] = obj.currentText()
 
         self._debugPrint(str(self.trainingParams.items()))
+
+        try:
+            self.trainData, self.testData = train_test_split(self.numericData, test_size = 0.2)
+            labelColumn = self.trainingParams["targetColumn"]
+
+            self.trainLabel = self.trainData[labelColumn].values
+            self.trainData = self.trainData.loc[:, self.trainData.columns != labelColumn].values
+
+            self.testLabel = self.testData[labelColumn].values
+            self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
+
+            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
+
+            self.DNN = QSARDNN(targetType, self.trainData.shape[1])
+
+            self._debugPrint("DNN's Set up")
+        except:
+            self.DNN = self.trainData = self.testData = self.trainLabel = self.testLabel = None
+            self._debugPrint("Fail to Set up DNN")
 
     def modelBrowseSlot(self):
         """
@@ -169,23 +176,38 @@ class Tab1(QMainWindow):
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:
-            self._debugPrint("Not a csv file")
+            self._debugPrint("Not a csv file!")
 
-    def outputBrowseSlot(self):
+    def modelSaveSlot(self):
         """
-        Slot Function of Browsing Output Folder
+        Slot Function of Saving Model
         """
-        folder = getFolder()
-        if folder:
-            self._debugPrint("setting data folder: " + folder)
-            self.outputLineEdit.setText(folder)
-            self._currentOutputFolder = folder
+        path = saveModel()
+        if path is not None:
+            self._currentOutputPath = path
+            try:
+                self.DNN.save(path)
+                self._debugPrint('File {} saved'.format(path))
+            except:
+                self._debugPrint('DNN not Available yet, or Path Invalid!')
 
-    def outputSaveSlot(self):
-        """
-        Slot Function of Saving Output Model
-        """
-        pass
+    def modelSelectSlot(self):
+        try:
+            model = self.modelList.currentItem().text()
+        except:
+            self._debugPrint("Current Model File Not Found")
+            return
+
+        self._debugPrint(model)
+        if re.match(".+.pxl$", model):
+            try:
+                self.DNN.load(model)
+                self._debugPrint("Model Loaded")
+            except:
+                self._debugPrint("Load Model Error!")
+                return
+        else:
+            self._debugPrint("Not a .pxl pytorch model!")
 
     def _debugPrint(self, msg):
         """
