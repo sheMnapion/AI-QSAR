@@ -48,7 +48,17 @@ class QSARDNN():
 
     def train(self,train_set,train_label,batch_size,learning_rate,num_epoches,early_stop,max_tolerance,
                 progress_callback):
-        #self.model.train()
+
+        progress_callback.emit('train_set.shape: {}'.format(train_set.shape))
+        progress_callback.emit('train_label.shape: {}'.format(train_label.shape))
+        progress_callback.emit('batch_size: {}'.format(batch_size))
+        progress_callback.emit('learning_rate: {}'.format(learning_rate))
+        progress_callback.emit('num_epoches: {}'.format(num_epoches))
+        progress_callback.emit('early_stop: {}'.format(early_stop))
+        progress_callback.emit('max_tolerance: {}'.format(max_tolerance))
+
+        progress_callback.emit('\n***********Start Training***********\n')
+
         train_len = int(train_set.shape[0]/batch_size)*batch_size
         train_set = train_set[0:train_len]
         #create training data loader
@@ -93,13 +103,14 @@ class QSARDNN():
                     if num_nongrowth > max_tolerance and early_stop == 1:
                         return epoch +1,self.loss_list
             if epoch % 10 == 0:
-                print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
-                print('*' * 10)
-                print('loss : {}'.format(avg_loss))
-
+#                print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
+#                print('*' * 10)
+#                print('loss : {}'.format(avg_loss))
                 progress_callback.emit('epoch [{}/{}]'.format(epoch + 10, num_epoches))
                 progress_callback.emit('*' * 10)
                 progress_callback.emit('loss : {}'.format(avg_loss))
+
+        progress_callback.emit('\n***********Finish Training***********\n')
 
         return num_epoches,self.loss_list
 

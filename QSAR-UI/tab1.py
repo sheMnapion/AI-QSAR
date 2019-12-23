@@ -88,20 +88,19 @@ class Tab1(QMainWindow):
             self._debugPrint("Fail to Start DNN")
             return
 
-        self._debugPrint("Start Training")
 
-        worker = Worker(DNN.train, trainData, trainLabel, batch_size = int(self.trainingParams["batchSize"]),
+        worker = Worker(fn = DNN.train,
+                         train_set = trainData,
+                         train_label = trainLabel,
+                         batch_size = int(self.trainingParams["batchSize"]),
                          learning_rate = float(self.trainingParams["learningRate"]),
                          num_epoches = int(self.trainingParams["epochs"]),
                          early_stop = bool(self.trainingParams["earlyStop"]),
                          max_tolerance = int(self.trainingParams["earlyStopEpochs"])
-                       )
+                       )       
 
         worker.sig.progress.connect(self.appendDebugInfoSlot)
-
         self.threadPool.start(worker)
-
-        self._debugPrint("Finish Training")
 
     def appendDebugInfoSlot(self, info):
         self._debugPrint(info)
