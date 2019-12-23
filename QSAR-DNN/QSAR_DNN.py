@@ -106,9 +106,9 @@ class QSARDNN():
                         progress_callback.emit('\n***********Finish Training***********\n')
                         return epoch +1,self.loss_list
             if epoch % 10 == 0:
-                print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
-                print('*' * 10)
-                print('loss : {}'.format(avg_loss))
+                # print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
+                # print('*' * 10)
+                # print('loss : {}'.format(avg_loss))
                 progress_callback.emit('epoch [{}/{}]'.format(epoch + 10, num_epoches))
                 progress_callback.emit('*' * 10)
                 progress_callback.emit('loss : {}'.format(avg_loss))

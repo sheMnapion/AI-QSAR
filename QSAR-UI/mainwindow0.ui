@@ -51,7 +51,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetFixedSize</enum>
@@ -265,7 +265,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0,0">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetFixedSize</enum>
@@ -811,7 +811,7 @@
      <x>0</x>
      <y>0</y>
      <width>995</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

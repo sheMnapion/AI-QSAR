@@ -4,6 +4,7 @@ import os
 from PyQt5 import uic, QtWidgets, QtGui, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QTabWidget, QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
+from PyQt5.QtCore import QCoreApplication
 from os.path import expanduser
 from tab0 import Tab0
 from tab1 import Tab1
@@ -45,6 +46,9 @@ class MainWindow(QMainWindow):
 
         self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
         self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
+
+        exitAction=self.actionExit_E
+        exitAction.triggered.connect(QCoreApplication.instance().quit)
 
     def projectBrowseSlot(self):
         """

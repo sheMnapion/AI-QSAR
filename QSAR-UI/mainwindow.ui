@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>PyMolPredictor V1.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -112,9 +112,30 @@
      <x>0</x>
      <y>0</y>
      <width>1208</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile_F">
+    <property name="title">
+     <string>File(&amp;F)</string>
+    </property>
+    <addaction name="actionOpen_folder_O"/>
+    <addaction name="actionExit_E"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit_E">
+    <property name="title">
+     <string>Edit(&amp;E)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp_H">
+    <property name="title">
+     <string>Help(&amp;H)</string>
+    </property>
+    <addaction name="actionAbout_A"/>
+   </widget>
+   <addaction name="menuFile_F"/>
+   <addaction name="menuEdit_E"/>
+   <addaction name="menuHelp_H"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -128,6 +149,21 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionOpen_folder_O">
+   <property name="text">
+    <string>Open folder(&amp;O)</string>
+   </property>
+  </action>
+  <action name="actionExit_E">
+   <property name="text">
+    <string>Exit(&amp;E)</string>
+   </property>
+  </action>
+  <action name="actionAbout_A">
+   <property name="text">
+    <string>About(&amp;A)</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
