@@ -117,13 +117,13 @@ class Tab1(QMainWindow):
                     test_size = 0.2, shuffle = False)
             labelColumn = self.trainingParams["targetColumn"]
 
-            self.trainLabel = self.trainData[labelColumn].values
+            self.trainLabel = self.trainData[labelColumn].values.reshape(-1,1)
             self.trainData = self.trainData.loc[:, self.trainData.columns != labelColumn].values
 
-            self.testLabel = self.testData[labelColumn].values
+            self.testLabel = self.testData[labelColumn].values.reshape(-1,1)
             self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
 
-            targetType = {"regression": 0, "classification": 2}.get(self.trainingParams["targetType"])
+            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
 
             self.DNN = QSARDNN(targetType, self.trainData.shape[1])
 
