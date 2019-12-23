@@ -1,6 +1,24 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score
 from rdkit import Chem
+
+def loadAugData():
+    """load data from desc_canvas_aug30 dataset"""
+    augData=pd.read_csv('../datasets/desc_canvas_aug30.csv')
+    columns=augData.columns
+    augDataTrain=augData[augData['Model']=='Train']
+    augDataTrainX=augDataTrain[columns[5:-1]]
+    augDataTrainY=augDataTrain[columns[4]]
+    augDataTest=augData[augData['Model']=='Test']
+    augDataTestX=augDataTest[columns[5:-1]]
+    augDataTestY=augDataTest[columns[4]]
+    augDataValid=augData[augData['Model']=='Valid']
+    augDataValidX=augDataValid[columns[5:-1]]
+    augDataValidY=augDataValid[columns[4]]
+    return np.array(augDataTrainX), np.array(augDataTrainY), np.array(augDataTestX), np.array(augDataTestY), \
+        np.array(augDataValidX), np.array(augDataValidY)
 
 def loadEsolSmilesData():
     """load data from ESOL dataset where only smiles format and the aim is extracted"""
@@ -29,4 +47,13 @@ def loadEsolSmilesData():
     return np.array(smilesSplit), properties
 
 if __name__=='__main__':
-    loadEsolSmilesData()
+    # loadEsolSmilesData()
+    trainX,trainY,testX,testY,valX,valY=loadAugData()
+    from sklearn.linear_model import LinearRegression
+    from sklearn.ensemble import RandomForestRegressor
+    tempRegressor=RandomForestRegressor(n_estimators=200,max_features='log2',verbose=True,n_jobs=2)
+    tempRegressor.fit(testX,testY)
+    pred=tempRegressor.predict(trainX)
+    valScore=r2_score(trainY,pred)
+    print(valScore)
+    plt.scatter(trainY,pred); plt.show()
