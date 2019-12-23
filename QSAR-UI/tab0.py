@@ -84,6 +84,11 @@ class Tab0(QMainWindow):
         selectedFileNoSuffix = selectedFile.rsplit('.', 1)[0]
 
         outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)
+
+        if os.path.exists(outputFile) is not True:
+            self._debugPrint("Invalid Save Path")
+            return
+
         self.transformedData.to_csv(outputFile, index = None)
 
         self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
@@ -162,27 +167,25 @@ class Tab0(QMainWindow):
 
     def _updatePlot(self, selectedColumn):
         name = selectedColumn.name
-        if len(name) >= 20:
-            name = name[:20] + '...'
+        if len(name) >= 50:
+            name = name[:50] + '...'
 
         if np.issubdtype(selectedColumn.dtype, np.number):
             fig = Figure()
-            ax1f1 = fig.add_subplot(121)
-            ax1f1.plot(np.random.rand(20))
-            ax1f1.hist(x = selectedColumn, bins = 'auto', color = '#0504aa',
-                        alpha = 0.7, rwidth = 0.85)
-            ax1f1.set_ylabel('Frequency')
+
+            ax1f1 = fig.add_subplot(111)
+            selectedColumn.plot.kde(ax=ax1f1, legend=False, title='Histogram')
+            selectedColumn.plot.hist(density=True, ax=ax1f1, color = '#0504aa', alpha = 0.7, rwidth = 0.85)
             ax1f1.set_title(name)
-
-            ax2f2 = fig.add_subplot(122)
-            selectedColumn.plot.kde(ax=ax2f2, legend=False, title='Histogram')
-            selectedColumn.plot.hist(density=True, ax=ax2f2, color = '#0504aa', alpha = 0.7, rwidth = 0.85)
-
-            ax2f2.set_title(name)
-
-            self._addmpl(fig)
         else:
-            return
+            fig = Figure()
+            ax1f1 = fig.add_subplot(111)
+            selectedColumn.value_counts().plot(ax=ax1f1, kind='pie', startangle=90)
+            ax1f1.set_title(name)
+            ax1f1.set_ylabel('')
+            ax1f1.set_xlabel('')
+
+        self._addmpl(fig)
 
     def _debugPrint(self, msg):
         """

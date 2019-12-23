@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>892</width>
+    <width>882</width>
     <height>577</height>
    </rect>
   </property>
@@ -21,33 +21,27 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="1,0">
-      <property name="verticalSpacing">
-       <number>9</number>
-      </property>
-      <item row="6" column="0" rowspan="2" colspan="2">
-       <widget class="QListWidget" name="dataList">
+    <item row="0" column="1" rowspan="2">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,1">
+      <item>
+       <widget class="QLabel" name="label_4">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Load Model</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,0,0">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="dataBrowseBtn">
+         <widget class="QPushButton" name="modelBrowseBtn">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -64,26 +58,17 @@
             <height>30</height>
            </size>
           </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Browse</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="dataSelectBtn">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QPushButton" name="modelSelectBtn">
           <property name="maximumSize">
            <size>
             <width>75</width>
-            <height>16777215</height>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -92,56 +77,41 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-          <property name="maximumSize">
+          <property name="sizeHint" stdset="0">
            <size>
-            <width>50</width>
+            <width>40</width>
             <height>20</height>
            </size>
           </property>
-          <property name="text">
-           <string> Header</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="headerCheckBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
+      <item>
+       <widget class="QListWidget" name="modelList">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
+          <verstretch>1</verstretch>
          </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Load Data</string>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="2" column="0" colspan="3">
+     <widget class="QListWidget" name="trainingList">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
     <item row="0" column="2" rowspan="2">
      <layout class="QFormLayout" name="formLayout">
@@ -472,20 +442,13 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="3">
-     <widget class="QListWidget" name="trainingList">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>1</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0" columnstretch="1,0">
+      <property name="verticalSpacing">
+       <number>9</number>
       </property>
-     </widget>
-    </item>
-    <item row="0" column="1" rowspan="2">
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,1">
-      <item>
-       <widget class="QLabel" name="label_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
@@ -493,16 +456,22 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Load Model</string>
+         <string>Load Data</string>
         </property>
        </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item row="1" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,0,0">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="QPushButton" name="modelBrowseBtn">
+         <widget class="QPushButton" name="dataBrowseBtn">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -519,17 +488,26 @@
             <height>30</height>
            </size>
           </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Browse</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="modelSelectBtn">
+         <widget class="QPushButton" name="dataSelectBtn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
             <width>75</width>
-            <height>30</height>
+            <height>16777215</height>
            </size>
           </property>
           <property name="text">
@@ -538,22 +516,44 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>20</height>
            </size>
           </property>
-         </spacer>
+          <property name="text">
+           <string> Header</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="headerCheckBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QListWidget" name="modelList">
+      <item row="2" column="0" rowspan="2" colspan="2">
+       <widget class="QListWidget" name="dataList">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>1</horstretch>
@@ -571,7 +571,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>892</width>
+     <width>882</width>
      <height>22</height>
     </rect>
    </property>
