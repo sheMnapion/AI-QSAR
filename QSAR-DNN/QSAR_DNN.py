@@ -61,6 +61,8 @@ class QSARDNN():
 
         train_len = int(train_set.shape[0]/batch_size)*batch_size
         train_set = train_set[0:train_len]
+        print(train_len)
+        print(train_set.shape)
         #create training data loader
         train_data = QSARDataset(train_set,train_label)
         train_loader = DataLoader(train_data,batch_size=batch_size, shuffle=True)
