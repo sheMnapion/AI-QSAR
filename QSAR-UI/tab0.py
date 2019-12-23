@@ -79,14 +79,14 @@ class Tab0(QMainWindow):
 
         self.transformedDataList.addItem(str(self.transformedData.head()))
 
+        if os.path.exists(self._currentOutputFolder) is not True:
+            self._debugPrint("Invalid Save Folder")
+            return
+
         selectedFile = os.path.join(self._currentOutputFolder, self._currentDataFile)
         selectedFileNoSuffix = selectedFile.rsplit('.', 1)[0]
 
-        outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)
-
-        if os.path.exists(outputFile) is not True:
-            self._debugPrint("Invalid Save Path")
-            return
+        outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)       
 
         self.transformedData.to_csv(outputFile, index = None)
 
