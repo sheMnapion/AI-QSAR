@@ -34,6 +34,8 @@ def getFolder():
                                              "Open Directory",
                                              expanduser("."),
                                              QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+    if folder=='':
+        return None
     folder += '/'
     return folder
 

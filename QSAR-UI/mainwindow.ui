@@ -64,7 +64,7 @@
       <property name="maximumSize">
        <size>
         <width>120</width>
-        <height>16777215</height>
+        <height>200</height>
        </size>
       </property>
       <property name="text">
@@ -119,6 +119,7 @@
     <property name="title">
      <string>File(&amp;F)</string>
     </property>
+    <addaction name="projectBrowseAction"/>
     <addaction name="actionOpen_folder_O"/>
     <addaction name="actionExit_E"/>
    </widget>
@@ -162,6 +163,11 @@
   <action name="actionAbout_A">
    <property name="text">
     <string>About(&amp;A)</string>
+   </property>
+  </action>
+  <action name="projectBrowseAction">
+   <property name="text">
+    <string>Project Browse (&amp;B)</string>
    </property>
   </action>
  </widget>

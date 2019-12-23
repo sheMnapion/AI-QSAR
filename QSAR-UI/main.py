@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab2, "TAB2")
         self.tabWidget.addTab(self.tab3, "TAB3")
 
+        self.setWindowIcon(QIcon("molPredict.ico"))
         self._bind()
 
     def _bind(self):
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow):
         self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
         self.openAction.triggered.connect(self.projectBrowseSlot)
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
+        self.projectBrowseAction.triggered.connect(self.projectBrowseSlot)
 
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
         self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
@@ -49,6 +51,7 @@ class MainWindow(QMainWindow):
 
         exitAction=self.actionExit_E
         exitAction.triggered.connect(QCoreApplication.instance().quit)
+
 
     def projectBrowseSlot(self):
         """
