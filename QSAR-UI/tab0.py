@@ -49,6 +49,9 @@ class Tab0(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)     
         self.dataLineEdit.textChanged.connect(lambda folder: self.outputSetSlot(folder))
 
+        # Ensure Scroll to Bottom in Realtime
+        self.infoList.model().rowsInserted.connect(self.infoList.scrollToBottom)
+
     def _addmpl(self, fig):
         """
         Add matplotlib Canvas
@@ -158,6 +161,8 @@ class Tab0(QMainWindow):
                                 file, shape=self.originalData.shape))
         else:
             self._debugPrint("Not a csv file")
+
+        self.outputSaveBtn.setEnabled(True)
 
     def columnSelectSlot(self):
         """

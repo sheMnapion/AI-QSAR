@@ -73,6 +73,17 @@ class Tab1(QMainWindow):
         self.modelSelectBtn.released.connect(self.modelSelectSlot)
         self.modelSaveBtn.released.connect(self.modelSaveSlot)
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
+        self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
+
+        # Ensure Scroll to Bottom in Realtime
+        self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
+        self.fromLoadedModelCheckBox.stateChanged.connect(self.changeEnabledSlot)
+
+    def changeEnabledSlot(self, val):
+        enabled = not val
+        for (objName, key) in self._trainingParamsMap.items():
+            obj = getattr(self, objName)
+            obj.setEnabled(enabled)
 
     def startTrainingSlot(self):
         """
@@ -80,7 +91,9 @@ class Tab1(QMainWindow):
         """
 
         self._updateTrainingParams()
+
         try:
+            self.DNN.setPropertyNum(self.trainData.shape[1])
             self.trainer = Worker(fn = self.DNN.train,
                              train_set = self.trainData,
                              train_label = self.trainLabel,
@@ -106,12 +119,13 @@ class Tab1(QMainWindow):
         """
         for (objName, key) in self._trainingParamsMap.items():
             obj = getattr(self, objName)
-            if getattr(obj, "value", None):
-                self.trainingParams[key] = obj.value()
-            if getattr(obj, "checkState", None):
-                self.trainingParams[key] = obj.checkState()
-            if getattr(obj, "currentText", None):
-                self.trainingParams[key] = obj.currentText()
+            if obj.isEnabled():
+                if getattr(obj, "value", None):
+                    self.trainingParams[key] = obj.value()
+                if getattr(obj, "checkState", None):
+                    self.trainingParams[key] = obj.checkState()
+                if getattr(obj, "currentText", None):
+                    self.trainingParams[key] = obj.currentText()
 
         self._debugPrint(str(self.trainingParams.items()))
 
@@ -174,6 +188,14 @@ class Tab1(QMainWindow):
         elif os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
 
+    def modelDoubleClickedSlot(self, item):
+        """
+        Slot Function of Double Clicking a Folder or a File in self.modelList
+        """
+        selectedFile = os.path.join(self._currentDataFolder, item.text())
+        if os.path.isfile(selectedFile):
+            self.modelSelectBtn.click()
+
     def dataSelectSlot(self):
         """
         Slot Function of Selecting Data File in the Opened Folder
@@ -206,6 +228,8 @@ class Tab1(QMainWindow):
         else:
             self._debugPrint("Not a csv file!")
 
+        self.trainParamsBtn.setEnabled(True)
+
     def modelSaveSlot(self):
         """
         Slot Function of Saving Model
@@ -229,6 +253,7 @@ class Tab1(QMainWindow):
         self._debugPrint(model)
         if re.match(".+.pxl$", model):
             try:
+                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
                 self.DNN.load(model)
                 self._debugPrint("Model Loaded")
             except:

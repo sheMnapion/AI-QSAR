@@ -64,8 +64,8 @@ class QSARDNN():
         train_len = int(train_set.shape[0]/batch_size)*batch_size
         train_set = train_set[:train_len]
         train_label=train_label[:train_len]
-        print(train_len)
-        print(train_set.shape,train_label.shape)
+#        print(train_len)
+#        print(train_set.shape,train_label.shape)
         # exit(0)
         #create training data loader
         train_data = QSARDataset(train_set,train_label)
@@ -88,9 +88,9 @@ class QSARDNN():
                 train = train.float()
                 if self.dnn_type == 0:
                     label = label.float()
-                print(self.model)
+#                print(self.model)
                 pred = self.model(train)
-                print(pred.shape,label.shape)
+#                print(pred.shape,label.shape)
 #                exit(0)
                 if self.dnn_type == 0:
                     loss = self.loss_func(pred,label)
