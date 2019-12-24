@@ -171,6 +171,7 @@ class Tab1(QMainWindow):
                 self.data = pd.read_csv(selectedFile, index_col = False,
                                             header = (0 if (self.headerCheckBox.isChecked()) else None))
                 self.numericData = self.data.select_dtypes(include = np.number)
+                self.columnSelectComboBox.clear()
                 self.columnSelectComboBox.addItems(self.numericData.columns)
             except:
                 self.data = None
