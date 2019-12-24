@@ -72,6 +72,7 @@ class Tab1(QMainWindow):
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
         self.modelSelectBtn.released.connect(self.modelSelectSlot)
         self.modelSaveBtn.released.connect(self.modelSaveSlot)
+        self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
 
     def startTrainingSlot(self):
         """
@@ -161,6 +162,14 @@ class Tab1(QMainWindow):
         resetFolderList(self.dataList, folder)
         self.dataLineEdit.setText(folder)
         self._currentDataFolder = folder
+
+    def dataDoubleClickedSlot(self, item):
+        selectedFile = os.path.join(self._currentDataFolder, item.text())
+        self._debugPrint(selectedFile)
+        if os.path.isfile(selectedFile):
+            self.dataSelectBtn.click()
+        elif os.path.isdir(selectedFile):
+            self.dataSetSlot(selectedFile)
 
     def dataSelectSlot(self):
         """

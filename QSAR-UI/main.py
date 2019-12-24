@@ -35,13 +35,15 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("molPredict.ico"))
 
         self.projectList.mousePressEvent = MethodType(mousePressEvent, self.projectList)
-
+        self._currentProjectFolder = None
         self._bind()
 
     def _bind(self):
         """
         Bind Slots and Signals & Add Buttons to ToolBar.
         """
+        self.projectList.itemDoubleClicked.connect(self.projectDoubleClickedSlot)
+
         self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
         self.openAction.triggered.connect(self.projectBrowseSlot)
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
@@ -61,13 +63,27 @@ class MainWindow(QMainWindow):
         exitAction = self.actionExit_E
         exitAction.triggered.connect(QCoreApplication.instance().quit)
 
+    def projectSetSlot(self, folder):
+        """
+        Slot Function of Setting Project Folder without Browsing
+        """
+        resetFolderList(self.projectList, folder)
+        self.projectLineEdit.setText(folder)
+        self._currentProjectFolder = folder
+
+    def projectDoubleClickedSlot(self, item):
+        selectedFile = os.path.join(self._currentProjectFolder, item.text())
+        if os.path.isfile(selectedFile):
+            self.projectSelectBtn.click()
+        elif os.path.isdir(selectedFile):
+            self.projectSetSlot(selectedFile)
+
     def projectBrowseSlot(self):
         """
         Slot Function of Opening the Project Folder
         """
         folder = getFolder()
         if folder:
-            self.tab1._debugPrint("setting project folder: " + folder)
             self._currentProjectFolder = folder
             self.projectLineEdit.setText(folder)
             resetFolderList(self.projectList, folder)

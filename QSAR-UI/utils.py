@@ -13,11 +13,13 @@ def resetFolderList(List, folder):
     """
     Reset a QListWidget Which List Files in Folders with a New Folder
     """
+    if folder is not None and folder[-1] != '/':
+        folder += '/'
     fileInfo = QtCore.QFileInfo(folder)
     List.clear()
     List.setUpdatesEnabled(False)
     for file in fileInfo.dir():
-        if file in ['.', '..']:
+        if file in ['.']:
             continue
         icon = getIcon(os.path.join(folder, file))
         List.addItem(QListWidgetItem(icon, file))
@@ -34,9 +36,8 @@ def getFolder():
                                              "Open Directory",
                                              expanduser("."),
                                              QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
-    if folder=='':
+    if folder == '':
         return None
-    folder += '/'
     return folder
 
 
