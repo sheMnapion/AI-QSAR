@@ -45,7 +45,8 @@ class Tab1(QMainWindow):
             "earlyStopCheckBox": "earlyStop",
             "earlyStopEpochsSpinBox": "earlyStopEpochs",
             "targetTypeComboBox": "targetType",
-            "columnSelectComboBox": "targetColumn"
+            "columnSelectComboBox": "targetColumn",
+            "fromLoadedModelCheckBox": "fromModel"
         }
 
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
@@ -77,13 +78,6 @@ class Tab1(QMainWindow):
 
         # Ensure Scroll to Bottom in Realtime
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
-        self.fromLoadedModelCheckBox.stateChanged.connect(self.changeEnabledSlot)
-
-    def changeEnabledSlot(self, val):
-        enabled = not val
-        for (objName, key) in self._trainingParamsMap.items():
-            obj = getattr(self, objName)
-            obj.setEnabled(enabled)
 
     def startTrainingSlot(self):
         """
@@ -93,7 +87,6 @@ class Tab1(QMainWindow):
         self._updateTrainingParams()
 
         try:
-            self.DNN.setPropertyNum(self.trainData.shape[1])
             self.trainer = Worker(fn = self.DNN.train,
                              train_set = self.trainData,
                              train_label = self.trainLabel,
@@ -117,15 +110,20 @@ class Tab1(QMainWindow):
         """
         Slot Function of Updating Training Parameters
         """
+
         for (objName, key) in self._trainingParamsMap.items():
             obj = getattr(self, objName)
-            if obj.isEnabled():
-                if getattr(obj, "value", None):
-                    self.trainingParams[key] = obj.value()
-                if getattr(obj, "checkState", None):
-                    self.trainingParams[key] = obj.checkState()
-                if getattr(obj, "currentText", None):
-                    self.trainingParams[key] = obj.currentText()
+            if getattr(obj, "value", None):
+                self.trainingParams[key] = obj.value()
+            if getattr(obj, "checkState", None):
+                self.trainingParams[key] = bool(obj.checkState())
+            if getattr(obj, "currentText", None):
+                self.trainingParams[key] = obj.currentText()
+
+        # If not from model, then restart the DNN instance.
+        if self.trainingParams["fromModel"] is False:
+            self._debugPrint("Remove loaded model(if any)")
+            self.DNN = QSARDNN()
 
         self._debugPrint(str(self.trainingParams.items()))
 
@@ -140,9 +138,7 @@ class Tab1(QMainWindow):
             self.testLabel = self.testData[labelColumn].values.reshape(-1,1)
             self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
 
-            targetType = {"regression": 0, "classification": 1}.get(self.trainingParams["targetType"])
-
-            self.DNN = QSARDNN(targetType, self.trainData.shape[1])
+            self.DNN.setPropertyNum(self.trainData.shape[1])
 
             self._debugPrint("DNN's Set up")
         except:
@@ -192,9 +188,10 @@ class Tab1(QMainWindow):
         """
         Slot Function of Double Clicking a Folder or a File in self.modelList
         """
-        selectedFile = os.path.join(self._currentDataFolder, item.text())
-        if os.path.isfile(selectedFile):
-            self.modelSelectBtn.click()
+        if self.modelSelectBtn.isEnabled():
+            selectedFile = os.path.join(self._currentDataFolder, item.text())
+            if os.path.isfile(selectedFile):
+                self.modelSelectBtn.click()
 
     def dataSelectSlot(self):
         """
@@ -229,6 +226,7 @@ class Tab1(QMainWindow):
             self._debugPrint("Not a csv file!")
 
         self.trainParamsBtn.setEnabled(True)
+        self.modelSelectBtn.setEnabled(True)
 
     def modelSaveSlot(self):
         """
@@ -253,6 +251,7 @@ class Tab1(QMainWindow):
         self._debugPrint(model)
         if re.match(".+.pxl$", model):
             try:
+                # If not set, loading will fail without a correct propertyNum
                 self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
                 self.DNN.load(model)
                 self._debugPrint("Model Loaded")
