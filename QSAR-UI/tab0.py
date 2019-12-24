@@ -14,6 +14,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
+from sklearn.decomposition import PCA
 
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
 
@@ -114,7 +115,20 @@ class Tab0(QMainWindow):
         outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)       
 
         self.transformedData.to_csv(outputFile, index = None)
-
+        pcaUsageData=self.transformedData.copy()
+        validColumns=[]; nItems=pcaUsageData.shape[0]
+        for i in range(len(pcaUsageData.columns)):
+            column=pcaUsageData.iloc[:,i]
+            valid=True
+            for ele in column:
+                try:
+                    temp=float(ele)
+                except ValueError as e:
+                    valid=False
+                    break
+            if valid: validColumns.append(i)
+        pcaUsageData=pcaUsageData.iloc[:,validColumns]
+        self._updatePCAResults(np.array(pcaUsageData))
         self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
                             outputFile, shape=self.transformedData.shape))
 
@@ -219,6 +233,16 @@ class Tab0(QMainWindow):
 
         self.columnSelectComboBox.clear()
         self.columnSelectComboBox.addItems(self.transformedData.columns)
+
+    def _updatePCAResults(self,transformedData):
+        """show PCA results on self.featurePlotWidget"""
+        planePCA=PCA(n_components=2)
+        pcaResults=planePCA.fit_transform(transformedData)
+        fig=Figure()
+        ax1f1=fig.add_subplot(111)
+        ax1f1.scatter(pcaResults[:,0],pcaResults[:,1])
+        ax1f1.set_title('PCA Analysis Result')
+        self._addmpl(fig)
 
     def _updatePlot(self, selectedColumn):
         name = selectedColumn.name
