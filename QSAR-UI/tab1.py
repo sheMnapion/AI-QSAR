@@ -92,10 +92,10 @@ class Tab1(QMainWindow):
             self._debugPrint("DNN Fail to Start")
             return
 
-        self.trainer.sig.progress.connect(self.appendDebugInfoSlot)
+        self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
         self.threadPool.start(self.trainer)
 
-    def appendDebugInfoSlot(self, info):
+    def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)
 
     def updateTrainingParamsSlot(self):
@@ -164,6 +164,9 @@ class Tab1(QMainWindow):
         self._currentDataFolder = folder
 
     def dataDoubleClickedSlot(self, item):
+        """
+        Slot Function of Double Clicking a Folder or a File in self.dataList
+        """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
         self._debugPrint(selectedFile)
         if os.path.isfile(selectedFile):

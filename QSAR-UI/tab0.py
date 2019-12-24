@@ -49,6 +49,9 @@ class Tab0(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
 
     def _addmpl(self, fig):
+        """
+        Add matplotlib Canvas
+        """
         clearLayout(self.plotLayout)
 
         self.canvas = FigureCanvas(fig)
@@ -114,6 +117,9 @@ class Tab0(QMainWindow):
         self._currentDataFolder = folder
 
     def dataDoubleClickedSlot(self, item):
+        """
+        Slot Function of Double Clicking a Folder or a File in self.dataList
+        """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
         self._debugPrint(selectedFile)
         if os.path.isfile(selectedFile):

@@ -72,10 +72,11 @@ class MainWindow(QMainWindow):
         self._currentProjectFolder = folder
 
     def projectDoubleClickedSlot(self, item):
+        """
+        Slot Function of Double Clicking a Folder or a File in self.projectList
+        """
         selectedFile = os.path.join(self._currentProjectFolder, item.text())
-        if os.path.isfile(selectedFile):
-            self.projectSelectBtn.click()
-        elif os.path.isdir(selectedFile):
+        if os.path.isdir(selectedFile):
             self.projectSetSlot(selectedFile)
 
     def projectBrowseSlot(self):
