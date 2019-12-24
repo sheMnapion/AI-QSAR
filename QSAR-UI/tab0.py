@@ -5,6 +5,7 @@ import matplotlib
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QListWidget, QFileIconProvider
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 from os.path import expanduser
 import numpy as np
 import pandas as pd
@@ -15,7 +16,6 @@ from matplotlib.backends.backend_qt4agg import (
     NavigationToolbar2QT as NavigationToolbar)
 
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
-
 
 class Tab0(QMainWindow):
     def __init__(self):
@@ -30,7 +30,7 @@ class Tab0(QMainWindow):
         self.header = False
 
         # Allowing deselection in a QListWidget by clicking off an item
-        self.originalDatatList.mousePressEvent = MethodType(mousePressEvent, self.originalDatatList)
+        # self.originalDataTable.mousePressEvent = MethodType(mousePressEvent, self.originalDataTable)
         self.transformedDataList.mousePressEvent = MethodType(mousePressEvent, self.transformedDataList)
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
         self.infoList.mousePressEvent = MethodType(mousePressEvent, self.infoList)
@@ -156,7 +156,17 @@ class Tab0(QMainWindow):
         if re.match(".+.csv$", file):
             self.originalData = pd.read_csv(selectedFile, index_col = False,
                                                 header = (0 if (self.headerCheckBox.isChecked()) else None))
-            self.originalDatatList.addItem(str(self.originalData.head()))
+            # self.originalDatatList.addItem(str(self.originalData.head()))
+            npOriginalData=np.array(self.originalData)[:100] # show only top 100 terms
+            w,h=npOriginalData.shape[:2]
+            self.originalDataTable.setRowCount(w)
+            self.originalDataTable.setColumnCount(h)
+            self.originalDataTable.setHorizontalHeaderLabels(self.originalData.columns)
+            for i in range(w):
+                for j in range(h):
+                    tempItem=QTableWidgetItem()
+                    tempItem.setText(str(npOriginalData[i][j]))
+                    self.originalDataTable.setItem(i,j,tempItem)
             self._debugPrint("csv file {} loaded: {shape[0]} lines, {shape[1]} columns".format(
                                 file, shape=self.originalData.shape))
         else:
