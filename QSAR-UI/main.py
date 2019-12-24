@@ -11,7 +11,8 @@ from tab1 import Tab1
 from tab2 import Tab2
 from tab3 import Tab3
 
-from utils import resetFolderList, getFolder
+from types import MethodType
+from utils import resetFolderList, getFolder, mousePressEvent
 
 
 class MainWindow(QMainWindow):
@@ -32,6 +33,9 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab3, "TAB3")
 
         self.setWindowIcon(QIcon("molPredict.ico"))
+
+        self.projectList.mousePressEvent = MethodType(mousePressEvent, self.projectList)
+
         self._bind()
 
     def _bind(self):
@@ -49,9 +53,8 @@ class MainWindow(QMainWindow):
         self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
         self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
 
-        exitAction=self.actionExit_E
+        exitAction = self.actionExit_E
         exitAction.triggered.connect(QCoreApplication.instance().quit)
-
 
     def projectBrowseSlot(self):
         """
@@ -60,7 +63,6 @@ class MainWindow(QMainWindow):
         folder = getFolder()
         if folder:
             self.tab1._debugPrint("setting project folder: " + folder)
-            self.projectLabel.setText(folder)
             self._currentProjectFolder = folder
             resetFolderList(self.projectList, folder)
 
