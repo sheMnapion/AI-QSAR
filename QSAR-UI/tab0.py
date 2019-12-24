@@ -31,7 +31,7 @@ class Tab0(QMainWindow):
 
         # Allowing deselection in a QListWidget by clicking off an item
         # self.originalDataTable.mousePressEvent = MethodType(mousePressEvent, self.originalDataTable)
-        self.transformedDataList.mousePressEvent = MethodType(mousePressEvent, self.transformedDataList)
+        # self.transformedDataList.mousePressEvent = MethodType(mousePressEvent, self.transformedDataList)
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
         self.infoList.mousePressEvent = MethodType(mousePressEvent, self.infoList)
 
@@ -93,7 +93,16 @@ class Tab0(QMainWindow):
             self._debugPrint("Data Processing Throw Error!")
             return
 
-        self.transformedDataList.addItem(str(self.transformedData.head()))
+        npTransformedData=np.array(self.transformedData)[:100]
+        w,h=npTransformedData.shape[:2]
+        self.transformedDataTable.setRowCount(w); self.transformedDataTable.setColumnCount(h)
+        self.transformedDataTable.setHorizontalHeaderLabels(self.transformedData.columns)
+        for i in range(w):
+            for j in range(h):
+                tempItem = QTableWidgetItem()
+                tempItem.setText(str(npTransformedData[i][j]))
+                self.transformedDataTable.setItem(i, j, tempItem)
+        # self.transformedDataList.addItem(str(self.transformedData.head()))
 
         if os.path.exists(self._currentOutputFolder) is not True:
             self._debugPrint("Invalid Save Folder")
@@ -185,7 +194,7 @@ class Tab0(QMainWindow):
             self._debugPrint("Column Selection Error. Column not Found!")
             return
 
-        self.transformedDataList.addItem(str(selectedColumn.describe()))
+        # self.transformedDataList.addItem(str(selectedColumn.describe()))
         self._debugPrint("Column {} selected for display".format(column))
 
         self._updatePlot(selectedColumn)
