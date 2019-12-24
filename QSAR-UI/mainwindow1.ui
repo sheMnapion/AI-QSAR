@@ -268,25 +268,6 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="enterParamsBtn">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>75</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Enter</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="trainParamsBtn">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

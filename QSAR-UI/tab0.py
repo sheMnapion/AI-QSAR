@@ -46,7 +46,8 @@ class Tab0(QMainWindow):
         self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
         self.outputSaveBtn.released.connect(self.outputSaveSlot)
         self.columnSelectBtn.released.connect(self.columnSelectSlot)
-        self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
+        self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)     
+        self.dataLineEdit.textChanged.connect(lambda folder: self.outputSetSlot(folder))
 
     def _addmpl(self, fig):
         """
@@ -67,9 +68,17 @@ class Tab0(QMainWindow):
         """
         folder = getFolder()
         if folder:
-            self._debugPrint("setting data folder: " + folder)
+#            self._debugPrint("setting data folder: " + folder)
             self.outputLineEdit.setText(folder)
             self._currentOutputFolder = folder
+
+    def outputSetSlot(self, folder):
+        """
+        Slot Function of Setting Output Folder
+        """
+#        self._debugPrint("setting data folder: " + folder)
+        self.outputLineEdit.setText(folder)
+        self._currentOutputFolder = folder
 
     def outputSaveSlot(self):
         """
@@ -121,7 +130,6 @@ class Tab0(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.dataList
         """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
-        self._debugPrint(selectedFile)
         if os.path.isfile(selectedFile):
             self.dataSelectBtn.click()
         elif os.path.isdir(selectedFile):

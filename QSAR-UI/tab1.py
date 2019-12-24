@@ -67,7 +67,7 @@ class Tab1(QMainWindow):
         """
         self.dataSelectBtn.released.connect(self.dataSelectSlot)
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
-        self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
+#        self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
         self.modelSelectBtn.released.connect(self.modelSelectSlot)
@@ -78,6 +78,8 @@ class Tab1(QMainWindow):
         """
         The Training Function Given Data and Training Parameters
         """
+
+        self._updateTrainingParams()
         try:
             self.trainer = Worker(fn = self.DNN.train,
                              train_set = self.trainData,
@@ -86,7 +88,7 @@ class Tab1(QMainWindow):
                              learning_rate = float(self.trainingParams["learningRate"]),
                              num_epoches = int(self.trainingParams["epochs"]),
                              early_stop = bool(self.trainingParams["earlyStop"]),
-                         max_tolerance = int(self.trainingParams["earlyStopEpochs"])
+                             max_tolerance = int(self.trainingParams["earlyStopEpochs"])
                        )       
         except:
             self._debugPrint("DNN Fail to Start")
@@ -98,7 +100,7 @@ class Tab1(QMainWindow):
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)
 
-    def updateTrainingParamsSlot(self):
+    def _updateTrainingParams(self):
         """
         Slot Function of Updating Training Parameters
         """
@@ -149,8 +151,7 @@ class Tab1(QMainWindow):
         """
         folder = getFolder()
         if folder:
-            self._debugPrint("setting data folder: " + folder)
-
+#            self._debugPrint("setting data folder: " + folder)
             resetFolderList(self.dataList, folder)
             self.dataLineEdit.setText(folder)
             self._currentDataFolder = folder
@@ -168,7 +169,6 @@ class Tab1(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.dataList
         """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
-        self._debugPrint(selectedFile)
         if os.path.isfile(selectedFile):
             self.dataSelectBtn.click()
         elif os.path.isdir(selectedFile):
