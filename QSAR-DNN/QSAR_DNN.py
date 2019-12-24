@@ -37,14 +37,16 @@ class QSARDataset(Dataset):#custom dataset
         return self.properties.shape[0]
 
 class QSARDNN():
-    dnn_type = 1
     loss_list = []
 
     #dnn_type 0:regression    1:classification
-    def __init__(self,dnn_type,property_num):
-        if dnn_type != 0:
-            self.dnn_type = 2
-        self.model = DNN(property_num, property_num, property_num,property_num,self.dnn_type)
+    def __init__(self,dnn_type=0,property_num=1):
+        self.dnn_type = dnn_type
+        assert(self.dnn_type == 0)# or self.dnn_type == 1)
+        self.model = DNN(property_num, property_num, property_num,property_num,1)
+
+    def setPropertyNum(self, property_num):
+        self.model = DNN(property_num, property_num, property_num,property_num,1)
 
     def train(self,train_set,train_label,batch_size,learning_rate,num_epoches,early_stop,max_tolerance,
                 progress_callback):
@@ -60,13 +62,15 @@ class QSARDNN():
         progress_callback.emit('\n***********Start Training***********\n')
 
         train_len = int(train_set.shape[0]/batch_size)*batch_size
-        train_set = train_set[0:train_len]
+        train_set = train_set[:train_len]
+        train_label=train_label[:train_len]
         print(train_len)
-        print(train_set.shape)
+        print(train_set.shape,train_label.shape)
+        # exit(0)
         #create training data loader
         train_data = QSARDataset(train_set,train_label)
         train_loader = DataLoader(train_data,batch_size=batch_size, shuffle=True)
-        if self.dnn_type == 1:
+        if self.dnn_type == 0:
             #use MSE loss function for regression
             self.loss_func = nn.MSELoss()
         else:
@@ -80,11 +84,15 @@ class QSARDNN():
             avg_loss = 0
             for i, data in enumerate(train_loader, start=0):
                 train, label = data
+                # print('train and label shapes:',train.shape,label.shape)
                 train = train.float()
-                if self.dnn_type == 1:
+                if self.dnn_type == 0:
                     label = label.float()
+                print(self.model)
                 pred = self.model(train)
-                if self.dnn_type == 1:
+                print(pred.shape,label.shape)
+#                exit(0)
+                if self.dnn_type == 0:
                     loss = self.loss_func(pred,label)
                 else:
                     loss = self.loss_func(pred,label.squeeze())    
@@ -129,7 +137,7 @@ class QSARDNN():
         test_set = torch.from_numpy(test_set).float()
         test_label = torch.from_numpy(test_label).float() 
         test_output = self.model(test_set)
-        if self.dnn_type == 1:
+        if self.dnn_type == 0:
             test_pred = test_output.data.numpy()
         else:
             test_pred = torch.max(test_output, 1)[1].data.numpy().reshape(test_output.shape[0],1)

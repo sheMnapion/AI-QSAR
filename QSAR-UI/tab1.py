@@ -58,7 +58,7 @@ class Tab1(QMainWindow):
         self.trainLabel = None
         self.testData = None
         self.testLabel = None
-        self.DNN = None
+        self.DNN = QSARDNN()
         self._bind()
 
     def _bind(self):
