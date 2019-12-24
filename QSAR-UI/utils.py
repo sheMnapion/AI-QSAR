@@ -133,3 +133,4 @@ class WorkerSignals(QObject):
     finished = pyqtSignal()
     result = pyqtSignal(object)
     progress = pyqtSignal(str)
+    update = pyqtSignal()

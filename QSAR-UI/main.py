@@ -47,6 +47,11 @@ class MainWindow(QMainWindow):
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
         self.projectBrowseAction.triggered.connect(self.projectBrowseSlot)
 
+        self.projectLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
+        self.projectLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
+
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
         self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
 
@@ -64,6 +69,7 @@ class MainWindow(QMainWindow):
         if folder:
             self.tab1._debugPrint("setting project folder: " + folder)
             self._currentProjectFolder = folder
+            self.projectLineEdit.setText(folder)
             resetFolderList(self.projectList, folder)
 
 
