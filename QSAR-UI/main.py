@@ -54,6 +54,8 @@ class MainWindow(QMainWindow):
         self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
         self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
 
+        self.tab1.trainingReturnLineEdit.textChanged.connect(self.tab2.refreshTrainingList)
+
         self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
         self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
 

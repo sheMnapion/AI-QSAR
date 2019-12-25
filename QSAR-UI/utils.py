@@ -5,8 +5,11 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog, QListWidgetItem, QFileIconProvider, QListWidget
 from PyQt5.QtCore import QRunnable, QObject, pyqtSignal
 from os.path import expanduser
+import numpy as np
 
 DEFAULT_ICON = "images/stock_media-play.png"
+DNN_PATH = os.path.abspath('../QSAR-DNN')
+CACHE_PATH = os.path.join(DNN_PATH, "__trainingcache__")
 
 
 def resetFolderList(List, folder):
@@ -116,6 +119,7 @@ class Worker(QRunnable):
 
         self.sig = WorkerSignals()
         self.kwargs['progress_callback'] = self.sig.progress
+        self.kwargs['result_callback'] = self.sig.result
 
         print(str(self.args))
         print(str(self.kwargs))
@@ -132,6 +136,6 @@ class WorkerSignals(QObject):
     Defines the signals available from a running worker thread.
     '''
     finished = pyqtSignal()
-    result = pyqtSignal(object)
+    result = pyqtSignal(dict)
     progress = pyqtSignal(str)
     update = pyqtSignal()

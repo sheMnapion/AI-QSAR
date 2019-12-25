@@ -174,8 +174,6 @@ class Tab0(QMainWindow):
         self._currentDataFile = file
         selectedFile = os.path.join(self._currentDataFolder, file)  
 
-        self._debugPrint(selectedFile)
-
         if re.match(".+.csv$", file):
             self.originalData = pd.read_csv(selectedFile, index_col = False,
                                                 header = (0 if (self.headerCheckBox.isChecked()) else None))

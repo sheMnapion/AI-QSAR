@@ -39,8 +39,6 @@ class QSARDataset(Dataset):#custom dataset
         return self.properties.shape[0]
 
 class QSARDNN():
-    loss_list = []
-
     #dnn_type 0:regression    1:classification
     def __init__(self,dnn_type=0,property_num=1):
         self.dnn_type = dnn_type
@@ -65,9 +63,10 @@ class QSARDNN():
 
         train_set,va_set,train_label,va_label = train_test_split(train_set,train_label,test_size = 0.2,random_state = 0)
         train_set = preprocessing.scale(train_set,axis=0)
-#        print(train_len)
-#        print(train_set.shape,train_label.shape)
-        # exit(0)
+
+        self.loss_list = []
+        self.mse_list = []
+
         #create training data loader
         train_data = QSARDataset(train_set,train_label)
         train_loader = DataLoader(train_data,batch_size=batch_size, shuffle=True)
@@ -82,30 +81,35 @@ class QSARDNN():
         num_nongrowth = 0
 
         for epoch in range(num_epoches):
-            avg_loss = 0
+            avg_loss = 0; avg_mse = 0; cnt = 0
             for i, data in enumerate(train_loader, start=0):
                 self.model.train()
                 train, label = data
                 if train.shape[0] < batch_size:
                     continue
-                # print('train and label shapes:',train.shape,label.shape)
+                else:
+                    cnt += 1
                 train = train.float()
                 if self.dnn_type == 0:
                     label = label.float()
-#                print(self.model)
+
                 pred = self.model(train)
-#                print(pred.shape,label.shape)
-#                exit(0)
+
                 if self.dnn_type == 0:
                     loss = self.loss_func(pred,label)
                 else:
                     loss = self.loss_func(pred,label.squeeze())    
+
+                avg_mse += loss.item()
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
-            
+
             va_pred = self.test(va_set,va_label)
             avg_loss = r2_score(va_pred,va_label)
+            avg_mse /= float(cnt)
+            self.mse_list.append(avg_mse)
+
             self.loss_list.append(avg_loss)
             if epoch == 0:
                 old_loss = avg_loss
@@ -117,18 +121,16 @@ class QSARDNN():
                     num_nongrowth = num_nongrowth +1
                     if num_nongrowth > max_tolerance and early_stop == 1:
                         progress_callback.emit('\n***********Finish Training***********\n')
-                        return epoch + 1, self.loss_list
+
+                        return epoch + 1, self.loss_list, self.mse_list
             if epoch % 10 == 0:
-                # print('epoch [{}/{}]'.format(epoch + 10, num_epoches))
-                # print('*' * 10)
-                # print('loss : {}'.format(avg_loss))
                 progress_callback.emit('epoch [{}/{}]'.format(epoch + 10, num_epoches))
                 progress_callback.emit('*' * 10)
                 progress_callback.emit('validation R2 score : {}'.format(avg_loss))
 
         progress_callback.emit('\n***********Finish Training***********\n')
 
-        return num_epoches,self.loss_list
+        return num_epoches, self.loss_list, self.mse_list
 
     
     #test_set must be 2d --- data_num*property_num
@@ -151,6 +153,23 @@ class QSARDNN():
             return np.array([test_pred[0]])  
         else:
             return test_pred
+
+    def train_and_test(self,train_set,train_label,test_set,test_label,batch_size,
+            learning_rate,num_epoches,early_stop,max_tolerance,progress_callback,result_callback):
+
+        num_epoches, loss_list, mse_list = self.train(train_set,train_label,batch_size,learning_rate,num_epoches,
+                                        early_stop,max_tolerance, progress_callback)
+
+        test_pred = self.test(test_set, test_label)
+        test_pred = list(test_pred.reshape(-1))
+
+        result = {"numEpochs": num_epoches, "lossList": loss_list,
+                  "testPred": test_pred, "mseList": mse_list,
+                  "model": self.model.state_dict()}
+
+        result_callback.emit(result)
+
+        return result
 
     def save(self,path):
         torch.save(self.model.state_dict(), path)

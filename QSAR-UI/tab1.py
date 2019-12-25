@@ -13,11 +13,12 @@ from types import MethodType
 
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from sklearn.model_selection import train_test_split
 
 from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mousePressEvent, Worker
+from utils import DNN_PATH, CACHE_PATH
 
-DNN_PATH = os.path.abspath('../QSAR-DNN')
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
 
@@ -36,6 +37,7 @@ class Tab1(QMainWindow):
         self._currentDataFolder = None
         self._currentProjectFolder = None
         self._currentOutputPath = None
+        self._currentDataFile = None
 
         # object name of QtWidgets -> key of self.trainingParams
         self._trainingParamsMap = {
@@ -59,6 +61,7 @@ class Tab1(QMainWindow):
         self.trainLabel = None
         self.testData = None
         self.testLabel = None
+
         self.DNN = QSARDNN()
         self._bind()
 
@@ -79,6 +82,25 @@ class Tab1(QMainWindow):
         # Ensure Scroll to Bottom in Realtime
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
 
+    def _setTrainingReturns(self, result):
+
+        self._debugPrint(str(result["numEpochs"]))
+        self._debugPrint(str(result["lossList"]))
+        self._debugPrint(str(result["mseList"]))
+        self._debugPrint(str(result["testPred"]))
+        self._debugPrint(str(result["model"].keys()))
+
+        outputName = '{}_{}.npy'.format(self._currentDataFile.rsplit('.', 1)[0],
+                                            datetime.now().strftime("%Y%m%d_%H_%M_%S"))
+
+        if not os.path.exists(CACHE_PATH):
+            os.mkdir(CACHE_PATH)
+
+        np.save(os.path.join(CACHE_PATH, outputName), result)
+
+        self.trainingReturnLineEdit.setText(outputName)
+        self._debugPrint("{} saved to {}".format(outputName, CACHE_PATH))
+
     def startTrainingSlot(self):
         """
         The Training Function Given Data and Training Parameters
@@ -87,21 +109,38 @@ class Tab1(QMainWindow):
         self._updateTrainingParams()
 
         try:
-            self.trainer = Worker(fn = self.DNN.train,
+            self.trainer = Worker(fn = self.DNN.train_and_test,
                              train_set = self.trainData,
                              train_label = self.trainLabel,
+                             test_set = self.testData,
+                             test_label = self.testLabel,
                              batch_size = int(self.trainingParams["batchSize"]),
                              learning_rate = float(self.trainingParams["learningRate"]),
                              num_epoches = int(self.trainingParams["epochs"]),
                              early_stop = bool(self.trainingParams["earlyStop"]),
                              max_tolerance = int(self.trainingParams["earlyStopEpochs"])
-                       )       
+                          )
         except:
             self._debugPrint("DNN Fail to Start")
             return
 
         self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
+        self.trainer.sig.result.connect(lambda result: self._setTrainingReturns(result))
         self.threadPool.start(self.trainer)
+
+#        self._debugPrint(str(num_epoches))
+#        self._debugPrint(str(loss_list))
+
+#        pred = model.test(test_set,test_label)
+#        print('R2 score: {}'.format(r2_score(pred,test_label)))
+
+#        #draw R2 score and L2 loss curve
+#        x1 = pred
+#        y1 = test_label
+#        plt.scatter(x1, y1)
+#        plt.title('pred')
+#        plt.ylabel('real label')
+#        plt.show()
 
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)
@@ -205,8 +244,6 @@ class Tab1(QMainWindow):
 
         selectedFile = os.path.join(self._currentDataFolder, file)
 
-        self._debugPrint(selectedFile)
-
         if re.match(".+.csv$", file):
             try:
                 self.data = pd.read_csv(selectedFile, index_col = False,
@@ -227,6 +264,7 @@ class Tab1(QMainWindow):
 
         self.trainParamsBtn.setEnabled(True)
         self.modelSelectBtn.setEnabled(True)
+        self._currentDataFile = file
 
     def modelSaveSlot(self):
         """
@@ -248,7 +286,6 @@ class Tab1(QMainWindow):
             self._debugPrint("Current Model File Not Found")
             return
 
-        self._debugPrint(model)
         if re.match(".+.pxl$", model):
             try:
                 # If not set, loading will fail without a correct propertyNum

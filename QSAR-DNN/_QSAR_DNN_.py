@@ -147,43 +147,43 @@ class QSARDNN():
         self.model.load_state_dict(torch.load(path))
 
 
-if __name__ == '__main__':
-    #csv_data = pd.read_csv("../datasets/delaney-dropped_transformed.csv")#location of the data file
-    csv_data = pd.read_csv("../datasets/desc_canvas_aug30_transformed.csv")
-    columns = csv_data.columns
-    device = torch.device('cpu')
-    a = []
-    label = []
-    for i in columns:
-        #if  i != "ESOL predicted log solubility in mols per litre" and i != "Compound ID" and i != "smiles":
-        #    if i == "measured log solubility in mols per litre":
-        if  i != "mol" and i != "CID" and i != "Class" and i != "Model":
-            if i == "pIC50":
-                label = csv_data[i].to_list()
-            else:
-                a.append(csv_data[i].to_list())
+#if __name__ == '__main__':
+#csv_data = pd.read_csv("../datasets/delaney-dropped_transformed.csv")#location of the data file
+csv_data = pd.read_csv("../datasets/desc_canvas_aug30_transformed.csv")
+columns = csv_data.columns
+device = torch.device('cpu')
+a = []
+label = []
+for i in columns:
+    #if  i != "ESOL predicted log solubility in mols per litre" and i != "Compound ID" and i != "smiles":
+    #    if i == "measured log solubility in mols per litre":
+    if  i != "mol" and i != "CID" and i != "Class" and i != "Model":
+        if i == "pIC50":
+            label = csv_data[i].to_list()
+        else:
+            a.append(csv_data[i].to_list())
 
-    data_set = np.array(a).T
-    property_num = data_set.shape[1]
+data_set = np.array(a).T
+property_num = data_set.shape[1]
 
-    #divide training set and test set
-    
-    data_label = np.array(label).reshape(len(label),1)
-    train_set,test_set,train_label,test_label = train_test_split(data_set,data_label,test_size = 0.2,random_state = 0)
+#divide training set and test set
 
-    batch_size = 50
-    learning_rate = 0.01
-    num_epoches = 1000
+data_label = np.array(label).reshape(len(label),1)
+train_set,test_set,train_label,test_label = train_test_split(data_set,data_label,test_size = 0.2,random_state = 0)
 
-    model = QSARDNN(0,property_num)
-    num_epoches , loss_list = model.train(train_set,train_label,batch_size,learning_rate,num_epoches,1,20)
-    pred = model.test(test_set,test_label)
-    print('R2 score: {}'.format(r2_score(pred,test_label)))
+batch_size = 50
+learning_rate = 0.01
+num_epoches = 1000
 
-    #draw R2 score and L2 loss curve
-    x1 = pred
-    y1 = test_label
-    plt.scatter(x1, y1)
-    plt.title('pred')
-    plt.ylabel('real label')
-    plt.show()
+model = QSARDNN(0,property_num)
+num_epoches , loss_list = model.train(train_set,train_label,batch_size,learning_rate,num_epoches,1,20)
+pred = model.test(test_set,test_label)
+print('R2 score: {}'.format(r2_score(pred,test_label)))
+
+#draw R2 score and L2 loss curve
+x1 = pred
+y1 = test_label
+plt.scatter(x1, y1)
+plt.title('pred')
+plt.ylabel('real label')
+plt.show()
