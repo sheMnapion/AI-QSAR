@@ -196,8 +196,7 @@ class Tab0(QMainWindow):
             self._debugPrint("Not a csv file")
 
         self.outputSaveBtn.setEnabled(True)
-
-
+        self.outputSaveBtn.repaint()
 
     def columnSelectSlot(self):
         """

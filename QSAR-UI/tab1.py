@@ -81,7 +81,7 @@ class Tab1(QMainWindow):
         # Ensure Scroll to Bottom in Realtime
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
 
-    def _setTrainingReturnsSlotSlot(self, result):
+    def _setTrainingReturnsSlot(self, result):
         """
         Slot Function of Processing Return Value of Training Thread
         """
@@ -120,7 +120,7 @@ class Tab1(QMainWindow):
             return
 
         self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
-        self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlotSlotSlot(result))
+        self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
         self.threadPool.start(self.trainer)
 
     def _appendDebugInfoSlot(self, info):
@@ -281,6 +281,8 @@ class Tab1(QMainWindow):
 
         self.trainParamsBtn.setEnabled(True)
         self.modelSelectBtn.setEnabled(True)
+        self.trainParamsBtn.repaint()
+        self.modelSelectBtn.repaint()
         self._currentDataFile = file
 
     def _debugPrint(self, msg):

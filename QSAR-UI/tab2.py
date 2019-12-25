@@ -7,7 +7,7 @@ from types import MethodType
 
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow
-
+from PyQt5.QtGui import QPixmap
 from utils import resetFolderList, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
 
@@ -96,6 +96,7 @@ class Tab2(QMainWindow):
 
         self._currentTrainingHistoryFile = file
         self.analyzeBtn.setEnabled(True)
+        self.analyzeBtn.repaint()
 
     def trainingHistoryDoubleClickedSlot(self, item):
         """
@@ -134,6 +135,23 @@ class Tab2(QMainWindow):
             self._addmpl(self.lossCurveLayout, fig)
         else:
             clearLayout(self.lossCurveLayout)
+
+        if self.lossCurveCheckBox.isChecked():
+            fig = Figure()
+            ax1f1 = fig.add_subplot(111)
+            y1 = self.result["mseList"]
+            x1 = np.linspace(0, len(y1) - 1, len(y1))
+            ax1f1.plot(x1, y1)
+            ax1f1.set_title('Training Loss Curve')
+            ax1f1.set_xlabel('Epochs')
+            ax1f1.set_ylabel('MSE')
+            self._addmpl(self.lossCurveLayout, fig)
+        else:
+            clearLayout(self.lossCurveLayout)
+
+#        if self.modelStructureCheckBox.isChecked():
+#            pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
+#            self.modelStructureLayout.setPixmap(pixmap)
 
     def _debugPrint(self, msg):
         """
