@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab0, "Data Processing")
         self.tabWidget.addTab(self.tab1, "Model Training")
         self.tabWidget.addTab(self.tab2, "Result Analysis")
-        self.tabWidget.addTab(self.tab3, "TAB3")
+        self.tabWidget.addTab(self.tab3, "Activity Prediction")
 
         self.setWindowIcon(QIcon("molPredict.ico"))
 
