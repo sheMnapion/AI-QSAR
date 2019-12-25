@@ -97,7 +97,7 @@ class SmilesCNN(nn.Module):
         super(SmilesCNN,self).__init__()
         self.conv1=nn.Conv2d(1,2,7,dilation=1)
         self.conv2=nn.Conv2d(2,3,7,dilation=2)
-        self.fc1=nn.Linear(867,400)
+        self.fc1=nn.Linear(768,400)
         self.fc2=nn.Linear(400,200)
         self.fc3=nn.Linear(200,1)
 
@@ -317,8 +317,8 @@ class SmilesCNNPredictor(object):
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesCNNPredictor(smiles,properties)
-    # predictor.train(nRounds=100,lr=3e-4)
+    predictor.train(nRounds=1000,lr=1e-3,batchSize=30)
     # predictor.trainVAE(nRounds=1000,lr=1e-3,earlyStop=True,earlyStopEpoch=10,batchSize=30)
-    predictor.loadVAE('tmp/tmpBestModel.pt')
-    predictor.encodeDataset()
-    predictor.trainLatentModel()
+    # predictor.loadVAE('tmp/tmpBestModel.pt')
+    # predictor.encodeDataset()
+    # predictor.trainLatentModel()
