@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self._currentProjectFolder = None
         self._bind()
 
-        self.resize(1600, 1200)
+        self.showMaximized()
 
     def _bind(self):
         """

@@ -112,6 +112,19 @@ class Tab2(QMainWindow):
 
             self._addmpl(self.precisionCurveLayout, fig)
 
+        if self.lossCurveCheckBox.isChecked():
+            fig = Figure()
+            ax1f1 = fig.add_subplot(111)
+            y1 = self.result["mseList"]
+            x1 = np.linspace(0, len(y1) - 1, len(y1))
+            ax1f1.plot(x1, y1)
+
+            ax1f1.set_title('Training Loss Curve')
+            ax1f1.set_xlabel('Epochs')
+            ax1f1.set_ylabel('MSE')
+
+            self._addmpl(self.lossCurveLayout, fig)
+
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
