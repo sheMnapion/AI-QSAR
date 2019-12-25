@@ -149,9 +149,12 @@ class Tab2(QMainWindow):
         else:
             clearLayout(self.lossCurveLayout)
 
-#        if self.modelStructureCheckBox.isChecked():
-#            pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
-#            self.modelStructureLayout.setPixmap(pixmap)
+        if self.modelStructureCheckBox.isChecked():
+            pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
+            pixmap = pixmap.scaled(self.modelStructureLabel.size())
+            self.modelStructureLabel.setPixmap(pixmap)
+        else:
+            self.modelStructureLabel.clear()
 
     def _debugPrint(self, msg):
         """
