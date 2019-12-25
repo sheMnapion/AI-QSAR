@@ -34,6 +34,9 @@ def loadEsolSmilesData():
             tempAlpha=smiles[index]
             if index<smilesLength-1 and tempAlpha>='A' and tempAlpha<='Z':
                 anotherAlpha=smiles[index+1]
+                if anotherAlpha==' ': # error, need cleaning
+                    index+=1
+                    continue
                 if anotherAlpha>='a' and anotherAlpha<='z':
                     elements=['He','Li','Be','Na','Br']
                     if smiles[index:index+2] in elements:
