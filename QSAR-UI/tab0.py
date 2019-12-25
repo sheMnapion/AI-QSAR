@@ -94,8 +94,8 @@ class Tab0(QMainWindow):
             self._debugPrint("Data Processing Throw Error!")
             return
 
-        npTransformedData=np.array(self.transformedData)[:100]
-        w,h=npTransformedData.shape[:2]
+        npTransformedData = np.array(self.transformedData)[:100]
+        w, h = npTransformedData.shape[:2]
         self.transformedDataTable.setRowCount(w); self.transformedDataTable.setColumnCount(h)
         self.transformedDataTable.setHorizontalHeaderLabels(self.transformedData.columns)
         for i in range(w):
@@ -115,19 +115,19 @@ class Tab0(QMainWindow):
         outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)       
 
         self.transformedData.to_csv(outputFile, index = None)
-        pcaUsageData=self.transformedData.copy()
-        validColumns=[]; nItems=pcaUsageData.shape[0]
+        pcaUsageData = self.transformedData.copy()
+        validColumns = []; nItems = pcaUsageData.shape[0]
         for i in range(len(pcaUsageData.columns)):
-            column=pcaUsageData.iloc[:,i]
-            valid=True
+            column = pcaUsageData.iloc[:,i]
+            valid = True
             for ele in column:
                 try:
-                    temp=float(ele)
+                    temp = float(ele)
                 except ValueError as e:
-                    valid=False
+                    valid = False
                     break
             if valid: validColumns.append(i)
-        pcaUsageData=pcaUsageData.iloc[:,validColumns]
+        pcaUsageData = pcaUsageData.iloc[:,validColumns]
         self._updatePCAResults(np.array(pcaUsageData))
         self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
                             outputFile, shape=self.transformedData.shape))
@@ -180,18 +180,18 @@ class Tab0(QMainWindow):
             self.originalData = pd.read_csv(selectedFile, index_col = False,
                                                 header = (0 if (self.headerCheckBox.isChecked()) else None))
             # self.originalDatatList.addItem(str(self.originalData.head()))
-            npOriginalData=np.array(self.originalData)[:100] # show only top 100 terms
-            w,h=npOriginalData.shape[:2]
+            npOriginalData = np.array(self.originalData)[:100] # show only top 100 terms
+            w, h = npOriginalData.shape[:2]
             self.originalDataTable.setRowCount(w)
             self.originalDataTable.setColumnCount(h)
             self.originalDataTable.setHorizontalHeaderLabels(self.originalData.columns)
             for i in range(w):
                 for j in range(h):
-                    tempItem=QTableWidgetItem()
+                    tempItem = QTableWidgetItem()
                     tempItem.setText(str(npOriginalData[i][j]))
                     self.originalDataTable.setItem(i,j,tempItem)
             self._debugPrint("csv file {} loaded: {shape[0]} lines, {shape[1]} columns".format(
-                                file, shape=self.originalData.shape))
+                                file, shape = self.originalData.shape))
         else:
             self._debugPrint("Not a csv file")
 
@@ -236,10 +236,10 @@ class Tab0(QMainWindow):
 
     def _updatePCAResults(self,transformedData):
         """show PCA results on self.featurePlotWidget"""
-        planePCA=PCA(n_components=2)
-        pcaResults=planePCA.fit_transform(transformedData)
-        fig=Figure()
-        ax1f1=fig.add_subplot(111)
+        planePCA = PCA(n_components=2)
+        pcaResults = planePCA.fit_transform(transformedData)
+        fig = Figure()
+        ax1f1 = fig.add_subplot(111)
         ax1f1.scatter(pcaResults[:,0],pcaResults[:,1])
         ax1f1.set_title('PCA Analysis Result')
         self._addmpl(fig)
