@@ -8,8 +8,14 @@ from types import MethodType
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow
 
-from utils import resetFolderList, mousePressEvent
+from utils import resetFolderList, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
+
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt4agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar)
+
 
 class Tab2(QMainWindow):
     def __init__(self):
@@ -20,6 +26,7 @@ class Tab2(QMainWindow):
         self._currentTrainingHistoryFile = None
 
         self.trainingHistoryList.mousePressEvent = MethodType(mousePressEvent, self.trainingHistoryList)
+        self.resultList.mousePressEvent = MethodType(mousePressEvent, self.resultList)
         self.refreshTrainingList()
 
         self._bind()
@@ -27,7 +34,19 @@ class Tab2(QMainWindow):
     def _bind(self):
         self.trainingHistorySelectBtn.released.connect(self.trainingHistorySelectSlot)
         self.trainingHistoryList.itemDoubleClicked.connect(self.trainingHistoryDoubleClickedSlot)
+        self.analyzeBtn.released.connect(self.AnalyzeTrainingHistorySlot)
 
+    def _addmpl(self, layout, fig):
+        """
+        Add matplotlib Canvas
+        """
+        clearLayout(layout)
+
+        self.canvas = FigureCanvas(fig)
+        layout.addWidget(self.canvas)
+        self.canvas.draw()
+#        self.plotToolBar = NavigationToolbar(self.canvas, self.plotWidget, coordinates=True)
+#        layout.addWidget(self.plotToolBar)
 
     def refreshTrainingList(self):
         """
@@ -58,11 +77,12 @@ class Tab2(QMainWindow):
                 return
 
             self._debugPrint("Training History {} loaded".format(selectedFile))
-            self._debugPrint("(n, len(loss), len(mse), len(pred)) = ( {}, {}, {}, {} )".format(
+            self._debugPrint("(n, len(loss), len(mse), len(testPred), len(testLabel):\n( {}, {}, {}, {} )".format(
                         self.result["numEpochs"],
                         len(self.result["lossList"]),
                         len(self.result["mseList"]),
-                        len(self.result["testPred"])))
+                        len(self.result["testPred"]),
+                        len(self.result["testLabel"])))
 
         else:
             self._debugPrint("Not a Training History(*.npy)!")
@@ -73,14 +93,41 @@ class Tab2(QMainWindow):
 
     def trainingHistoryDoubleClickedSlot(self, item):
         """
-        Slot Function of Double Clicking a Folder or a File in self.modelList
+        Slot Function of Double Clicking a Folder or a File in self.trainingHistoryList
         """
         selectedFile = os.path.join(CACHE_PATH, item.text())
         if os.path.isfile(selectedFile):
             self.trainingHistorySelectBtn.click()
+
+    def AnalyzeTrainingHistorySlot(self):
+        if self.precisionCurveCheckBox.isChecked():
+            fig = Figure()
+            ax1f1 = fig.add_subplot(111)
+            x1 = self.result["testPred"]
+            y1 = self.result["testLabel"]
+            ax1f1.scatter(x1, y1)
+            ax1f1.set_title('Precision Curve')
+            ax1f1.set_xlabel('Predict Value')
+            ax1f1.set_ylabel('Real Value')
+
+            self._addmpl(self.precisionCurveLayout, fig)
 
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
         """
         self.resultList.addItem(msg)
+
+#        self._debugPrint(str(num_epoches))
+#        self._debugPrint(str(loss_list))
+
+#        pred = model.test(test_set,test_label)
+#        print('R2 score: {}'.format(r2_score(pred,test_label)))
+
+#        #draw R2 score and L2 loss curve
+#        x1 = pred
+#        y1 = test_label
+#        plt.scatter(x1, y1)
+#        plt.title('pred')
+#        plt.ylabel('real label')
+#        plt.show()

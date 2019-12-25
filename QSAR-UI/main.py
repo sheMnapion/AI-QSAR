@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
 
         self.tabWidget.addTab(self.tab0, "Data Processing")
         self.tabWidget.addTab(self.tab1, "Model Training")
-        self.tabWidget.addTab(self.tab2, "TAB2")
+        self.tabWidget.addTab(self.tab2, "Result Analysis")
         self.tabWidget.addTab(self.tab3, "TAB3")
 
         self.setWindowIcon(QIcon("molPredict.ico"))
@@ -37,6 +37,8 @@ class MainWindow(QMainWindow):
         self.projectList.mousePressEvent = MethodType(mousePressEvent, self.projectList)
         self._currentProjectFolder = None
         self._bind()
+
+        self.resize(1600, 1200)
 
     def _bind(self):
         """

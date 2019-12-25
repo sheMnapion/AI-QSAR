@@ -83,13 +83,6 @@ class Tab1(QMainWindow):
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
 
     def _setTrainingReturns(self, result):
-
-        self._debugPrint(str(result["numEpochs"]))
-        self._debugPrint(str(result["lossList"]))
-        self._debugPrint(str(result["mseList"]))
-        self._debugPrint(str(result["testPred"]))
-        self._debugPrint(str(result["model"].keys()))
-
         outputName = '{}_{}.npy'.format(self._currentDataFile.rsplit('.', 1)[0],
                                             datetime.now().strftime("%Y%m%d_%H_%M_%S"))
 
@@ -127,20 +120,6 @@ class Tab1(QMainWindow):
         self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
         self.trainer.sig.result.connect(lambda result: self._setTrainingReturns(result))
         self.threadPool.start(self.trainer)
-
-#        self._debugPrint(str(num_epoches))
-#        self._debugPrint(str(loss_list))
-
-#        pred = model.test(test_set,test_label)
-#        print('R2 score: {}'.format(r2_score(pred,test_label)))
-
-#        #draw R2 score and L2 loss curve
-#        x1 = pred
-#        y1 = test_label
-#        plt.scatter(x1, y1)
-#        plt.title('pred')
-#        plt.ylabel('real label')
-#        plt.show()
 
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)

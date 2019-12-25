@@ -165,7 +165,7 @@ class QSARDNN():
 
         result = {"numEpochs": num_epoches, "lossList": loss_list,
                   "testPred": test_pred, "mseList": mse_list,
-                  "model": self.model.state_dict()}
+                  "model": self.model.state_dict(), "testLabel": test_label}
 
         result_callback.emit(result)
 
