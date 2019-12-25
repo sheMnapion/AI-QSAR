@@ -80,7 +80,6 @@ class Tab0(QMainWindow):
         """
         Slot Function of Setting Output Folder
         """
-#        self._debugPrint("setting data folder: " + folder)
         self.outputLineEdit.setText(folder)
         self._currentOutputFolder = folder
 
@@ -151,6 +150,7 @@ class Tab0(QMainWindow):
         self.dataLineEdit.setText(folder)
         self._currentDataFolder = folder
 
+
     def dataDoubleClickedSlot(self, item):
         """
         Slot Function of Double Clicking a Folder or a File in self.dataList
@@ -160,6 +160,8 @@ class Tab0(QMainWindow):
             self.dataSelectBtn.click()
         elif os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
+
+
 
     def dataSelectSlot(self):
         """
@@ -194,6 +196,8 @@ class Tab0(QMainWindow):
             self._debugPrint("Not a csv file")
 
         self.outputSaveBtn.setEnabled(True)
+
+
 
     def columnSelectSlot(self):
         """
@@ -269,3 +273,4 @@ class Tab0(QMainWindow):
         Print Debug Info on the UI
         """
         self.infoList.addItem(msg)
+        self.infoList.repaint()
