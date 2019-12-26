@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>803</height>
+    <width>1100</width>
+    <height>970</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,9 +20,9 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_7">
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,5">
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,5">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="25,25">
         <property name="sizeConstraint">
@@ -555,125 +555,70 @@
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="molPlotLayout">
+              <layout class="QHBoxLayout" name="molPlotLayout" stretch="1,1,1,1,1">
                <item>
-                <widget class="QWidget" name="molPlotWidget_1" native="true">
+                <widget class="QLabel" name="label_10">
                  <property name="minimumSize">
                   <size>
-                   <width>120</width>
+                   <width>145</width>
                    <height>0</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="molPlotLayout_1">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
+                 <property name="text">
+                  <string/>
+                 </property>
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="molPlotWidget_2" native="true">
+                <widget class="QLabel" name="label_12">
                  <property name="minimumSize">
                   <size>
-                   <width>120</width>
+                   <width>145</width>
                    <height>0</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="molPlotLayout_2">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
+                 <property name="text">
+                  <string/>
+                 </property>
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="molPlotWidget_3" native="true">
+                <widget class="QLabel" name="label_11">
                  <property name="minimumSize">
                   <size>
-                   <width>120</width>
+                   <width>145</width>
                    <height>0</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="molPlotLayout_3">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
+                 <property name="text">
+                  <string/>
+                 </property>
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="molPlotWidget_4" native="true">
+                <widget class="QLabel" name="label_9">
                  <property name="minimumSize">
                   <size>
-                   <width>120</width>
+                   <width>145</width>
                    <height>0</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="molPlotLayout_4">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
+                 <property name="text">
+                  <string/>
+                 </property>
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="molPlotWidget_5" native="true">
+                <widget class="QLabel" name="label_13">
                  <property name="minimumSize">
                   <size>
-                   <width>120</width>
+                   <width>145</width>
                    <height>0</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="molPlotLayout_5">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
+                 <property name="text">
+                  <string/>
+                 </property>
                 </widget>
                </item>
               </layout>

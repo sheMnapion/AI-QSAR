@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem
+from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
@@ -17,6 +18,7 @@ from utils import DNN_PATH, CACHE_PATH
 
 from rdkit import Chem
 from rdkit.Chem import Draw
+from PIL.ImageQt import ImageQt
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
@@ -228,9 +230,14 @@ class Tab3(QMainWindow):
             for i in range( min(5, len(sortedTestDataWithPred)) ):
                 smiles = sortedTestDataWithPred.loc[i, 'smiles']
                 mol = Chem.MolFromSmiles(smiles)
-                molFig = Draw.MolToMPL(mol)
+
+                im = Draw.MolToImage(mol)
+                qim = ImageQt(im)
+                pixmap = QPixmap.fromImage(qim)
+
                 widget = self.molPlotLayout.itemAt(i).widget()
-                self._addmpl(widget.layout(), molFig)
+                pixmap = pixmap.scaled(widget.size())
+                widget.setPixmap(pixmap)
 
         # Fitting Plot
         fig = Figure()
