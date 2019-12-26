@@ -15,6 +15,7 @@ from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
 from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
 
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
 
@@ -30,6 +31,7 @@ class Tab0(QMainWindow):
         self.transformedData = None
         self.header = False
 
+        self.testRatio = 0.2
         # Allowing deselection in a QListWidget by clicking off an item
         # self.originalDataTable.mousePressEvent = MethodType(mousePressEvent, self.originalDataTable)
         # self.transformedDataList.mousePressEvent = MethodType(mousePressEvent, self.transformedDataList)
@@ -111,9 +113,21 @@ class Tab0(QMainWindow):
         selectedFile = os.path.join(self._currentOutputFolder, self._currentDataFile)
         selectedFileNoSuffix = selectedFile.rsplit('.', 1)[0]
 
-        outputFile = '{}_transformed.csv'.format(selectedFileNoSuffix)       
+        trainData, testData = train_test_split(self.transformedData,
+                                        test_size = self.testRatio, shuffle = False)
 
-        self.transformedData.to_csv(outputFile, index = None)
+        # Output Train Data
+        outputFile = '{}_train.csv'.format(selectedFileNoSuffix)
+        trainData.to_csv(outputFile, index = None)
+        self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
+                            outputFile, shape=self.transformedData.shape))
+
+        # Output Test Data
+        outputFile = '{}_test.csv'.format(selectedFileNoSuffix)
+        testData.to_csv(outputFile, index = None)
+        self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
+                            outputFile, shape=self.transformedData.shape))
+
         pcaUsageData = self.transformedData.copy()
         validColumns = []; nItems = pcaUsageData.shape[0]
         for i in range(len(pcaUsageData.columns)):
@@ -128,8 +142,8 @@ class Tab0(QMainWindow):
             if valid: validColumns.append(i)
         pcaUsageData = pcaUsageData.iloc[:,validColumns]
         self._updatePCAResults(np.array(pcaUsageData))
-        self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
-                            outputFile, shape=self.transformedData.shape))
+
+        self.syncBtn.click()
 
     def dataBrowseSlot(self):
         """
@@ -150,7 +164,6 @@ class Tab0(QMainWindow):
         self.dataLineEdit.setText(folder)
         self._currentDataFolder = folder
 
-
     def dataDoubleClickedSlot(self, item):
         """
         Slot Function of Double Clicking a Folder or a File in self.dataList
@@ -160,8 +173,6 @@ class Tab0(QMainWindow):
             self.dataSelectBtn.click()
         elif os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
-
-
 
     def dataSelectSlot(self):
         """
@@ -221,6 +232,8 @@ class Tab0(QMainWindow):
         if self.originalData is None or self.originalData.columns is None:
             raise Exception("Original data is invalid")
 
+        # train / test: trainTestRatioDoubleSpinBox.value()
+        self.testRatio = 1.0 / float(1.0 + self.trainTestRatioDoubleSpinBox.value())
         outLierPolicy = self.outlierOperationComboBox.currentText()
         self.transformedData = {
             'Delete Data': self.originalData.dropna(),

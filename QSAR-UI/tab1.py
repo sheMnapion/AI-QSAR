@@ -226,7 +226,6 @@ class Tab1(QMainWindow):
         """
         folder = getFolder()
         if folder:
-#            self._debugPrint("setting data folder: " + folder)
             resetFolderList(self.dataList, folder)
             self.dataLineEdit.setText(folder)
             self._currentDataFolder = folder
