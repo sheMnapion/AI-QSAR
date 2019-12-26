@@ -136,19 +136,6 @@ class Tab2(QMainWindow):
         else:
             clearLayout(self.lossCurveLayout)
 
-        if self.lossCurveCheckBox.isChecked():
-            fig = Figure()
-            ax1f1 = fig.add_subplot(111)
-            y1 = self.result["mseList"]
-            x1 = np.linspace(0, len(y1) - 1, len(y1))
-            ax1f1.plot(x1, y1)
-            ax1f1.set_title('Training Loss Curve')
-            ax1f1.set_xlabel('Epochs')
-            ax1f1.set_ylabel('MSE')
-            self._addmpl(self.lossCurveLayout, fig)
-        else:
-            clearLayout(self.lossCurveLayout)
-
         if self.modelStructureCheckBox.isChecked():
             pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
             pixmap = pixmap.scaled(self.modelStructureLabel.size())

@@ -6,11 +6,15 @@ import pandas as pd
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget
-
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt4agg import (
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar)
 from types import MethodType
 
-from utils import resetFolderList, getFolder, getFile, getIcon, saveModel, mousePressEvent
+from utils import resetFolderList, getFolder, getFile, getIcon, saveModel, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
+
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
@@ -24,7 +28,16 @@ class Tab3(QMainWindow):
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
         self.modelList.mousePressEvent = MethodType(mousePressEvent, self.modelList)
 
+        # Original test data and test data with only numeric columns
         self.data = None
+        self.numericData = None
+
+        # Splitted test data and label
+        self.testData = None
+        self.testLabel = None
+        self.testPred = None
+
+        self.testDataWithPred = None
 
         # Currently Opened Folder
         self._currentDataFolder = None
@@ -45,8 +58,20 @@ class Tab3(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
         self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
 
+        self.analyzeBtn.released.connect(self.AnalyzePredictSlot)
+
         # Ensure Scroll to Bottom in Realtime
         self.infoList.model().rowsInserted.connect(self.infoList.scrollToBottom)
+
+    def _addmpl(self, layout, fig):
+        """
+        Add matplotlib Canvas
+        """
+        clearLayout(layout)
+
+        self.canvas = FigureCanvas(fig)
+        layout.addWidget(self.canvas)
+        self.canvas.draw()
 
     def modelBrowseSlot(self):
         """
@@ -89,6 +114,9 @@ class Tab3(QMainWindow):
                 return
         else:
             self._debugPrint("Not a .pxl pytorch model!")
+
+        self.analyzeBtn.setEnabled(True)
+        self.analyzeBtn.repaint()
 
     def dataBrowseSlot(self):
         """
@@ -135,6 +163,8 @@ class Tab3(QMainWindow):
                 self.data = pd.read_csv(selectedFile, index_col = False,
                                             header = (0 if (self.headerCheckBox.isChecked()) else None))
                 self.numericData = self.data.select_dtypes(include = np.number)
+                self.columnSelectComboBox.clear()
+                self.columnSelectComboBox.addItems(self.numericData.columns)
             except:
                 self.data = None
                 self.numericData = None
@@ -149,6 +179,40 @@ class Tab3(QMainWindow):
         self.modelSelectBtn.setEnabled(True)
         self.modelSelectBtn.repaint()
         self._currentDataFile = file
+
+    def AnalyzePredictSlot(self):
+        """
+        Slot Function of Updating Prediction & Plots
+        """
+#        print (self.DNN.model.state_dict())
+        labelColumn = self.columnSelectComboBox.currentText()
+
+        self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
+        self.testData = self.numericData.loc[:, self.numericData.columns != labelColumn]
+
+        self.testPred = self.DNN.test(self.testData.values, self.testLabel)
+        self.testPred = pd.DataFrame(data = {'predict': self.testPred.reshape(-1) })
+
+        self.testDataWithPred = pd.concat([self.testPred, self.testData], axis = 1)
+        self._debugPrint(str(self.testDataWithPred.head()))
+
+        # Prediction Info
+
+        # Sorted Prediction Info
+
+        # Molecule Plot
+
+        # Fitting Plot
+        fig = Figure()
+        ax1f1 = fig.add_subplot(111)
+        x1 = self.testPred.values.reshape(-1)
+        y1 = self.testLabel.reshape(-1)
+
+        ax1f1.scatter(x1, y1)
+        ax1f1.set_title('Fitting Curve')
+        ax1f1.set_xlabel('Predict Value')
+        ax1f1.set_ylabel('Real Value')
+        self._addmpl(self.fittingPlotLayout, fig)
 
     def _debugPrint(self, msg):
         """
