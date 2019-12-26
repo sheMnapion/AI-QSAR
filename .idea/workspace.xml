@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/tmpBestModel.pt" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/tmp/tmpBestModel.pt" afterDir="false" />
     </list>
@@ -92,12 +93,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="4318" />
+          <entry key="py" value="7773" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="4318" />
+          <entry key="Python" value="7773" />
         </counts>
       </usages-collector>
     </session>
@@ -133,15 +134,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="125" column="31" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
+            <state relative-caret-position="76">
+              <caret line="243" column="26" lean-forward="true" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#445#2781#0" />
-                <element signature="e#3262#3734#0" />
+                <element signature="e#3490#3804#0" />
+                <element signature="e#3840#4164#0" />
                 <element signature="e#4209#4374#0" />
                 <element signature="e#5181#7286#0" />
-                <marker date="1577363623377" expanded="true" signature="3372:3914" ph="..." />
+                <marker date="1577387874142" expanded="true" signature="3138:3614" ph="..." />
+                <marker date="1577387874142" expanded="true" signature="9033:10443" ph="..." />
+                <marker date="1577387874142" expanded="true" signature="13520:13703" ph="..." />
               </folding>
             </state>
           </provider>
@@ -150,8 +153,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/torchVAEExample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
-              <caret line="121" column="21" selection-start-line="121" selection-start-column="21" selection-end-line="121" selection-end-column="21" />
+            <state relative-caret-position="161">
+              <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="75" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -162,7 +165,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
+            <state relative-caret-position="-203">
               <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -218,6 +221,10 @@
       <find>_add</find>
       <find>self.canvas</find>
       <find>VAE</find>
+      <find>Pad</find>
+      <find>vaeLossF</find>
+      <find>vaeLoss</find>
+      <find>vaeNet</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -352,7 +359,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py</url>
-          <line>281</line>
+          <line>330</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
@@ -461,7 +468,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
+        <state relative-caret-position="-203">
           <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -471,8 +478,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SMILES_RNN/torchVAEExample.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="121" column="21" selection-start-line="121" selection-start-column="21" selection-end-line="121" selection-end-column="21" />
+        <state relative-caret-position="161">
+          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="75" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
@@ -481,15 +488,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="125" column="31" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
+        <state relative-caret-position="76">
+          <caret line="243" column="26" lean-forward="true" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#445#2781#0" />
-            <element signature="e#3262#3734#0" />
+            <element signature="e#3490#3804#0" />
+            <element signature="e#3840#4164#0" />
             <element signature="e#4209#4374#0" />
             <element signature="e#5181#7286#0" />
-            <marker date="1577363623377" expanded="true" signature="3372:3914" ph="..." />
+            <marker date="1577387874142" expanded="true" signature="3138:3614" ph="..." />
+            <marker date="1577387874142" expanded="true" signature="9033:10443" ph="..." />
+            <marker date="1577387874142" expanded="true" signature="13520:13703" ph="..." />
           </folding>
         </state>
       </provider>
