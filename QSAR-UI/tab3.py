@@ -15,6 +15,8 @@ from types import MethodType
 from utils import resetFolderList, getFolder, getFile, getIcon, saveModel, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
 
+from rdkit import Chem
+from rdkit.Chem import Draw
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
@@ -192,7 +194,8 @@ class Tab3(QMainWindow):
         self.testPred = self.DNN.test(self.testData.values, self.testLabel)
         self.testPred = pd.DataFrame(data = { predColumn : self.testPred.reshape(-1) })
 
-        testDataWithPred = pd.concat([self.testPred, self.testData], axis = 1)
+        # Include non numeric columns to testDataWithPred
+        testDataWithPred = pd.concat([self.testPred, self.data], axis = 1)
         sortedTestDataWithPred = testDataWithPred.sort_values(by = [predColumn], ascending=False)
 
         # Prediction Info
@@ -221,6 +224,13 @@ class Tab3(QMainWindow):
 
         # Molecule Plot
 
+        if 'smiles' in sortedTestDataWithPred.columns:
+            for i in range( min(5, len(sortedTestDataWithPred)) ):
+                smiles = sortedTestDataWithPred.loc[i, 'smiles']
+                mol = Chem.MolFromSmiles(smiles)
+                molFig = Draw.MolToMPL(mol)
+                widget = self.molPlotLayout.itemAt(i).widget()
+                self._addmpl(widget.layout(), molFig)
 
         # Fitting Plot
         fig = Figure()
