@@ -235,11 +235,15 @@ class SmilesCNNPredictor(object):
         nTrain=self.trainRepr.shape[0]
         for i in range(nTrain):
             latentVector=self.trainRepr[i].detach().clone()
+            origVec=np.array(self.origSmilesTrain[i])
+            origTranslation=''.join([self.decodeDict[tR] for tR in origVec if tR>0])
+            # print(origTranslation)
             latentVector.unsqueeze_(0); latentVector.unsqueeze_(0)
             print("Number [%d]:" %(i+1))
             # print(latentVector,latentVector.shape)
             optimizer=optim.Adam([latentVector],lr=lr)
             bestScore=-10.0
+            designedMolecules=set()
             for epoch in range(rounds):
                 tempScore=self.latentRegressor(latentVector)
                 optimizer.zero_grad()
@@ -251,12 +255,14 @@ class SmilesCNNPredictor(object):
                 validVector=np.array(validVector)
                 # print(validVector,validVector.shape)
                 translation=''.join([self.decodeDict[vV] for vV in validVector if vV>0])
+                if translation==origTranslation or translation in designedMolecules: continue
                 try:
                     mol=Chem.MolFromSmiles(translation)
-                    Draw.MolToImageFile(mol,str.format('%d_derivative_%d.png' % (i+1,epoch+1)))
+                    Draw.MolToImageFile(mol,str.format('%d_derivative_%d_%.5f.png' % (i+1,epoch+1,tempScore.item())))
                     print(translation)
+                    print(origTranslation)
                     print("Epoch [%d]: designed molecular property %.5f" % (epoch+1,tempScore.item()))
-                    break
+                    designedMolecules.add(translation)
                 except ValueError as e:
                     continue
 
@@ -400,6 +406,7 @@ class SmilesCNNPredictor(object):
         self.embedding=nn.Embedding(self.nWords+1,self.maxLength,padding_idx=0)
         self.standardData=padData
         smilesTrain,smilesTest,propTrain,propTest=train_test_split(padData,self.origProperties,test_size=0.2,random_state=2019)
+        self.origSmilesTrain=smilesTrain # this stores smiles sequences for molecular design rip out usage
         nTrain=len(smilesTrain); nTest=len(smilesTest)
         print("Train test #:",nTrain,nTest)
         smilesTrain=torch.tensor(smilesTrain).to(torch.long)
@@ -439,4 +446,4 @@ if __name__=='__main__':
     predictor.encodeDataset()
     # predictor.trainLatentModel(lr=3e-4,batchSize=20,nRounds=10000,earlyStopEpoch=100)
     predictor.loadLatentModel('tmp/latentModel.pt')
-    predictor.molecularDesign(lr=3e-4,rounds=100)
+    predictor.molecularDesign(lr=1e-3,rounds=100)
