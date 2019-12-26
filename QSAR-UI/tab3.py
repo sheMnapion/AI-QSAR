@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
@@ -36,8 +36,6 @@ class Tab3(QMainWindow):
         self.testData = None
         self.testLabel = None
         self.testPred = None
-
-        self.testDataWithPred = None
 
         # Currently Opened Folder
         self._currentDataFolder = None
@@ -186,21 +184,43 @@ class Tab3(QMainWindow):
         """
 #        print (self.DNN.model.state_dict())
         labelColumn = self.columnSelectComboBox.currentText()
+        predColumn = 'predict_{}'.format((labelColumn) if len(labelColumn) <= 50 else (labelColumn[:50] + '...'))
 
         self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
         self.testData = self.numericData.loc[:, self.numericData.columns != labelColumn]
 
         self.testPred = self.DNN.test(self.testData.values, self.testLabel)
-        self.testPred = pd.DataFrame(data = {'predict': self.testPred.reshape(-1) })
+        self.testPred = pd.DataFrame(data = { predColumn : self.testPred.reshape(-1) })
 
-        self.testDataWithPred = pd.concat([self.testPred, self.testData], axis = 1)
-        self._debugPrint(str(self.testDataWithPred.head()))
+        testDataWithPred = pd.concat([self.testPred, self.testData], axis = 1)
+        sortedTestDataWithPred = testDataWithPred.sort_values(by = [predColumn], ascending=False)
 
         # Prediction Info
+        npTestDataWithPred = np.array(testDataWithPred)[:100] # show only top 100 terms
+        w, h = npTestDataWithPred.shape[:2]
+        self.predTable.setRowCount(w)
+        self.predTable.setColumnCount(h)
+        self.predTable.setHorizontalHeaderLabels(testDataWithPred.columns)
+        for i in range(w):
+            for j in range(h):
+                tempItem = QTableWidgetItem()
+                tempItem.setText(str(npTestDataWithPred[i][j]))
+                self.predTable.setItem(i,j,tempItem)
 
         # Sorted Prediction Info
+        npSortedTestDataWithPred = np.array(sortedTestDataWithPred)[:100] # show only top 100 terms
+        w, h = npSortedTestDataWithPred.shape[:2]
+        self.sortedPredTable.setRowCount(w)
+        self.sortedPredTable.setColumnCount(h)
+        self.sortedPredTable.setHorizontalHeaderLabels(sortedTestDataWithPred.columns)
+        for i in range(w):
+            for j in range(h):
+                tempItem = QTableWidgetItem()
+                tempItem.setText(str(npSortedTestDataWithPred[i][j]))
+                self.sortedPredTable.setItem(i,j,tempItem)
 
         # Molecule Plot
+
 
         # Fitting Plot
         fig = Figure()
