@@ -71,7 +71,6 @@ class Tab1(QMainWindow):
         """
         self.dataSelectBtn.released.connect(self.dataSelectSlot)
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
-#        self.enterParamsBtn.released.connect(self.updateTrainingParamsSlot)
         self.trainParamsBtn.released.connect(self.startTrainingSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
         self.modelSelectBtn.released.connect(self.modelSelectSlot)
@@ -82,7 +81,10 @@ class Tab1(QMainWindow):
         # Ensure Scroll to Bottom in Realtime
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
 
-    def _setTrainingReturns(self, result):
+    def _setTrainingReturnsSlot(self, result):
+        """
+        Slot Function of Processing Return Value of Training Thread
+        """
         outputName = '{}_{}.npy'.format(self._currentDataFile.rsplit('.', 1)[0],
                                             datetime.now().strftime("%Y%m%d_%H_%M_%S"))
 
@@ -118,7 +120,7 @@ class Tab1(QMainWindow):
             return
 
         self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
-        self.trainer.sig.result.connect(lambda result: self._setTrainingReturns(result))
+        self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
         self.threadPool.start(self.trainer)
 
     def _appendDebugInfoSlot(self, info):
@@ -172,6 +174,51 @@ class Tab1(QMainWindow):
             self._debugPrint("openning model file: " + file)
             icon = getIcon(os.path.join(os.getcwd(), file))
             self.modelList.addItem(QListWidgetItem(icon, file))
+            self.modelList.repaint()
+
+    def modelDoubleClickedSlot(self, item):
+        """
+        Slot Function of Double Clicking a Folder or a File in self.modelList
+        """
+        if self.modelSelectBtn.isEnabled():
+            selectedFile = item.text()
+            if os.path.isfile(selectedFile):
+                self.modelSelectBtn.click()
+
+    def modelSaveSlot(self):
+        """
+        Slot Function of Saving Model
+        """
+        path = saveModel()
+        if path is not None:
+            self._currentOutputPath = path
+            try:
+                self.DNN.save(path)
+                self._debugPrint('File {} saved'.format(path))
+            except:
+                self._debugPrint('DNN not Available yet, or Path Invalid!')
+
+    def modelSelectSlot(self):
+        """
+        Slot Function of Selecting Model File
+        """
+        try:
+            model = self.modelList.currentItem().text()
+        except:
+            self._debugPrint("Current Model File Not Found")
+            return
+
+        if re.match(".+.pxl$", model):
+            try:
+                # If not set, loading will fail without a correct propertyNum
+                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
+                self.DNN.load(model)
+                self._debugPrint("Model Loaded: {}".format(model))
+            except:
+                self._debugPrint("Load Model {} Error!".format(model))
+                return
+        else:
+            self._debugPrint("Not a .pxl pytorch model!")
 
     def dataBrowseSlot(self):
         """
@@ -179,7 +226,6 @@ class Tab1(QMainWindow):
         """
         folder = getFolder()
         if folder:
-#            self._debugPrint("setting data folder: " + folder)
             resetFolderList(self.dataList, folder)
             self.dataLineEdit.setText(folder)
             self._currentDataFolder = folder
@@ -201,15 +247,6 @@ class Tab1(QMainWindow):
             self.dataSelectBtn.click()
         elif os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
-
-    def modelDoubleClickedSlot(self, item):
-        """
-        Slot Function of Double Clicking a Folder or a File in self.modelList
-        """
-        if self.modelSelectBtn.isEnabled():
-            selectedFile = os.path.join(self._currentDataFolder, item.text())
-            if os.path.isfile(selectedFile):
-                self.modelSelectBtn.click()
 
     def dataSelectSlot(self):
         """
@@ -243,42 +280,13 @@ class Tab1(QMainWindow):
 
         self.trainParamsBtn.setEnabled(True)
         self.modelSelectBtn.setEnabled(True)
+        self.trainParamsBtn.repaint()
+        self.modelSelectBtn.repaint()
         self._currentDataFile = file
-
-    def modelSaveSlot(self):
-        """
-        Slot Function of Saving Model
-        """
-        path = saveModel()
-        if path is not None:
-            self._currentOutputPath = path
-            try:
-                self.DNN.save(path)
-                self._debugPrint('File {} saved'.format(path))
-            except:
-                self._debugPrint('DNN not Available yet, or Path Invalid!')
-
-    def modelSelectSlot(self):
-        try:
-            model = self.modelList.currentItem().text()
-        except:
-            self._debugPrint("Current Model File Not Found")
-            return
-
-        if re.match(".+.pxl$", model):
-            try:
-                # If not set, loading will fail without a correct propertyNum
-                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
-                self.DNN.load(model)
-                self._debugPrint("Model Loaded")
-            except:
-                self._debugPrint("Load Model Error!")
-                return
-        else:
-            self._debugPrint("Not a .pxl pytorch model!")
 
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
         """
         self.trainingList.addItem(msg)
+        self.trainingList.repaint()

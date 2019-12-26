@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1,1">
       <item>
        <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0" columnstretch="1,0">
         <property name="verticalSpacing">
@@ -441,7 +441,7 @@
            <number>500</number>
           </property>
           <property name="value">
-           <number>20</number>
+           <number>30</number>
           </property>
          </widget>
         </item>
@@ -619,8 +619,17 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
       <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustIgnored</enum>
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::AllEditTriggers</set>
       </property>
      </widget>
     </item>

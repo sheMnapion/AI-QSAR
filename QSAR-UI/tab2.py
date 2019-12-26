@@ -7,7 +7,7 @@ from types import MethodType
 
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow
-
+from PyQt5.QtGui import QPixmap
 from utils import resetFolderList, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
 
@@ -32,9 +32,15 @@ class Tab2(QMainWindow):
         self._bind()
 
     def _bind(self):
+        """
+        Bind Slots and Signals
+        """
         self.trainingHistorySelectBtn.released.connect(self.trainingHistorySelectSlot)
         self.trainingHistoryList.itemDoubleClicked.connect(self.trainingHistoryDoubleClickedSlot)
         self.analyzeBtn.released.connect(self.AnalyzeTrainingHistorySlot)
+
+        # Ensure Scroll to Bottom in Realtime
+        self.resultList.model().rowsInserted.connect(self.resultList.scrollToBottom)
 
     def _addmpl(self, layout, fig):
         """
@@ -90,6 +96,7 @@ class Tab2(QMainWindow):
 
         self._currentTrainingHistoryFile = file
         self.analyzeBtn.setEnabled(True)
+        self.analyzeBtn.repaint()
 
     def trainingHistoryDoubleClickedSlot(self, item):
         """
@@ -100,6 +107,9 @@ class Tab2(QMainWindow):
             self.trainingHistorySelectBtn.click()
 
     def AnalyzeTrainingHistorySlot(self):
+        """
+        Slot Function of Updating Matplotlib Plots about Selected Training History
+        """
         if self.precisionCurveCheckBox.isChecked():
             fig = Figure()
             ax1f1 = fig.add_subplot(111)
@@ -109,8 +119,9 @@ class Tab2(QMainWindow):
             ax1f1.set_title('Precision Curve')
             ax1f1.set_xlabel('Predict Value')
             ax1f1.set_ylabel('Real Value')
-
             self._addmpl(self.precisionCurveLayout, fig)
+        else:
+            clearLayout(self.precisionCurveLayout)
 
         if self.lossCurveCheckBox.isChecked():
             fig = Figure()
@@ -118,29 +129,23 @@ class Tab2(QMainWindow):
             y1 = self.result["mseList"]
             x1 = np.linspace(0, len(y1) - 1, len(y1))
             ax1f1.plot(x1, y1)
-
             ax1f1.set_title('Training Loss Curve')
             ax1f1.set_xlabel('Epochs')
             ax1f1.set_ylabel('MSE')
-
             self._addmpl(self.lossCurveLayout, fig)
+        else:
+            clearLayout(self.lossCurveLayout)
+
+        if self.modelStructureCheckBox.isChecked():
+            pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
+            pixmap = pixmap.scaled(self.modelStructureLabel.size())
+            self.modelStructureLabel.setPixmap(pixmap)
+        else:
+            self.modelStructureLabel.clear()
 
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
         """
         self.resultList.addItem(msg)
-
-#        self._debugPrint(str(num_epoches))
-#        self._debugPrint(str(loss_list))
-
-#        pred = model.test(test_set,test_label)
-#        print('R2 score: {}'.format(r2_score(pred,test_label)))
-
-#        #draw R2 score and L2 loss curve
-#        x1 = pred
-#        y1 = test_label
-#        plt.scatter(x1, y1)
-#        plt.title('pred')
-#        plt.ylabel('real label')
-#        plt.show()
+        self.resultList.repaint()

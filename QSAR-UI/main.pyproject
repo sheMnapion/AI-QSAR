@@ -1,3 +1,3 @@
 {
-    "files": ["tab2.py","mainwindow.ui","../QSAR-DNN/QSAR-DNN.py","mainwindow1.ui","tab0.py","icons.qrc","main.py","tab1.py","mainwindow3.ui","utils.py","test.py","mainwindow2.ui","mainwindow0.ui","tab3.py","images.qrc","../QSAR-DNN/QSAR_DNN.py"]
+    "files": ["images.qrc","mainwindow2.ui","mainwindow.ui","tab2.py","tab1.py","../QSAR-DNN/QSAR-DNN.py","mainwindow0.ui","tab0.py","main.py","utils.py","icons.qrc","test.py","mainwindow1.ui","mainwindow3.ui","tab3.py","../QSAR-DNN/QSAR_DNN.py","../QSAR-DNN/architecture.png"]
 }

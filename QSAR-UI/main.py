@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.tab0, "Data Processing")
         self.tabWidget.addTab(self.tab1, "Model Training")
         self.tabWidget.addTab(self.tab2, "Result Analysis")
-        self.tabWidget.addTab(self.tab3, "TAB3")
+        self.tabWidget.addTab(self.tab3, "Activity Prediction")
 
         self.setWindowIcon(QIcon("molPredict.ico"))
 
@@ -53,8 +53,19 @@ class MainWindow(QMainWindow):
 
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.projectLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+
         self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+        self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab0.dataList, self.tab0._currentDataFolder))
+        self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab1.dataList, self.tab1._currentDataFolder))
+        self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab3.dataList, self.tab3._currentDataFolder))
+
         self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
+        self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+
+        self.tab3.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
+        self.tab3.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
 
         self.tab1.trainingReturnLineEdit.textChanged.connect(self.tab2.refreshTrainingList)
 
