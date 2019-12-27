@@ -73,9 +73,9 @@ class Tab4(QMainWindow):
 
     def _resetTrainBtn(self):
         """
-        When Should We Enable trainBtn, and Where to Call This Method: TODO
+        When Should We Enable trainBtn, and Where to Call This Method
         """
-        if self._currentDataFile and self._currentModelFile:
+        if self._currentDataFile:
             self.trainBtn.setEnabled(True)
             self.trainBtn.repaint()
         else:
@@ -84,9 +84,14 @@ class Tab4(QMainWindow):
 
     def _resetDesignBtn(self):
         """
-        When Should We Enable designBtn, and Where to Call This Method: TODO
+        When Should We Enable designBtn, and Where to Call This Method
         """
-        pass
+        if self._currentModelFile:
+            self.designBtn.setEnabled(True)
+            self.designBtn.repaint()
+        else:
+            self.designBtn.setEnabled(False)
+            self.designBtn.repaint()
 
     def modelBrowseSlot(self):
         """
@@ -124,9 +129,6 @@ class Tab4(QMainWindow):
         if re.match(".+.pxl$", model):
             try:
                 # Load Model Here: TODO
-                raise NotImplementedError
-#                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
-#                self.DNN.load(model)
                 self._debugPrint("Model Loaded: {}".format(model))
             except:
                 self._debugPrint("Load Model Error!")
@@ -137,7 +139,7 @@ class Tab4(QMainWindow):
 
         self._currentModelFile = model
 
-        self._resetTrainBtn()
+        self._resetDesignBtn()
 
     def dataBrowseSlot(self):
         """
@@ -209,8 +211,6 @@ class Tab4(QMainWindow):
             self._debugPrint("Not a csv file!")
             return
 
-        self.modelSelectBtn.setEnabled(True)
-        self.modelSelectBtn.repaint()
         self._currentDataFile = file
 
         self._resetTrainBtn()
