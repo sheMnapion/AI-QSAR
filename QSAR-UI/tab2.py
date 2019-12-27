@@ -42,15 +42,17 @@ class Tab2(QMainWindow):
         # Ensure Scroll to Bottom in Realtime
         self.resultList.model().rowsInserted.connect(self.resultList.scrollToBottom)
 
-    def _addmpl(self, widget, fig):
+    def _addmpl(self, layout, fig):
         """
         Add matplotlib Canvas
         """
-        clearLayout(widget.layout())
+        clearLayout(layout)
 
         self.canvas = FigureCanvas(fig)
-        widget.layout().addWidget(self.canvas)
+        layout.addWidget(self.canvas)
         self.canvas.draw()
+#        self.plotToolBar = NavigationToolbar(self.canvas, self.plotWidget, coordinates=True)
+#        layout.addWidget(self.plotToolBar)
 
     def refreshTrainingList(self):
         """
@@ -128,7 +130,7 @@ class Tab2(QMainWindow):
             # now plot both limits against eachother
             ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 
-            self._addmpl(self.precisionCurveWidget, fig)
+            self._addmpl(self.precisionCurveLayout, fig)
         else:
             clearLayout(self.precisionCurveLayout)
 
@@ -141,7 +143,7 @@ class Tab2(QMainWindow):
             ax1f1.set_title('Training Loss Curve')
             ax1f1.set_xlabel('Epochs')
             ax1f1.set_ylabel('MSE')
-            self._addmpl(self.lossCurveWidget, fig)
+            self._addmpl(self.lossCurveLayout, fig)
         else:
             clearLayout(self.lossCurveLayout)
 
