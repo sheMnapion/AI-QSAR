@@ -55,18 +55,18 @@ class Tab0(QMainWindow):
         # Ensure Scroll to Bottom in Realtime
         self.infoList.model().rowsInserted.connect(self.infoList.scrollToBottom)
 
-    def _addmpl(self, fig):
+    def _addmpl(self, widget, fig):
         """
         Add matplotlib Canvas
         """
-        clearLayout(self.plotLayout)
+        clearLayout(widget.layout())
 
         self.canvas = FigureCanvas(fig)
-        self.plotLayout.addWidget(self.canvas)
+        widget.layout().addWidget(self.canvas)
         self.canvas.draw()
 
-        self.plotToolBar = NavigationToolbar(self.canvas, self.plotWidget, coordinates=True)
-        self.plotLayout.addWidget(self.plotToolBar)
+        self.plotToolBar = NavigationToolbar(self.canvas, widget, coordinates=True)
+        widget.layout().addWidget(self.plotToolBar)
 
     def outputBrowseSlot(self):
         """
@@ -257,7 +257,7 @@ class Tab0(QMainWindow):
         ax1f1 = fig.add_subplot(111)
         ax1f1.scatter(pcaResults[:,0],pcaResults[:,1])
         ax1f1.set_title('PCA Analysis Result')
-        self._addmpl(fig)
+        self._addmpl(self.PCAPlotWidget, fig)
 
     def _updatePlot(self, selectedColumn):
         name = selectedColumn.name
@@ -279,7 +279,7 @@ class Tab0(QMainWindow):
             ax1f1.set_ylabel('')
             ax1f1.set_xlabel('')
 
-        self._addmpl(fig)
+        self._addmpl(self.plotWidget, fig)
 
     def _debugPrint(self, msg):
         """
