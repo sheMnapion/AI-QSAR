@@ -24,10 +24,10 @@ sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
 
 
-class Tab3(QMainWindow):
+class Tab4(QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
-        uic.loadUi("mainwindow3.ui", self)
+        uic.loadUi("mainwindow4.ui", self)
 
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
         self.modelList.mousePressEvent = MethodType(mousePressEvent, self.modelList)
@@ -37,17 +37,10 @@ class Tab3(QMainWindow):
         self.numericData = None
         self.nonNumericData = None
 
-        # Splitted test data and label
-        self.testData = None
-        self.testLabel = None
-        self.testPred = None
-
         # Currently Opened Folder
         self._currentDataFolder = None
         self._currentDataFile = None
         self._currentModelFile = None
-
-        self.DNN = QSARDNN()
 
         self._bind()
 
@@ -62,7 +55,8 @@ class Tab3(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
         self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
 
-        self.analyzeBtn.released.connect(self.analyzeSlot)
+        self.designBtn.released.connect(self.designSlot)
+        self.trainBtn.released.connect(self.startTrainingSlot)
 
         # Ensure Scroll to Bottom in Realtime
         self.infoList.model().rowsInserted.connect(self.infoList.scrollToBottom)
@@ -77,15 +71,22 @@ class Tab3(QMainWindow):
         layout.addWidget(self.canvas)
         self.canvas.draw()
 
-    def _resetAnalyzeBtn(self):
-        if self._currentDataFile and self._currentModelFile \
-                and self.DNN.model.state_dict() is not None \
-                and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
-            self.analyzeBtn.setEnabled(True)
-            self.analyzeBtn.repaint()
+    def _resetTrainBtn(self):
+        """
+        When Should We Enable trainBtn, and Where to Call This Method: TODO
+        """
+        if self._currentDataFile and self._currentModelFile:
+            self.trainBtn.setEnabled(True)
+            self.trainBtn.repaint()
         else:
-            self.analyzeBtn.setEnabled(False)
-            self.analyzeBtn.repaint()
+            self.trainBtn.setEnabled(False)
+            self.trainBtn.repaint()
+
+    def _resetDesignBtn(self):
+        """
+        When Should We Enable designBtn, and Where to Call This Method: TODO
+        """
+        pass
 
     def modelBrowseSlot(self):
         """
@@ -122,9 +123,10 @@ class Tab3(QMainWindow):
 
         if re.match(".+.pxl$", model):
             try:
-                # If not set, loading will fail without a correct propertyNum
-                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
-                self.DNN.load(model)
+                # Load Model Here: TODO
+                raise NotImplementedError
+#                self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
+#                self.DNN.load(model)
                 self._debugPrint("Model Loaded: {}".format(model))
             except:
                 self._debugPrint("Load Model Error!")
@@ -135,7 +137,7 @@ class Tab3(QMainWindow):
 
         self._currentModelFile = model
 
-        self._resetAnalyzeBtn()
+        self._resetTrainBtn()
 
     def dataBrowseSlot(self):
         """
@@ -181,7 +183,6 @@ class Tab3(QMainWindow):
             try:
                 self.data = pd.read_csv(selectedFile, index_col = False,
                                             header = (0 if (self.headerCheckBox.isChecked()) else None))
-
                 self.numericData = self.data.select_dtypes(include = np.number)
                 if self.numericData is not None:
                     self.columnSelectComboBox.clear()
@@ -191,13 +192,12 @@ class Tab3(QMainWindow):
                 if self.nonNumericData is not None:
                     self.smilesSelectComboBox.clear()
                     self.smilesSelectComboBox.addItems(self.nonNumericData.columns)
-                    # Set Index of self.smilesSelectComboBox to 'smile' Like Item If Found
+
                     for i in range(len(self.nonNumericData.columns)):
                         if re.search(SMILE_REGEX, self.nonNumericData.columns[i]):
                             self.smilesSelectComboBox.setCurrentIndex(i)
                             self.smilesSelectComboBox.repaint()
                             break
-
             except:
                 self.data = self.numericData = self.nonNumericData = None
                 self._debugPrint("Load Data Error!")
@@ -213,102 +213,19 @@ class Tab3(QMainWindow):
         self.modelSelectBtn.repaint()
         self._currentDataFile = file
 
-        self._resetAnalyzeBtn()
+        self._resetTrainBtn()
 
-    def analyzeSlot(self):
+    def designSlot(self):
         """
-        Slot Function of Updating Prediction & Plots
+        Slot Function of Design Molecules after Training: TODO
         """
-        if not self.analyzeBtn.isEnabled():
-            return
+        pass
 
-        labelColumn = self.columnSelectComboBox.currentText()
-        smilesColumn = self.smilesSelectComboBox.currentText()
-        predColumn = 'predict'
-
-        self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
-        self.testData = self.numericData.loc[:, self.numericData.columns != labelColumn]
-
-        self.testPred = self.DNN.test(self.testData.values, self.testLabel)
-        self.testPred = pd.DataFrame(data = { predColumn : self.testPred.reshape(-1) })
-
-        # Include non numeric columns to testDataWithPred
-        testDataWithPred = pd.concat([self.testPred, self.data], axis = 1)
-        sortedTestDataWithPred = testDataWithPred.sort_values(by = [predColumn], ascending=False)
-
-        # Prediction Info
-        npTestDataWithPred = np.array(testDataWithPred)[:100] # show only top 100 terms
-        w, h = npTestDataWithPred.shape[:2]
-        self.predTable.setRowCount(w)
-        self.predTable.setColumnCount(h)
-        self.predTable.setHorizontalHeaderLabels(testDataWithPred.columns)
-        for i in range(w):
-            for j in range(h):
-                tempItem = QTableWidgetItem()
-                tempItem.setText(str(npTestDataWithPred[i][j]))
-                self.predTable.setItem(i,j,tempItem)
-        self.predTable.repaint()
-
-        # Sorted Prediction Info
-        npSortedTestDataWithPred = np.array(sortedTestDataWithPred)[:100] # show only top 100 terms
-        w, h = npSortedTestDataWithPred.shape[:2]
-        self.sortedPredTable.setRowCount(w)
-        self.sortedPredTable.setColumnCount(h)
-        self.sortedPredTable.setHorizontalHeaderLabels(sortedTestDataWithPred.columns)
-        for i in range(w):
-            for j in range(h):
-                tempItem = QTableWidgetItem()
-                tempItem.setText(str(npSortedTestDataWithPred[i][j]))
-                self.sortedPredTable.setItem(i,j,tempItem)
-        self.sortedPredTable.repaint()
-
-        # Molecule Plot
-
-        if smilesColumn is not None:
-            shortLabelColumn = labelColumn if len(labelColumn) < 20 else labelColumn[:20] + '...'
-            try:
-                for i in range( min(5, len(sortedTestDataWithPred)) ):
-                    smiles = sortedTestDataWithPred.loc[i, smilesColumn]
-                    mol = Chem.MolFromSmiles(smiles)
-
-                    im = Draw.MolToImage(mol)
-                    qim = ImageQt(im)
-                    pixmap = QPixmap.fromImage(qim)
-
-                    widget = self.molPlotLayout.itemAt(i).widget()
-                    label = self.molLabelLayout.itemAt(i).widget()
-                    pixmap = pixmap.scaled(widget.size())
-                    widget.setPixmap(pixmap)
-                    label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
-                    label.repaint()
-            except:
-                self._debugPrint("Cannot Plot With Selected SMILES Column")
-        else:
-            for i in range(5):
-                widget = self.molPlotLayout.itemAt(i).widget()
-                label = self.molLabelLayout.itemAt(i).widget()
-                widget.clear()
-                label.setText("SMILES Column not Found")
-
-        # Fitting Plot
-        fig = Figure()
-        ax1f1 = fig.add_subplot(111)
-        x1 = self.testPred.values.reshape(-1)
-        y1 = self.testLabel.reshape(-1)
-
-        ax1f1.scatter(x1, y1)
-        ax1f1.set_title('Fitting Curve')
-        ax1f1.set_xlabel('Predict Value')
-        ax1f1.set_ylabel('Real Value')
-
-        lims = [
-            np.min([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # min of both axes
-            np.max([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # max of both axes
-        ]
-        # now plot both limits against eachother
-        ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
-
-        self._addmpl(self.fittingPlotLayout, fig)
+    def startTrainingSlot(self):
+        """
+        Slot Function of Training After Loading Data and Model: TODO
+        """
+        pass
 
     def _debugPrint(self, msg):
         """
