@@ -14,7 +14,7 @@ from matplotlib.backends.backend_qt4agg import (
 from types import MethodType
 
 from utils import resetFolderList, getFolder, getFile, getIcon, saveModel, mousePressEvent, clearLayout
-from utils import DNN_PATH, CACHE_PATH
+from utils import DNN_PATH, CACHE_PATH, SMILE_REGEX
 
 from rdkit import Chem
 from rdkit.Chem import Draw
@@ -35,6 +35,7 @@ class Tab3(QMainWindow):
         # Original test data and test data with only numeric columns
         self.data = None
         self.numericData = None
+        self.nonNumericData = None
 
         # Splitted test data and label
         self.testData = None
@@ -79,7 +80,6 @@ class Tab3(QMainWindow):
     def _resetAnalyzeBtn(self):
         if self._currentDataFile and self._currentModelFile \
                 and self.DNN.model.state_dict() is not None \
-                and self.numericData is not None \
                 and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
             self.analyzeBtn.setEnabled(True)
             self.analyzeBtn.repaint()
@@ -181,12 +181,25 @@ class Tab3(QMainWindow):
             try:
                 self.data = pd.read_csv(selectedFile, index_col = False,
                                             header = (0 if (self.headerCheckBox.isChecked()) else None))
+
                 self.numericData = self.data.select_dtypes(include = np.number)
-                self.columnSelectComboBox.clear()
-                self.columnSelectComboBox.addItems(self.numericData.columns)
+                if self.numericData is not None:
+                    self.columnSelectComboBox.clear()
+                    self.columnSelectComboBox.addItems(self.numericData.columns)
+
+                self.nonNumericData = self.data.select_dtypes(exclude = np.number)
+                if self.nonNumericData is not None:
+                    self.smilesSelectComboBox.clear()
+                    self.smilesSelectComboBox.addItems(self.nonNumericData.columns)
+                    # Set Index of self.smilesSelectComboBox to 'smile' Like Item If Found
+                    for i in range(len(self.nonNumericData.columns)):
+                        if re.search(SMILE_REGEX, self.nonNumericData.columns[i]):
+                            self.smilesSelectComboBox.setCurrentIndex(i)
+                            self.smilesSelectComboBox.repaint()
+                            break
+
             except:
-                self.data = None
-                self.numericData = None
+                self.data = self.numericData = self.nonNumericData = None
                 self._debugPrint("Load Data Error!")
                 return
 
@@ -210,6 +223,7 @@ class Tab3(QMainWindow):
             return
 
         labelColumn = self.columnSelectComboBox.currentText()
+        smilesColumn = self.smilesSelectComboBox.currentText()
         predColumn = 'predict'
 
         self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
@@ -250,22 +264,25 @@ class Tab3(QMainWindow):
 
         # Molecule Plot
 
-        if 'smiles' in sortedTestDataWithPred.columns:
+        if smilesColumn is not None:
             shortLabelColumn = labelColumn if len(labelColumn) < 20 else labelColumn[:20] + '...'
-            for i in range( min(5, len(sortedTestDataWithPred)) ):
-                smiles = sortedTestDataWithPred.loc[i, 'smiles']
-                mol = Chem.MolFromSmiles(smiles)
+            try:
+                for i in range( min(5, len(sortedTestDataWithPred)) ):
+                    smiles = sortedTestDataWithPred.loc[i, smilesColumn]
+                    mol = Chem.MolFromSmiles(smiles)
 
-                im = Draw.MolToImage(mol)
-                qim = ImageQt(im)
-                pixmap = QPixmap.fromImage(qim)
+                    im = Draw.MolToImage(mol)
+                    qim = ImageQt(im)
+                    pixmap = QPixmap.fromImage(qim)
 
-                widget = self.molPlotLayout.itemAt(i).widget()
-                label = self.molLabelLayout.itemAt(i).widget()
-                pixmap = pixmap.scaled(widget.size())
-                widget.setPixmap(pixmap)              
-                label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
-                label.repaint()
+                    widget = self.molPlotLayout.itemAt(i).widget()
+                    label = self.molLabelLayout.itemAt(i).widget()
+                    pixmap = pixmap.scaled(widget.size())
+                    widget.setPixmap(pixmap)
+                    label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
+                    label.repaint()
+            except:
+                self._debugPrint("Cannot Plot With Selected SMILES Column")
         else:
             for i in range(5):
                 widget = self.molPlotLayout.itemAt(i).widget()

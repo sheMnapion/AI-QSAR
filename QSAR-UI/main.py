@@ -98,6 +98,7 @@ class MainWindow(QMainWindow):
         self.actionModel_Training_T.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab1))
         self.actionResult_Analysis_A.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab2))
         self.actionActivity_Prediction_P.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab3))
+        self.actionMolecule_Design_M.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab4))
 
     def projectSetSlot(self, folder):
         """

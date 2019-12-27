@@ -20,11 +20,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <layout class="QHBoxLayout" name="horizontalLayout_8">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,5">
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="25,25">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="15,25">
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
@@ -211,7 +211,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
           </property>
@@ -263,6 +263,57 @@
             </item>
             <item>
              <widget class="QComboBox" name="columnSelectComboBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Select Smiles</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="smilesSelectComboBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -377,7 +428,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="trainBtn">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -456,7 +507,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="15,5">
+       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="15">
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
@@ -485,12 +536,12 @@
                </size>
               </property>
               <property name="text">
-               <string>Prediction Info</string>
+               <string>Design Info</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QTableWidget" name="predTable">
+             <widget class="QTableWidget" name="designTable">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>1</horstretch>
@@ -506,53 +557,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
-          <item>
-           <widget class="QWidget" name="widget" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_7">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetMaximumSize</enum>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_6">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>1</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Prediction Molecules</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTableWidget" name="tableWidget"/>
-             </item>
-            </layout>
-           </widget>
           </item>
          </layout>
         </item>

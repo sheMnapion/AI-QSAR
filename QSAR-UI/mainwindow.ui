@@ -166,6 +166,7 @@
     <addaction name="actionModel_Training_T"/>
     <addaction name="actionResult_Analysis_A"/>
     <addaction name="actionActivity_Prediction_P"/>
+    <addaction name="actionMolecule_Design_M"/>
    </widget>
    <addaction name="menuFile_F"/>
    <addaction name="menuData"/>
@@ -234,6 +235,7 @@
    <addaction name="actionModel_Training_T"/>
    <addaction name="actionResult_Analysis_A"/>
    <addaction name="actionActivity_Prediction_P"/>
+   <addaction name="actionMolecule_Design_M"/>
    <addaction name="separator"/>
    <addaction name="actionAbout_A"/>
   </widget>
@@ -469,6 +471,21 @@
    </property>
    <property name="toolTip">
     <string>Activity Prediction(P)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionMolecule_Design_M">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/stock_print-setup.png</normaloff>images/stock_print-setup.png</iconset>
+   </property>
+   <property name="text">
+    <string>Molecule Design(&amp;M)</string>
+   </property>
+   <property name="toolTip">
+    <string>Molecule Design(M)</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
