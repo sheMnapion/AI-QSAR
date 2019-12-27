@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.model_selection import train_test_split
 
 from utils import resetFolderList, getFolder, getFile, getIcon, mousePressEvent, clearLayout
@@ -48,6 +48,7 @@ class Tab0(QMainWindow):
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.outputBrowseBtn.released.connect(self.outputBrowseSlot)
         self.outputSaveBtn.released.connect(self.outputSaveSlot)
+        self.analyzeBtn.released.connect(self.analyzeSlot)
         self.columnSelectBtn.released.connect(self.columnSelectSlot)
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)     
         self.dataLineEdit.textChanged.connect(lambda folder: self.outputSetSlot(folder))
@@ -89,23 +90,11 @@ class Tab0(QMainWindow):
         """
         Slot Function of Saving Output CSV
         """
-        try:
-            self._processData()
-        except:
-            self._debugPrint("Data Processing Throw Error!")
-            return
 
-        npTransformedData = np.array(self.transformedData)[:100]
-        w, h = npTransformedData.shape[:2]
-        self.transformedDataTable.setRowCount(w); self.transformedDataTable.setColumnCount(h)
-        self.transformedDataTable.setHorizontalHeaderLabels(self.transformedData.columns)
-        for i in range(w):
-            for j in range(h):
-                tempItem = QTableWidgetItem()
-                tempItem.setText(str(npTransformedData[i][j]))
-                self.transformedDataTable.setItem(i, j, tempItem)
-        # self.transformedDataList.addItem(str(self.transformedData.head()))
+        # Process and Analyze CSV
+        self.analyzeSlot()
 
+        # Split and Save CSV Data
         if os.path.exists(self._currentOutputFolder) is not True:
             self._debugPrint("Invalid Save Folder")
             return
@@ -128,22 +117,38 @@ class Tab0(QMainWindow):
         self._debugPrint("csv file {} saved: {shape[0]} lines, {shape[1]} columns".format(
                             outputFile, shape=self.transformedData.shape))
 
-        pcaUsageData = self.transformedData.copy()
-        validColumns = []; nItems = pcaUsageData.shape[0]
-        for i in range(len(pcaUsageData.columns)):
-            column = pcaUsageData.iloc[:,i]
-            valid = True
-            for ele in column:
-                try:
-                    temp = float(ele)
-                except ValueError as e:
-                    valid = False
-                    break
-            if valid: validColumns.append(i)
-        pcaUsageData = pcaUsageData.iloc[:,validColumns]
-        self._updatePCAResults(np.array(pcaUsageData))
-
         self.syncBtn.click()
+
+    def analyzeSlot(self):
+        """
+        Slot Function of Processing and Analyzing CSV
+        """
+        try:
+            self._processData()
+        except:
+            self._debugPrint("Data Processing Throw Error!")
+            return
+
+        npTransformedData = np.array(self.transformedData)[:100]
+        w, h = npTransformedData.shape[:2]
+        self.transformedDataTable.setRowCount(w); self.transformedDataTable.setColumnCount(h)
+        self.transformedDataTable.setHorizontalHeaderLabels(self.transformedData.columns)
+        for i in range(w):
+            for j in range(h):
+                tempItem = QTableWidgetItem()
+                tempItem.setText(str(npTransformedData[i][j]))
+                self.transformedDataTable.setItem(i, j, tempItem)
+        # self.transformedDataList.addItem(str(self.transformedData.head()))
+
+        pcaUsageData = self.transformedData.select_dtypes(include = np.number)
+
+        if self.featureAnalysisComboBox.currentText() == 'PCA':
+            self._updatePCAResults(np.array(pcaUsageData))
+        elif self.featureAnalysisComboBox.currentText() == 'SVD':
+            self._updateSVDResults(np.array(pcaUsageData))
+
+        clearLayout(self.plotLayout)
+        self._debugPrint("Analyzing {}".format(self._currentDataFile))
 
     def dataBrowseSlot(self):
         """
@@ -209,6 +214,8 @@ class Tab0(QMainWindow):
 
         self.outputSaveBtn.setEnabled(True)
         self.outputSaveBtn.repaint()
+        self.analyzeBtn.setEnabled(True)
+        self.analyzeBtn.repaint()
 
     def columnSelectSlot(self):
         """
@@ -257,7 +264,17 @@ class Tab0(QMainWindow):
         ax1f1 = fig.add_subplot(111)
         ax1f1.scatter(pcaResults[:,0],pcaResults[:,1])
         ax1f1.set_title('PCA Analysis Result')
-        self._addmpl(self.PCAPlotWidget, fig)
+        self._addmpl(self.featurePlotWidget, fig)
+
+    def _updateSVDResults(self,transformedData):
+        """show SVD results on self.featurePlotWidget"""
+        plantSVD = TruncatedSVD(n_components=2)
+        svdResults = plantSVD.fit_transform(transformedData)
+        fig = Figure()
+        ax1f1 = fig.add_subplot(111)
+        ax1f1.scatter(svdResults[:,0],svdResults[:,1])
+        ax1f1.set_title('SVD Analysis Result')
+        self._addmpl(self.featurePlotWidget, fig)
 
     def _updatePlot(self, selectedColumn):
         name = selectedColumn.name
@@ -287,3 +304,18 @@ class Tab0(QMainWindow):
         """
         self.infoList.addItem(msg)
         self.infoList.repaint()
+
+
+#        pcaUsageData = self.transformedData.copy()
+#        validColumns = []; nItems = pcaUsageData.shape[0]
+#        for i in range(len(pcaUsageData.columns)):
+#            column = pcaUsageData.iloc[:,i]
+#            valid = True
+#            for ele in column:
+#                try:
+#                    temp = float(ele)
+#                except ValueError as e:
+#                    valid = False
+#                    break
+#            if valid: validColumns.append(i)
+#        pcaUsageData = pcaUsageData.iloc[:,validColumns]
