@@ -205,6 +205,7 @@ class Tab0(QMainWindow):
                                 file, shape = self.originalData.shape))
         else:
             self._debugPrint("Not a csv file")
+            return
 
         self.outputSaveBtn.setEnabled(True)
         self.outputSaveBtn.repaint()

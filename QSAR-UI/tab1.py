@@ -219,6 +219,7 @@ class Tab1(QMainWindow):
                 return
         else:
             self._debugPrint("Not a .pxl pytorch model!")
+            return
 
     def dataBrowseSlot(self):
         """
@@ -277,6 +278,7 @@ class Tab1(QMainWindow):
             self._debugPrint(str(self.data.head()))
         else:
             self._debugPrint("Not a csv file!")
+            return
 
         self.trainParamsBtn.setEnabled(True)
         self.modelSelectBtn.setEnabled(True)

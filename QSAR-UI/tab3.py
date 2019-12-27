@@ -44,6 +44,7 @@ class Tab3(QMainWindow):
         # Currently Opened Folder
         self._currentDataFolder = None
         self._currentDataFile = None
+        self._currentModelFile = None
 
         self.DNN = QSARDNN()
 
@@ -74,6 +75,16 @@ class Tab3(QMainWindow):
         self.canvas = FigureCanvas(fig)
         layout.addWidget(self.canvas)
         self.canvas.draw()
+
+    def _resetAnalyzeBtn(self):
+        if self._currentDataFile and self._currentModelFile \
+                and self.DNN.model.state_dict() \
+                and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
+            self.analyzeBtn.setEnabled(True)
+            self.analyzeBtn.repaint()
+        else:
+            self.analyzeBtn.setEnabled(False)
+            self.analyzeBtn.repaint()
 
     def modelBrowseSlot(self):
         """
@@ -116,9 +127,11 @@ class Tab3(QMainWindow):
                 return
         else:
             self._debugPrint("Not a .pxl pytorch model!")
+            return
 
-        self.analyzeBtn.setEnabled(True)
-        self.analyzeBtn.repaint()
+        self._currentModelFile = model
+
+        self._resetAnalyzeBtn()
 
     def dataBrowseSlot(self):
         """
@@ -177,16 +190,18 @@ class Tab3(QMainWindow):
             self._debugPrint(str(self.data.head()))
         else:
             self._debugPrint("Not a csv file!")
+            return
 
         self.modelSelectBtn.setEnabled(True)
         self.modelSelectBtn.repaint()
         self._currentDataFile = file
 
+        self._resetAnalyzeBtn()
+
     def AnalyzePredictSlot(self):
         """
         Slot Function of Updating Prediction & Plots
         """
-#        print (self.DNN.model.state_dict())
         labelColumn = self.columnSelectComboBox.currentText()
         predColumn = 'predict'
 
@@ -270,6 +285,8 @@ class Tab3(QMainWindow):
         ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 
         self._addmpl(self.fittingPlotLayout, fig)
+
+#        self._debugPrint(str(self.DNN.model.state_dict()))
 
     def _debugPrint(self, msg):
         """

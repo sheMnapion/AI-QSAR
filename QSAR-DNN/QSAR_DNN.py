@@ -180,7 +180,7 @@ class QSARDNN():
 
 if __name__ == '__main__':
     #csv_data = pd.read_csv("../datasets/delaney-dropped_transformed.csv")#location of the data file
-    csv_data = pd.read_csv("../datasets/desc_canvas_aug30_transformed.csv")
+    csv_data = pd.read_csv("../datasets/desc_canvas_aug30_train.csv")
     columns = csv_data.columns
     device = torch.device('cpu')
     a = []
