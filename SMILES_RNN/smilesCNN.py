@@ -26,11 +26,11 @@ class SmilesCNNVAE(nn.Module):
         super(SmilesCNNVAE,self).__init__()
         self.featureNum=featureNum
         self.embedding=nn.Embedding(32,32)
-        self.fc1=nn.Linear(3200,1024)
-        self.fc21=nn.Linear(1024,200)
-        self.fc22=nn.Linear(1024,200)
-        self.fc3=nn.Linear(200,1024)
-        self.fc4=nn.Linear(1024,3200)
+        self.fc1=nn.Linear(3200,1200)
+        self.fc21=nn.Linear(1200,200)
+        self.fc22=nn.Linear(1200,200)
+        self.fc3=nn.Linear(200,1200)
+        self.fc4=nn.Linear(1200,3200)
         self.decodeFC=nn.Linear(32,32)
 
     def num_flat_features(self,x):
@@ -96,13 +96,13 @@ class DNNRegressor(nn.Module):
         super(DNNRegressor,self).__init__()
         self.fc1=nn.Linear(200,200)
         self.fc2=nn.Linear(200,200)
-        self.fc3=nn.Linear(200,200)
+        # self.fc3=nn.Linear(200,200)
         self.fc4=nn.Linear(200,1)
 
     def forward(self, x):
         x=F.relu(self.fc1(x))
         x=F.relu(self.fc2(x))
-        x=F.relu(self.fc3(x))
+        # x=F.relu(self.fc3(x))
         return self.fc4(x)
 
 class SmilesCNN(nn.Module):
@@ -243,7 +243,7 @@ class SmilesCNNPredictor(object):
             latentVector.unsqueeze_(0); latentVector.unsqueeze_(0)
             print("Number [%d]:" %(i+1))
             # print(latentVector,latentVector.shape)
-            optimizer=optim.Adam([latentVector],lr=lr)
+            optimizer=optim.SGD([latentVector],lr=lr)
             bestScore=-10.0
             designedMolecules=set()
             for epoch in range(rounds):
@@ -260,7 +260,7 @@ class SmilesCNNPredictor(object):
                 if translation==origTranslation or translation in designedMolecules: continue
                 try:
                     mol=Chem.MolFromSmiles(translation)
-                    Draw.MolToImageFile(mol,str.format('%d_derivative_%d_%.5f.png' % (i+1,epoch+1,tempScore.item())))
+                    Draw.MolToImageFile(mol,str.format('designed/%d_%d_derivative_%.5f.png' % (i+1,epoch+1,tempScore.item())))
                     print(translation)
                     print(origTranslation)
                     print("Epoch [%d]: designed molecular property %.5f" % (epoch+1,tempScore.item()))
@@ -444,8 +444,8 @@ if __name__=='__main__':
     predictor=SmilesCNNPredictor(smiles,properties)
     # predictor.train(nRounds=1000,lr=5e-4,batchSize=20)
     # predictor.trainVAE(nRounds=1000,lr=3e-4,earlyStop=True,earlyStopEpoch=20,batchSize=20)
-    predictor.loadVAE('tmp/model_0.66524.pt')
+    predictor.loadVAE('tmp/model_0.64696.pt')
     predictor.encodeDataset()
-    # predictor.trainLatentModel(lr=3e-4,batchSize=20,nRounds=10000,earlyStopEpoch=100)
-    predictor.loadLatentModel('tmp/latentModel.pt')
-    predictor.molecularDesign(lr=1e-3,rounds=100)
+    predictor.trainLatentModel(lr=3e-4,batchSize=20,nRounds=10000,earlyStopEpoch=100)
+    # predictor.loadLatentModel('tmp/latentModel.pt')
+    predictor.molecularDesign(lr=1e-3,rounds=1000)
