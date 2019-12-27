@@ -65,16 +65,26 @@ class MainWindow(QMainWindow):
 
         self.tab1.trainingReturnLineEdit.textChanged.connect(self.tab2.refreshTrainingList)
 
+        # Connect Menu's Actions
         self.actionOpen_ProjectFolder_P.triggered.connect(self.projectBrowseSlot)
+        self.actionExit_E.triggered.connect(self.close)
+
         self.actionOpen_DataFolder_O.triggered.connect(self.tab1.dataBrowseSlot)
-        self.actionLoad_Model.triggered.connect(lambda: self.commonSlot('modelBrowseSlot'))
         self.actionSelect_Data_D.triggered.connect(lambda: self.commonSlot('dataSelectSlot'))
+        self.actionSave_Data_S.triggered.connect(lambda: self.commonSlot('outputSaveSlot'))
+
+        self.actionLoad_Model_L.triggered.connect(lambda: self.commonSlot('modelBrowseSlot'))
         self.actionSelect_Model.triggered.connect(lambda: self.commonSlot('modelSelectSlot'))
         self.actionSave_Model_S.triggered.connect(lambda: self.commonSlot('modelSaveSlot'))
-        self.actionAnalyze.triggered.connect(lambda: self.commonSlot('analyzeSlot'))
+
+        self.actionSelect_TrainingHistory_S.triggered.connect(lambda: self.commonSlot('trainingHistorySelectSlot'))
+        self.actionAnalyze_A.triggered.connect(lambda: self.commonSlot('analyzeSlot'))
         self.actionTrain.triggered.connect(lambda: self.commonSlot('startTrainingSlot'))
-        self.actionExit_E.triggered.connect(QCoreApplication.instance().quit)
-        self.actionSelect_TrainingHistory.triggered.connect(lambda: self.commonSlot('trainingHistorySelectSlot'))
+
+        self.actionData_Processing_D.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab0))
+        self.actionModel_Training_T.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab1))
+        self.actionResult_Analysis_A.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab2))
+        self.actionActivity_Prediction_P.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab3))
 
     def projectSetSlot(self, folder):
         """
@@ -103,13 +113,28 @@ class MainWindow(QMainWindow):
             resetFolderList(self.projectList, folder)
 
     def commonSlot(self, funcName):
+        """
+        Slot Function of Calling Current Tab's Method If Exists
+        """
         if getattr(self.tabWidget.currentWidget(), funcName, None) is not None:
             method = getattr(self.tabWidget.currentWidget(), funcName)
             method()
+
+    def closeEvent(self, event):
+        """
+        Override Default Closing Event with Prompt Dialog
+        """
+        quit_msg = "Are you sure you want to exit the program?"
+        reply = QtWidgets.QMessageBox.question(self, 'Message',
+                         quit_msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
     app.exec_()

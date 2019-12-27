@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1208</width>
-    <height>728</height>
+    <width>1580</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,28 +21,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0" colspan="2">
-     <widget class="QListWidget" name="projectList">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>580</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>200</width>
-        <height>16777215</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QPushButton" name="projectBrowseBtn">
       <property name="minimumSize">
@@ -62,16 +40,25 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="label">
+    <item row="2" column="0" colspan="2">
+     <widget class="QListWidget" name="projectList">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="text">
-       <string>Project Structure</string>
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>580</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -104,6 +91,19 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Project Structure</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -111,9 +111,12 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1208</width>
+     <width>1580</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
    </property>
    <property name="nativeMenuBar">
     <bool>false</bool>
@@ -123,19 +126,14 @@
      <string>File(&amp;F)</string>
     </property>
     <addaction name="actionOpen_ProjectFolder_P"/>
-    <addaction name="actionOpen_DataFolder_O"/>
-    <addaction name="actionSelect_Data_D"/>
-    <addaction name="actionLoad_Model"/>
-    <addaction name="actionSelect_Model"/>
-    <addaction name="actionSave_Model_S"/>
-    <addaction name="actionSelect_TrainingHistory"/>
     <addaction name="actionExit_E"/>
    </widget>
    <widget class="QMenu" name="menuEdit_E">
     <property name="title">
-     <string>Edit(&amp;E)</string>
+     <string>Train</string>
     </property>
-    <addaction name="actionAnalyze"/>
+    <addaction name="actionSelect_TrainingHistory_S"/>
+    <addaction name="actionAnalyze_A"/>
     <addaction name="actionTrain"/>
    </widget>
    <widget class="QMenu" name="menuHelp_H">
@@ -144,14 +142,72 @@
     </property>
     <addaction name="actionAbout_A"/>
    </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionOpen_DataFolder_O"/>
+    <addaction name="actionSelect_Data_D"/>
+    <addaction name="actionSave_Data_S"/>
+   </widget>
+   <widget class="QMenu" name="menuModel">
+    <property name="title">
+     <string>Model</string>
+    </property>
+    <addaction name="actionLoad_Model_L"/>
+    <addaction name="actionSelect_Model"/>
+    <addaction name="actionSave_Model_S"/>
+   </widget>
+   <widget class="QMenu" name="menuNavigate">
+    <property name="title">
+     <string>Navigate</string>
+    </property>
+    <addaction name="actionData_Processing_D"/>
+    <addaction name="actionModel_Training_T"/>
+    <addaction name="actionResult_Analysis_A"/>
+    <addaction name="actionActivity_Prediction_P"/>
+   </widget>
    <addaction name="menuFile_F"/>
+   <addaction name="menuData"/>
+   <addaction name="menuModel"/>
    <addaction name="menuEdit_E"/>
+   <addaction name="menuNavigate"/>
    <addaction name="menuHelp_H"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>28</width>
+     <height>28</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>true</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -159,78 +215,263 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionExit_E"/>
+   <addaction name="actionOpen_ProjectFolder_P"/>
+   <addaction name="separator"/>
+   <addaction name="actionOpen_DataFolder_O"/>
+   <addaction name="actionSelect_Data_D"/>
+   <addaction name="actionSave_Data_S"/>
+   <addaction name="separator"/>
+   <addaction name="actionLoad_Model_L"/>
+   <addaction name="actionSelect_Model"/>
+   <addaction name="actionSave_Model_S"/>
+   <addaction name="separator"/>
+   <addaction name="actionSelect_TrainingHistory_S"/>
+   <addaction name="actionAnalyze_A"/>
+   <addaction name="actionTrain"/>
+   <addaction name="separator"/>
+   <addaction name="actionData_Processing_D"/>
+   <addaction name="actionModel_Training_T"/>
+   <addaction name="actionResult_Analysis_A"/>
+   <addaction name="actionActivity_Prediction_P"/>
+   <addaction name="separator"/>
+   <addaction name="actionAbout_A"/>
   </widget>
   <action name="actionOpen_DataFolder_O">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>images/document-open.png</normaloff>images/document-open.png</iconset>
+   </property>
    <property name="text">
-    <string>Open Data Folder(&amp;O)</string>
+    <string>Open Data(&amp;O)</string>
    </property>
    <property name="toolTip">
     <string>Open Data Folder(O)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionExit_E">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/application-exit.png</normaloff>images/application-exit.png</iconset>
+   </property>
    <property name="text">
     <string>Exit(&amp;E)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionAbout_A">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/help-about.png</normaloff>images/help-about.png</iconset>
+   </property>
    <property name="text">
     <string>About(&amp;A)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionOpen_ProjectFolder_P">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/document-open.png</normaloff>images/document-open.png</iconset>
+   </property>
    <property name="text">
-    <string>Open Project Folder(&amp;P)</string>
+    <string>Open Project(&amp;P)</string>
    </property>
    <property name="toolTip">
     <string>Open Project Folder(P)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
-  <action name="actionAnalyze">
+  <action name="actionAnalyze_A">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/stock_file-properites.png</normaloff>images/stock_file-properites.png</iconset>
+   </property>
    <property name="text">
     <string>Analyze(&amp;A)</string>
    </property>
    <property name="toolTip">
     <string>Analyze(A)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionSave_Model_S">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/document-save-as.png</normaloff>images/document-save-as.png</iconset>
+   </property>
    <property name="text">
     <string>Save Model(&amp;S)</string>
    </property>
    <property name="toolTip">
     <string>Save Model(S)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionSelect_Model">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/edit-select-all.png</normaloff>images/edit-select-all.png</iconset>
+   </property>
    <property name="text">
     <string>Select Model</string>
    </property>
    <property name="toolTip">
     <string>Select Model</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionSelect_Data_D">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/edit-select-all.png</normaloff>images/edit-select-all.png</iconset>
+   </property>
    <property name="text">
     <string>Select Data(&amp;D)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
-  <action name="actionLoad_Model">
+  <action name="actionLoad_Model_L">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/document-open.png</normaloff>images/document-open.png</iconset>
+   </property>
    <property name="text">
-    <string>Load Model</string>
+    <string>Load Model(&amp;L)</string>
+   </property>
+   <property name="toolTip">
+    <string>Load Model(L)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionTrain">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/gnome-logout.png</normaloff>images/gnome-logout.png</iconset>
+   </property>
    <property name="text">
     <string>Train(&amp;T)</string>
    </property>
    <property name="toolTip">
     <string>Train(T)</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
-  <action name="actionSelect_TrainingHistory">
+  <action name="actionSelect_TrainingHistory_S">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/edit-select-all.png</normaloff>images/edit-select-all.png</iconset>
+   </property>
    <property name="text">
-    <string>Select Training History</string>
+    <string>Select History(&amp;S)</string>
+   </property>
+   <property name="toolTip">
+    <string>Select Training History(S)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSave_Data_S">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/document-save-as.png</normaloff>images/document-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Data(&amp;S)</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Transformed Data(S)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionData_Processing_D">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/gtk-media-record.png</normaloff>images/gtk-media-record.png</iconset>
+   </property>
+   <property name="text">
+    <string>Data Processing(&amp;D)</string>
+   </property>
+   <property name="toolTip">
+    <string>Data Processing(D)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionModel_Training_T">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/gtk-media-play-ltr.png</normaloff>images/gtk-media-play-ltr.png</iconset>
+   </property>
+   <property name="text">
+    <string>Model Training(&amp;T)</string>
+   </property>
+   <property name="toolTip">
+    <string>Model Training(T)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionResult_Analysis_A">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/system-shutdown.png</normaloff>images/system-shutdown.png</iconset>
+   </property>
+   <property name="text">
+    <string>Result Analysis(&amp;A)</string>
+   </property>
+   <property name="toolTip">
+    <string>Result Analysis(A)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionActivity_Prediction_P">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/forward.png</normaloff>images/forward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Activity Prediction(&amp;P)</string>
+   </property>
+   <property name="toolTip">
+    <string>Activity Prediction(P)</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

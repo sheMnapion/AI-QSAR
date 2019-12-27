@@ -293,8 +293,6 @@ class Tab3(QMainWindow):
 
         self._addmpl(self.fittingPlotLayout, fig)
 
-#        self._debugPrint(str(self.DNN.model.state_dict()))
-
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
