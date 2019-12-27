@@ -37,7 +37,7 @@ class Tab2(QMainWindow):
         """
         self.trainingHistorySelectBtn.released.connect(self.trainingHistorySelectSlot)
         self.trainingHistoryList.itemDoubleClicked.connect(self.trainingHistoryDoubleClickedSlot)
-        self.analyzeBtn.released.connect(self.AnalyzeTrainingHistorySlot)
+        self.analyzeBtn.released.connect(self.analyzeSlot)
 
         # Ensure Scroll to Bottom in Realtime
         self.resultList.model().rowsInserted.connect(self.resultList.scrollToBottom)
@@ -106,10 +106,13 @@ class Tab2(QMainWindow):
         if os.path.isfile(selectedFile):
             self.trainingHistorySelectBtn.click()
 
-    def AnalyzeTrainingHistorySlot(self):
+    def analyzeSlot(self):
         """
         Slot Function of Updating Matplotlib Plots about Selected Training History
         """
+        if not self.analyzeBtn.isEnabled():
+            return
+
         if self.precisionCurveCheckBox.isChecked():
             fig = Figure()
             ax1f1 = fig.add_subplot(111)

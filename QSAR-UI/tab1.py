@@ -118,6 +118,8 @@ class Tab1(QMainWindow):
         """
         The Training Function Given Data and Training Parameters
         """
+        if not self.trainParamsBtn.isEnabled():
+            return
 
         self._updateTrainingParams()
 
@@ -220,6 +222,9 @@ class Tab1(QMainWindow):
         """
         Slot Function of Selecting Model File
         """
+        if not self.modelSelectBtn.isEnabled():
+            return
+
         try:
             model = self.modelList.currentItem().text()
         except:

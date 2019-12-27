@@ -116,15 +116,19 @@
     <property name="title">
      <string>File(&amp;F)</string>
     </property>
-    <addaction name="projectBrowseAction"/>
-    <addaction name="actionOpen_folder_O"/>
+    <addaction name="actionOpen_ProjectFolder_P"/>
+    <addaction name="actionOpen_DataFolder_O"/>
+    <addaction name="actionSelect_Data_D"/>
+    <addaction name="actionLoad_Model"/>
+    <addaction name="actionSelect_Model"/>
+    <addaction name="actionSave_Model_S"/>
     <addaction name="actionExit_E"/>
    </widget>
    <widget class="QMenu" name="menuEdit_E">
     <property name="title">
      <string>Edit(&amp;E)</string>
     </property>
-    <addaction name="actionEdit"/>
+    <addaction name="actionAnalyze"/>
    </widget>
    <widget class="QMenu" name="menuHelp_H">
     <property name="title">
@@ -148,9 +152,12 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionOpen_folder_O">
+  <action name="actionOpen_DataFolder_O">
    <property name="text">
-    <string>Open folder(&amp;O)</string>
+    <string>Open Data Folder(&amp;O)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Data Folder(O)</string>
    </property>
   </action>
   <action name="actionExit_E">
@@ -163,14 +170,46 @@
     <string>About(&amp;A)</string>
    </property>
   </action>
-  <action name="projectBrowseAction">
+  <action name="actionOpen_ProjectFolder_P">
    <property name="text">
-    <string>Project Browse (&amp;B)</string>
+    <string>Open Project Folder(&amp;P)</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Project Folder(P)</string>
    </property>
   </action>
-  <action name="actionEdit">
+  <action name="actionAnalyze">
    <property name="text">
-    <string>edit</string>
+    <string>Analyze(&amp;A)</string>
+   </property>
+   <property name="toolTip">
+    <string>Analyze(A)</string>
+   </property>
+  </action>
+  <action name="actionSave_Model_S">
+   <property name="text">
+    <string>Save Model(&amp;S)</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Model(S)</string>
+   </property>
+  </action>
+  <action name="actionSelect_Model">
+   <property name="text">
+    <string>Select Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Select Model</string>
+   </property>
+  </action>
+  <action name="actionSelect_Data_D">
+   <property name="text">
+    <string>Select Data(&amp;D)</string>
+   </property>
+  </action>
+  <action name="actionLoad_Model">
+   <property name="text">
+    <string>Load Model</string>
    </property>
   </action>
  </widget>

@@ -45,11 +45,7 @@ class MainWindow(QMainWindow):
         Bind Slots and Signals & Add Buttons to ToolBar.
         """
         self.projectList.itemDoubleClicked.connect(self.projectDoubleClickedSlot)
-
-        self.openAction = self.toolBar.addAction(QIcon("images/fileopen.png"), "Open Project(&O)")
-        self.openAction.triggered.connect(self.projectBrowseSlot)
         self.projectBrowseBtn.released.connect(self.projectBrowseSlot)
-        self.projectBrowseAction.triggered.connect(self.projectBrowseSlot)
 
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
@@ -69,14 +65,15 @@ class MainWindow(QMainWindow):
 
         self.tab1.trainingReturnLineEdit.textChanged.connect(self.tab2.refreshTrainingList)
 
-        self.saveModelAction = self.toolBar.addAction(QIcon("images/gtk-save.png"), "Save Model(&S)")
-        self.saveASModelAction = self.toolBar.addAction(QIcon("images/gtk-save-as.png"), "Save As Model")
+        self.actionOpen_ProjectFolder_P.triggered.connect(self.projectBrowseSlot)
+        self.actionOpen_DataFolder_O.triggered.connect(self.tab1.dataBrowseSlot)
+        self.actionLoad_Model.triggered.connect(lambda: self.commonSlot('modelBrowseSlot'))
+        self.actionSelect_Data_D.triggered.connect(lambda: self.commonSlot('dataSelectSlot'))
+        self.actionSelect_Model.triggered.connect(lambda: self.commonSlot('modelSelectSlot'))
+        self.actionSave_Model_S.triggered.connect(lambda: self.commonSlot('modelSaveSlot'))
+        self.actionAnalyze.triggered.connect(lambda: self.commonSlot('analyzeSlot'))
 
-        self.loadModelAction = self.toolBar.addAction(QIcon("images/add.png"), "Load Model(&O)")
-        self.loadModelAction.triggered.connect(self.tab1.modelBrowseSlot)
-
-        exitAction = self.actionExit_E
-        exitAction.triggered.connect(QCoreApplication.instance().quit)
+        self.actionExit_E.triggered.connect(QCoreApplication.instance().quit)
 
     def projectSetSlot(self, folder):
         """
@@ -104,6 +101,10 @@ class MainWindow(QMainWindow):
             self.projectLineEdit.setText(folder)
             resetFolderList(self.projectList, folder)
 
+    def commonSlot(self, funcName):
+        if getattr(self.tabWidget.currentWidget(), funcName, None) is not None:
+            method = getattr(self.tabWidget.currentWidget(), funcName)
+            method()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

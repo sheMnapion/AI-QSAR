@@ -61,7 +61,7 @@ class Tab3(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
         self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
 
-        self.analyzeBtn.released.connect(self.AnalyzePredictSlot)
+        self.analyzeBtn.released.connect(self.analyzeSlot)
 
         # Ensure Scroll to Bottom in Realtime
         self.infoList.model().rowsInserted.connect(self.infoList.scrollToBottom)
@@ -111,6 +111,9 @@ class Tab3(QMainWindow):
         """
         Slot Function of Selecting Model File
         """
+        if not self.modelSelectBtn.isEnabled():
+            return
+
         try:
             model = self.modelList.currentItem().text()
         except:
@@ -199,10 +202,13 @@ class Tab3(QMainWindow):
 
         self._resetAnalyzeBtn()
 
-    def AnalyzePredictSlot(self):
+    def analyzeSlot(self):
         """
         Slot Function of Updating Prediction & Plots
         """
+        if not self.analyzeBtn.isEnabled():
+            return
+
         labelColumn = self.columnSelectComboBox.currentText()
         predColumn = 'predict'
 
