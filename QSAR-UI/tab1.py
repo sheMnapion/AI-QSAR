@@ -38,6 +38,7 @@ class Tab1(QMainWindow):
         self._currentProjectFolder = None
         self._currentOutputPath = None
         self._currentDataFile = None
+        self._currentModelFile = None
 
         # object name of QtWidgets -> key of self.trainingParams
         self._trainingParamsMap = {
@@ -78,8 +79,25 @@ class Tab1(QMainWindow):
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
         self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
 
+        self.fromLoadedModelCheckBox.stateChanged.connect(self._resetTrainParamsBtn)
         # Ensure Scroll to Bottom in Realtime
         self.trainingList.model().rowsInserted.connect(self.trainingList.scrollToBottom)
+
+    def _resetTrainParamsBtn(self):
+        if self.fromLoadedModelCheckBox.isChecked():
+            if self._currentDataFile and self._currentModelFile \
+                    and self.DNN.model.state_dict() is not None \
+                    and self.numericData is not None \
+                    and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
+                self.trainParamsBtn.setEnabled(True)
+                self.trainParamsBtn.repaint()
+            else:
+                self.trainParamsBtn.setEnabled(False)
+                self.trainParamsBtn.repaint()
+        else:
+            if self._currentDataFile and self.numericData is not None:
+                self.trainParamsBtn.setEnabled(True)
+                self.trainParamsBtn.repaint()
 
     def _setTrainingReturnsSlot(self, result):
         """
@@ -215,11 +233,15 @@ class Tab1(QMainWindow):
                 self.DNN.load(model)
                 self._debugPrint("Model Loaded: {}".format(model))
             except:
-                self._debugPrint("Load Model {} Error!".format(model))
+                self._debugPrint("Load Model Error!")
                 return
         else:
             self._debugPrint("Not a .pxl pytorch model!")
             return
+
+        self._currentModelFile = model
+
+        self._resetTrainParamsBtn()
 
     def dataBrowseSlot(self):
         """
@@ -285,6 +307,8 @@ class Tab1(QMainWindow):
         self.trainParamsBtn.repaint()
         self.modelSelectBtn.repaint()
         self._currentDataFile = file
+
+        self._resetTrainParamsBtn()
 
     def _debugPrint(self, msg):
         """

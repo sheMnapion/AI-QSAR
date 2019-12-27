@@ -78,7 +78,8 @@ class Tab3(QMainWindow):
 
     def _resetAnalyzeBtn(self):
         if self._currentDataFile and self._currentModelFile \
-                and self.DNN.model.state_dict() \
+                and self.DNN.model.state_dict() is not None \
+                and self.numericData is not None \
                 and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
             self.analyzeBtn.setEnabled(True)
             self.analyzeBtn.repaint()
@@ -123,7 +124,7 @@ class Tab3(QMainWindow):
                 self.DNN.load(model)
                 self._debugPrint("Model Loaded: {}".format(model))
             except:
-                self._debugPrint("Load Model {} Error!".format(model))
+                self._debugPrint("Load Model Error!")
                 return
         else:
             self._debugPrint("Not a .pxl pytorch model!")
