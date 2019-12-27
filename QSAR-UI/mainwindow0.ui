@@ -260,7 +260,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="featureAnalysisComboBox_2">
+             <widget class="QComboBox" name="featureAnalysisComboBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -275,11 +275,6 @@
               <item>
                <property name="text">
                 <string>SVD</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Factor Analysis</string>
                </property>
               </item>
              </widget>
@@ -458,7 +453,7 @@
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>Output Folder</string>
+               <string>Output</string>
               </property>
              </widget>
             </item>
@@ -475,13 +470,13 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>75</width>
+                <width>70</width>
                 <height>30</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>75</width>
+                <width>65</width>
                 <height>30</height>
                </size>
               </property>
@@ -491,7 +486,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="outputSaveBtn">
+             <widget class="QPushButton" name="analyzeBtn">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -503,18 +498,40 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>75</width>
+                <width>70</width>
                 <height>30</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>75</width>
+                <width>65</width>
                 <height>30</height>
                </size>
               </property>
               <property name="text">
                <string>Analyze</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="outputSaveBtn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>65</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>65</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Output</string>
               </property>
              </widget>
             </item>
@@ -854,7 +871,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
            <widget class="QWidget" name="featurePlotWidget" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <layout class="QVBoxLayout" name="featurePlotLayout">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -867,39 +884,6 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QWidget" name="PCAPlotWidget" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>1</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
-               <layout class="QGridLayout" name="PCAPlotLayout">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-               </layout>
-              </widget>
-             </item>
             </layout>
            </widget>
           </item>
