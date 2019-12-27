@@ -124,7 +124,7 @@
               <property name="maximumSize">
                <size>
                 <width>75</width>
-                <height>16777215</height>
+                <height>30</height>
                </size>
               </property>
               <property name="text">
@@ -310,7 +310,7 @@
               <property name="maximumSize">
                <size>
                 <width>75</width>
-                <height>16777215</height>
+                <height>30</height>
                </size>
               </property>
               <property name="text">
