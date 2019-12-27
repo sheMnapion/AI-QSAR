@@ -117,9 +117,6 @@ class Tab4(QMainWindow):
         """
         Slot Function of Selecting Model File
         """
-        if not self.modelSelectBtn.isEnabled():
-            return
-
         try:
             model = self.modelList.currentItem().text()
         except:
@@ -219,13 +216,15 @@ class Tab4(QMainWindow):
         """
         Slot Function of Design Molecules after Training: TODO
         """
-        pass
+        if not self.designBtn.isEnabled():
+            return
 
     def startTrainingSlot(self):
         """
         Slot Function of Training After Loading Data and Model: TODO
         """
-        pass
+        if not self.trainBtn.isEnabled():
+            return
 
     def _debugPrint(self, msg):
         """
