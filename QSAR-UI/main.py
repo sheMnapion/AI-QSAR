@@ -10,6 +10,7 @@ from tab0 import Tab0
 from tab1 import Tab1
 from tab2 import Tab2
 from tab3 import Tab3
+from tab4 import Tab4
 
 from types import MethodType
 from utils import resetFolderList, getFolder, mousePressEvent
@@ -26,11 +27,13 @@ class MainWindow(QMainWindow):
         self.tab1 = Tab1()
         self.tab2 = Tab2()
         self.tab3 = Tab3()
+        self.tab4 = Tab4()
 
         self.tabWidget.addTab(self.tab0, "Data Processing")
         self.tabWidget.addTab(self.tab1, "Model Training")
         self.tabWidget.addTab(self.tab2, "Result Analysis")
         self.tabWidget.addTab(self.tab3, "Activity Prediction")
+        self.tabWidget.addTab(self.tab4, "Molecule Design")
 
         self.setWindowIcon(QIcon("molPredict.ico"))
 
@@ -50,18 +53,28 @@ class MainWindow(QMainWindow):
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
         self.projectLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+        self.projectLineEdit.textChanged.connect(lambda folder: self.tab4.dataSetSlot(folder))
 
         self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
         self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+        self.tab0.dataLineEdit.textChanged.connect(lambda folder: self.tab4.dataSetSlot(folder))
+
         self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab0.dataList, self.tab0._currentDataFolder))
         self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab1.dataList, self.tab1._currentDataFolder))
         self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab3.dataList, self.tab3._currentDataFolder))
+        self.tab0.syncBtn.clicked.connect(lambda: resetFolderList(self.tab4.dataList, self.tab3._currentDataFolder))
 
         self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
         self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
+        self.tab1.dataLineEdit.textChanged.connect(lambda folder: self.tab4.dataSetSlot(folder))
 
         self.tab3.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
         self.tab3.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.tab3.dataLineEdit.textChanged.connect(lambda folder: self.tab4.dataSetSlot(folder))
+
+        self.tab4.dataLineEdit.textChanged.connect(lambda folder: self.tab0.dataSetSlot(folder))
+        self.tab4.dataLineEdit.textChanged.connect(lambda folder: self.tab1.dataSetSlot(folder))
+        self.tab4.dataLineEdit.textChanged.connect(lambda folder: self.tab3.dataSetSlot(folder))
 
         self.tab1.trainingReturnLineEdit.textChanged.connect(self.tab2.refreshTrainingList)
 
