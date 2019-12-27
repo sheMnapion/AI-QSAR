@@ -119,6 +119,14 @@ class Tab2(QMainWindow):
             ax1f1.set_title('Precision Curve')
             ax1f1.set_xlabel('Predict Value')
             ax1f1.set_ylabel('Real Value')
+
+            lims = [
+                np.min([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # min of both axes
+                np.max([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # max of both axes
+            ]
+            # now plot both limits against eachother
+            ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+
             self._addmpl(self.precisionCurveLayout, fig)
         else:
             clearLayout(self.precisionCurveLayout)

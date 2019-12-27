@@ -188,7 +188,7 @@ class Tab3(QMainWindow):
         """
 #        print (self.DNN.model.state_dict())
         labelColumn = self.columnSelectComboBox.currentText()
-        predColumn = 'predict_{}'.format((labelColumn) if len(labelColumn) <= 50 else (labelColumn[:50] + '...'))
+        predColumn = 'predict'
 
         self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
         self.testData = self.numericData.loc[:, self.numericData.columns != labelColumn]
@@ -211,6 +211,7 @@ class Tab3(QMainWindow):
                 tempItem = QTableWidgetItem()
                 tempItem.setText(str(npTestDataWithPred[i][j]))
                 self.predTable.setItem(i,j,tempItem)
+        self.predTable.repaint()
 
         # Sorted Prediction Info
         npSortedTestDataWithPred = np.array(sortedTestDataWithPred)[:100] # show only top 100 terms
@@ -223,10 +224,12 @@ class Tab3(QMainWindow):
                 tempItem = QTableWidgetItem()
                 tempItem.setText(str(npSortedTestDataWithPred[i][j]))
                 self.sortedPredTable.setItem(i,j,tempItem)
+        self.sortedPredTable.repaint()
 
         # Molecule Plot
 
         if 'smiles' in sortedTestDataWithPred.columns:
+            shortLabelColumn = labelColumn if len(labelColumn) < 20 else labelColumn[:20] + '...'
             for i in range( min(5, len(sortedTestDataWithPred)) ):
                 smiles = sortedTestDataWithPred.loc[i, 'smiles']
                 mol = Chem.MolFromSmiles(smiles)
@@ -236,8 +239,17 @@ class Tab3(QMainWindow):
                 pixmap = QPixmap.fromImage(qim)
 
                 widget = self.molPlotLayout.itemAt(i).widget()
+                label = self.molLabelLayout.itemAt(i).widget()
                 pixmap = pixmap.scaled(widget.size())
-                widget.setPixmap(pixmap)
+                widget.setPixmap(pixmap)              
+                label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
+                label.repaint()
+        else:
+            for i in range(5):
+                widget = self.molPlotLayout.itemAt(i).widget()
+                label = self.molLabelLayout.itemAt(i).widget()
+                widget.clear()
+                label.setText("SMILES Column not Found")
 
         # Fitting Plot
         fig = Figure()
@@ -249,6 +261,14 @@ class Tab3(QMainWindow):
         ax1f1.set_title('Fitting Curve')
         ax1f1.set_xlabel('Predict Value')
         ax1f1.set_ylabel('Real Value')
+
+        lims = [
+            np.min([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # min of both axes
+            np.max([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # max of both axes
+        ]
+        # now plot both limits against eachother
+        ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+
         self._addmpl(self.fittingPlotLayout, fig)
 
     def _debugPrint(self, msg):
