@@ -72,8 +72,9 @@ class MainWindow(QMainWindow):
         self.actionSelect_Model.triggered.connect(lambda: self.commonSlot('modelSelectSlot'))
         self.actionSave_Model_S.triggered.connect(lambda: self.commonSlot('modelSaveSlot'))
         self.actionAnalyze.triggered.connect(lambda: self.commonSlot('analyzeSlot'))
-
+        self.actionTrain.triggered.connect(lambda: self.commonSlot('startTrainingSlot'))
         self.actionExit_E.triggered.connect(QCoreApplication.instance().quit)
+        self.actionSelect_TrainingHistory.triggered.connect(lambda: self.commonSlot('trainingHistorySelectSlot'))
 
     def projectSetSlot(self, folder):
         """

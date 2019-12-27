@@ -77,6 +77,12 @@
     </item>
     <item row="0" column="2" rowspan="3">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
       <property name="currentIndex">
        <number>-1</number>
       </property>
@@ -122,6 +128,7 @@
     <addaction name="actionLoad_Model"/>
     <addaction name="actionSelect_Model"/>
     <addaction name="actionSave_Model_S"/>
+    <addaction name="actionSelect_TrainingHistory"/>
     <addaction name="actionExit_E"/>
    </widget>
    <widget class="QMenu" name="menuEdit_E">
@@ -129,6 +136,7 @@
      <string>Edit(&amp;E)</string>
     </property>
     <addaction name="actionAnalyze"/>
+    <addaction name="actionTrain"/>
    </widget>
    <widget class="QMenu" name="menuHelp_H">
     <property name="title">
@@ -210,6 +218,19 @@
   <action name="actionLoad_Model">
    <property name="text">
     <string>Load Model</string>
+   </property>
+  </action>
+  <action name="actionTrain">
+   <property name="text">
+    <string>Train(&amp;T)</string>
+   </property>
+   <property name="toolTip">
+    <string>Train(T)</string>
+   </property>
+  </action>
+  <action name="actionSelect_TrainingHistory">
+   <property name="text">
+    <string>Select Training History</string>
    </property>
   </action>
  </widget>
