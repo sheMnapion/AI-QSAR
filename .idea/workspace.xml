@@ -2,139 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/101_derivative_1_-2.39811.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/102_derivative_1_-3.58110.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/103_derivative_1_-1.29927.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/107_derivative_1_-4.85178.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/118_derivative_1_-1.17106.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/120_derivative_1_-1.74264.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/122_derivative_1_-0.44215.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/12_derivative_1_-0.72018.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/131_derivative_1_-1.58643.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/135_derivative_1_-5.39081.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/136_derivative_1_-5.60197.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/140_derivative_1_-2.96640.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/141_derivative_1_-0.29352.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/146_derivative_1_-3.44376.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/148_derivative_1_-1.94397.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/150_derivative_1_-2.06213.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/160_derivative_1_-3.31328.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/162_derivative_1_-1.60476.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/163_derivative_1_-2.01960.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/166_derivative_1_-1.38537.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/172_derivative_1_-1.30008.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/175_derivative_1_-6.52690.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/177_derivative_1_-2.43369.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/179_derivative_1_-1.57344.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/181_derivative_1_-1.26053.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/185_derivative_1_-0.69304.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/188_derivative_1_-5.37768.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/192_derivative_1_-1.21686.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/193_derivative_1_-0.64582.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/194_derivative_1_-1.39881.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/195_derivative_1_-1.27817.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/196_derivative_1_-1.35618.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/199_derivative_1_-2.12249.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/201_derivative_1_-7.40027.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/204_derivative_1_-2.53277.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/206_derivative_1_-2.13589.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/20_derivative_1_-0.65049.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/210_derivative_1_-0.93918.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/216_derivative_1_-2.31471.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/219_derivative_1_-1.72031.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/220_derivative_1_-1.68610.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/222_derivative_1_-1.18843.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/227_derivative_1_-1.24698.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/229_derivative_1_-1.66707.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/230_derivative_1_-0.89249.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/232_derivative_1_-1.99216.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/233_derivative_1_-2.83881.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/242_derivative_1_-1.51177.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/256_derivative_1_-0.83025.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/25_derivative_1_-1.86082.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/260_derivative_1_-3.55942.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/266_derivative_1_-2.89644.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/26_derivative_1_-1.34897.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/274_derivative_1_-2.45072.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/279_derivative_1_-1.33617.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/282_derivative_1_0.37432.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/288_derivative_1_-1.19941.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/290_derivative_1_-2.01085.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/291_derivative_1_-3.21249.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/292_derivative_1_-2.19405.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/296_derivative_1_-2.53437.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/298_derivative_1_-7.23755.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/29_derivative_1_-0.21686.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/2_derivative_1_-2.06183.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/301_derivative_1_-2.81100.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/307_derivative_1_-1.33980.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/30_derivative_1_-1.87321.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/313_derivative_1_-4.47523.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/314_derivative_1_-2.21427.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/324_derivative_1_-1.82224.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/325_derivative_1_-0.91409.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/326_derivative_1_-2.70247.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/330_derivative_1_-2.49554.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/332_derivative_1_-2.32920.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/335_derivative_1_-1.47112.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/339_derivative_1_-0.11077.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/348_derivative_1_-6.09426.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/354_derivative_1_-1.36075.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/356_derivative_1_-1.97727.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/359_derivative_1_-1.39866.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/361_derivative_1_0.41883.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/362_derivative_1_-1.80138.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/371_derivative_1_-1.63654.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/372_derivative_1_-1.79966.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/374_derivative_1_-0.81365.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/376_derivative_1_-0.39589.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/379_derivative_1_-2.66143.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/380_derivative_1_-3.78921.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/384_derivative_1_-2.40287.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/385_derivative_1_-2.81025.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/38_derivative_1_-0.87533.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/393_derivative_1_-1.51197.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/396_derivative_1_-1.71493.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/397_derivative_1_-1.48189.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/399_derivative_1_-0.73266.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/39_derivative_1_-2.52879.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/3_derivative_1_-2.56164.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/402_derivative_1_-1.98082.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/406_derivative_1_-2.29878.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/408_derivative_1_-2.17483.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/411_derivative_1_-0.93575.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/417_derivative_1_-1.11400.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/421_derivative_1_-1.24013.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/428_derivative_1_-1.22762.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/431_derivative_1_0.03433.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/434_derivative_1_-0.60375.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/436_derivative_1_-3.06275.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/439_derivative_1_-1.47736.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/449_derivative_1_-0.46362.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/452_derivative_1_-2.25095.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/459_derivative_1_-1.89959.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/470_derivative_1_-2.06097.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/478_derivative_1_-1.49252.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/48_derivative_1_-2.98481.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/49_derivative_1_-0.84980.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/51_derivative_1_-6.66562.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/56_derivative_1_-2.99016.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/57_derivative_1_-0.85652.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/60_derivative_1_-2.93106.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/68_derivative_1_-0.82388.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/70_derivative_1_-1.05854.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/73_derivative_1_-1.27773.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/77_derivative_1_-0.07718.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/80_derivative_1_-2.39541.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/84_derivative_1_-1.66749.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/86_derivative_1_-0.07283.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/87_derivative_1_-2.20735.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/89_derivative_1_-2.38740.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/96_derivative_1_-2.33451.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/101_1_derivative_-1.92892.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/102_1_derivative_-3.32713.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/107_1_derivative_-4.73393.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/110_1_derivative_-2.40949.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/118_1_derivative_-1.25908.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/120_1_derivative_-1.42422.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/122_1_derivative_-0.55044.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/12_1_derivative_-0.70802.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/131_1_derivative_-1.98617.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/135_1_derivative_-5.49208.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/140_1_derivative_-3.24245.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/16_1_derivative_-1.01228.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/20_1_derivative_-0.85722.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/25_1_derivative_-2.03204.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/26_1_derivative_-1.46764.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/29_1_derivative_-0.46296.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/30_1_derivative_-1.57997.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/35_1_derivative_-1.21457.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/38_1_derivative_-1.11640.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/41_1_derivative_-2.65231.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/48_1_derivative_-3.13147.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/49_1_derivative_-1.99046.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/51_1_derivative_-6.35909.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/56_1_derivative_-2.95195.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/57_1_derivative_-1.02947.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/68_1_derivative_-1.29918.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/70_1_derivative_-1.11929.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/73_1_derivative_-1.91095.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/77_1_derivative_-0.43159.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/80_1_derivative_-2.65406.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/84_1_derivative_-1.41165.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/86_1_derivative_-0.66635.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/89_1_derivative_-2.36391.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/94_1_derivative_-1.84585.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/96_1_derivative_-2.34572.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/97_1_derivative_-1.19953.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/latentModel.pt" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/tmp/latentModel.pt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/model_0.57857.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/model_0.66524.pt" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/tmp/model_0.66524.pt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -225,12 +131,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="9610" />
+          <entry key="py" value="12070" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="9610" />
+          <entry key="Python" value="12070" />
         </counts>
       </usages-collector>
     </session>
@@ -240,8 +146,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/QSAR-UI/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-497">
-              <caret line="74" selection-start-line="74" selection-end-line="74" />
+            <state relative-caret-position="-198">
+              <caret line="87" selection-start-line="87" selection-end-line="87" />
               <folding>
                 <element signature="e#54#64#0" expanded="true" />
               </folding>
@@ -264,17 +170,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="446" column="40" selection-start-line="446" selection-start-column="40" selection-end-line="446" selection-end-column="40" />
+            <state relative-caret-position="368">
+              <caret line="546" column="62" selection-start-line="546" selection-start-column="62" selection-end-line="546" selection-end-column="62" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#3490#3804#0" />
-                <element signature="e#3840#4164#0" />
-                <element signature="e#4209#4374#0" />
-                <element signature="e#5181#7286#0" />
-                <marker date="1577456575719" expanded="true" signature="3138:3684" ph="..." />
-                <marker date="1577456575719" expanded="true" signature="9103:10921" ph="..." />
-                <marker date="1577456575719" expanded="true" signature="13998:14181" ph="..." />
+                <element signature="e#2619#3179#0" />
+                <element signature="e#3216#3751#0" />
+                <element signature="e#3785#5082#0" />
+                <marker date="1577547257044" expanded="true" signature="10114:11687" ph="..." />
               </folding>
             </state>
           </provider>
@@ -346,6 +249,9 @@
       <find>PCA</find>
       <find>SVD</find>
       <find>middleRe</find>
+      <find>identi</find>
+      <find>encode</find>
+      <find>random</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -453,7 +359,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -480,7 +386,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py</url>
-          <line>338</line>
+          <line>364</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
@@ -567,8 +473,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/QSAR-UI/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-497">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
+        <state relative-caret-position="-198">
+          <caret line="87" selection-start-line="87" selection-end-line="87" />
           <folding>
             <element signature="e#54#64#0" expanded="true" />
           </folding>
@@ -610,17 +516,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="446" column="40" selection-start-line="446" selection-start-column="40" selection-end-line="446" selection-end-column="40" />
+        <state relative-caret-position="368">
+          <caret line="546" column="62" selection-start-line="546" selection-start-column="62" selection-end-line="546" selection-end-column="62" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#3490#3804#0" />
-            <element signature="e#3840#4164#0" />
-            <element signature="e#4209#4374#0" />
-            <element signature="e#5181#7286#0" />
-            <marker date="1577456575719" expanded="true" signature="3138:3684" ph="..." />
-            <marker date="1577456575719" expanded="true" signature="9103:10921" ph="..." />
-            <marker date="1577456575719" expanded="true" signature="13998:14181" ph="..." />
+            <element signature="e#2619#3179#0" />
+            <element signature="e#3216#3751#0" />
+            <element signature="e#3785#5082#0" />
+            <marker date="1577547257044" expanded="true" signature="10114:11687" ph="..." />
           </folding>
         </state>
       </provider>

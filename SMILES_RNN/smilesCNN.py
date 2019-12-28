@@ -26,11 +26,11 @@ class SmilesCNNVAE(nn.Module):
         super(SmilesCNNVAE,self).__init__()
         self.featureNum=featureNum
         self.embedding=nn.Embedding(32,32)
-        self.fc1=nn.Linear(3200,1200)
-        self.fc21=nn.Linear(1200,200)
-        self.fc22=nn.Linear(1200,200)
-        self.fc3=nn.Linear(200,1200)
-        self.fc4=nn.Linear(1200,3200)
+        self.fc1=nn.Linear(3200,1000)
+        self.fc21=nn.Linear(1000,200)
+        self.fc22=nn.Linear(1000,200)
+        self.fc3=nn.Linear(200,1000)
+        self.fc4=nn.Linear(1000,3200)
         self.decodeFC=nn.Linear(32,32)
 
     def num_flat_features(self,x):
@@ -44,18 +44,18 @@ class SmilesCNNVAE(nn.Module):
         """encode the input into two parts, mean mu and log variance"""
         x=self.embedding(x)
         x=x.view(-1,self.num_flat_features(x))
-        x=F.relu(self.fc1(x))
+        x=F.leaky_relu(self.fc1(x))
         return self.fc21(x), self.fc22(x)
 
     def decode(self, z):
         """decode the inner representation vibrated with random noise to the original size"""
         batchSize=z.shape[0]
-        z=F.relu(self.fc3(z))
-        z=F.relu(self.fc4(z))
+        z=F.leaky_relu(self.fc3(z))
+        z=F.leaky_relu(self.fc4(z))
         z=z.view(-1,32)
         z=self.decodeFC(z)
         z=z.view(batchSize,-1,32)
-        return torch.sigmoid(z) # temporarily take this as the binary vector format
+        return z # temporarily take this as the binary vector format
 
     def reparameterize(self, mu, logvar):
         """re-parameterization trick in training the net"""
@@ -71,19 +71,22 @@ class SmilesCNNVAE(nn.Module):
     def middleRepresentation(self, x):
         """return representation in latent space"""
         mu, logVar = self.encode(x)
-        return mu
+        return self.reparameterize(mu,logVar)
 
 def vaeLossFunc(reconstructedX, x, mu, logvar):
-    reconstructedX=reconstructedX.view(-1,3200)
-    x=x.view(-1,3200)
+    batchSize=x.shape[0]
+    reconstructedX=reconstructedX.view(-1,32)
+    x=x.view(-1)
     # print(reconstructedX.shape,x.shape)
-    BCE = F.binary_cross_entropy(reconstructedX, x, reduction='sum')
+    # BCE = F.binary_cross_entropy(reconstructedX, x, reduction='sum')
+    loss=nn.CrossEntropyLoss()
+    BCE=loss(reconstructedX,x)
     # see Appendix B from VAE paper:
     # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
     # https://arxiv.org/abs/1312.6114
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    # print(BCE,KLD)
+    print(BCE,KLD)
     return BCE + KLD
 
 class DNNRegressor(nn.Module):
@@ -96,13 +99,13 @@ class DNNRegressor(nn.Module):
         super(DNNRegressor,self).__init__()
         self.fc1=nn.Linear(200,200)
         self.fc2=nn.Linear(200,200)
-        # self.fc3=nn.Linear(200,200)
+        self.fc3=nn.Linear(200,200)
         self.fc4=nn.Linear(200,1)
 
     def forward(self, x):
         x=F.relu(self.fc1(x))
         x=F.relu(self.fc2(x))
-        # x=F.relu(self.fc3(x))
+        x=F.relu(self.fc3(x))
         return self.fc4(x)
 
 class SmilesCNN(nn.Module):
@@ -185,7 +188,7 @@ class SmilesCNNPredictor(object):
                 x.unsqueeze_(1)
                 y.unsqueeze_(1) # ; y.unsqueeze_(1)
                 reconstructedX,mu,logVar,origX=self.vaeNet(x)
-                loss=vaeLossFunc(reconstructedX,aimX,mu,logVar)
+                loss=vaeLossFunc(reconstructedX,x,mu,logVar)
                 # print(loss)
                 losses.append(loss.item())
                 optimizer.zero_grad()
@@ -204,7 +207,7 @@ class SmilesCNNPredictor(object):
                     x.unsqueeze_(1)
                     y.unsqueeze_(1) #; y.unsqueeze_(1)
                     reconstructedX,mu,logVar,origX=self.vaeNet(x)
-                    loss=vaeLossFunc(reconstructedX,aimX,mu,logVar)
+                    loss=vaeLossFunc(reconstructedX,x,mu,logVar)
                     valLosses.append(loss.item())
             valLoss=np.mean(valLosses)
             if bestLoss>valLoss:
@@ -232,15 +235,103 @@ class SmilesCNNPredictor(object):
         print('Test repr shape:',testRet.shape)
         self.testRepr=testRet.detach().clone()
 
+    def identityRatio(self):
+        """check the extent of identity learned through our vae net"""
+        temp=self.trainRepr
+        decoded=self.vaeNet.decode(temp)
+        print(decoded.shape)
+        translated=torch.argmax(decoded,dim=2)
+        correctRatios=[]
+        w,h=self.origSmilesTrain.shape[:2]
+        for i in range(w):
+            orig=self.origSmilesTrain[i]
+            trans=translated[i]
+            # print(orig)
+            # print(trans)
+            correctCount=0
+            for j in range(h):
+                if orig[j]==0:
+                    correctCount/=j
+                    correctRatios.append(correctCount)
+                    break
+                if trans[j]==orig[j]:
+                    correctCount+=1
+        print(correctRatios)
+        correctRatios=np.array(correctRatios)
+        print('Average correct translation ratio:',np.mean(correctRatios))
+
+    def molecularRandomDesign(self,aimNumber=100,batchSize=10):
+        """design [aimNumber] molecules by randomly sampling from latent space"""
+        designedNumber=0
+        designedMolecules=set()
+        designedMoleculesPairs=[]
+        while designedNumber<aimNumber:
+            latentVector=torch.randn(batchSize,1,200)
+            properties=self.latentRegressor(latentVector)
+            translate=self.vaeNet.decode(latentVector)
+            validVectors=np.array(torch.argmax(translate,dim=2))
+            translations=[]
+            for validVector in validVectors:
+                translation=''.join([self.decodeDict[vV] for vV in validVector if vV > 0])
+                translations.append(translation)
+            for i in range(batchSize):
+                translation=translations[i]
+                if designedNumber==aimNumber: break
+                if translation in designedMolecules: continue
+                try:
+                    mol=Chem.MolFromSmiles(translation)
+                    Draw.MolToImageFile(mol,str.format('designed/designed_%d_%.5f.png' % (designedNumber,properties[i].item())))
+                    print('[%d]: %s | (%d)' % (designedNumber+1,translation,i))
+                    designedMoleculesPairs.append([properties[i].item(),translation])
+                    designedNumber+=1
+                except ValueError as e:
+                    continue
+        designedMoleculesPairs=np.array(designedMoleculesPairs)
+        propertyIndex=np.argsort(designedMoleculesPairs[:,0])
+        designedMoleculesPairs=designedMoleculesPairs[propertyIndex]
+        print(designedMoleculesPairs)
+
     def molecularDesign(self,lr=1e-3,rounds=1000):
         """design molecular using trained latent model"""
         nTrain=self.trainRepr.shape[0]
+
+        latentVector=torch.randn(1,1,200,requires_grad=True)
+        optimizer = optim.Adam([latentVector], lr=lr)
+        bestScore = -10.0
+        designedMolecules = set()
+        for epoch in range(rounds):
+            tempScore = self.latentRegressor(latentVector)
+            optimizer.zero_grad()
+            tempScore.backward()
+            optimizer.step()
+            # print(latentVector)
+            translate = self.vaeNet.decode(latentVector)
+            validVector = torch.argmax(translate[0], dim=1)
+            validVector = np.array(validVector)
+            # print(validVector,validVector.shape)
+            translation = ''.join([self.decodeDict[vV] for vV in validVector if vV > 0])
+            print(epoch,translation,tempScore)
+            if translation in designedMolecules: continue
+            try:
+                # print(translation)
+                mol = Chem.MolFromSmiles(translation)
+                Draw.MolToImageFile(mol, str.format(
+                    'designed/search_%d_%.5f.png' % (epoch + 1, tempScore.item())))
+                print(translation)
+                print("Epoch [%d]: designed molecular property %.5f" % (epoch + 1, tempScore.item()))
+                designedMolecules.add(translation)
+            except ValueError as e:
+                continue
+        exit(0)
+
         for i in range(nTrain):
-            latentVector=self.trainRepr[i].detach().clone()
+            latentVector=torch.randn(1,1,200,requires_grad=True)
+            with torch.no_grad():
+                for j in range(200):
+                    latentVector[0][0][j]=self.trainRepr[i][j]
             origVec=np.array(self.origSmilesTrain[i])
             origTranslation=''.join([self.decodeDict[tR] for tR in origVec if tR>0])
             # print(origTranslation)
-            latentVector.unsqueeze_(0); latentVector.unsqueeze_(0)
             print("Number [%d]:" %(i+1))
             # print(latentVector,latentVector.shape)
             optimizer=optim.SGD([latentVector],lr=lr)
@@ -257,10 +348,11 @@ class SmilesCNNPredictor(object):
                 validVector=np.array(validVector)
                 # print(validVector,validVector.shape)
                 translation=''.join([self.decodeDict[vV] for vV in validVector if vV>0])
+                print(epoch, origTranslation, translation, tempScore)
                 if translation==origTranslation or translation in designedMolecules: continue
                 try:
                     mol=Chem.MolFromSmiles(translation)
-                    Draw.MolToImageFile(mol,str.format('designed/%d_%d_derivative_%.5f.png' % (i+1,epoch+1,tempScore.item())))
+                    Draw.MolToImageFile(mol,str.format('designed/%d_derivative_%d_%.5f.png' % (i+1,epoch+1,tempScore.item())))
                     print(translation)
                     print(origTranslation)
                     print("Epoch [%d]: designed molecular property %.5f" % (epoch+1,tempScore.item()))
@@ -273,7 +365,7 @@ class SmilesCNNPredictor(object):
         npTrainX=np.array(self.trainRepr); npTrainY=np.array(self.propTrain)
         npTestX=np.array(self.testRepr); npTestY=np.array(self.propTest)
         from sklearn.ensemble import RandomForestRegressor
-        tempRegressor=RandomForestRegressor(n_estimators=100,n_jobs=2,random_state=2019,verbose=True)
+        tempRegressor=RandomForestRegressor(n_estimators=200,n_jobs=2,random_state=2019,verbose=True)
         tempRegressor.fit(npTrainX,npTrainY)
         predTestY=tempRegressor.predict(npTestX)
         score=r2_score(npTestY,predTestY)
@@ -307,9 +399,11 @@ class SmilesCNNPredictor(object):
                     y.unsqueeze_(1); y.unsqueeze_(1)
                     prediction=tempRegressor(x)
                     # print(prediction.shape)
-                    for i, p in enumerate(prediction[:,0]):
+                    for i, p in enumerate(prediction[:,0,0]):
                         pred.append(p)
                         true.append(y[i][0])
+                    # print(pred)
+                    # print(true)
                     loss=lossFunc(prediction,y)
                     valLosses.append(loss.item())
             if epoch%10==0:
@@ -443,9 +537,11 @@ if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesCNNPredictor(smiles,properties)
     # predictor.train(nRounds=1000,lr=5e-4,batchSize=20)
-    # predictor.trainVAE(nRounds=1000,lr=3e-4,earlyStop=True,earlyStopEpoch=20,batchSize=20)
-    predictor.loadVAE('tmp/model_0.64696.pt')
+    # predictor.trainVAE(nRounds=500,lr=3e-4,earlyStop=True,earlyStopEpoch=20,batchSize=20)
+    predictor.loadVAE('tmp/tmpTanh1Model.pt')
     predictor.encodeDataset()
-    predictor.trainLatentModel(lr=3e-4,batchSize=20,nRounds=10000,earlyStopEpoch=100)
-    # predictor.loadLatentModel('tmp/latentModel.pt')
-    predictor.molecularDesign(lr=1e-3,rounds=1000)
+    # predictor.identityRatio()
+    # predictor.trainLatentModel(lr=3e-4,batchSize=20,nRounds=10000,earlyStopEpoch=100)
+    predictor.loadLatentModel('tmp/latentModel.pt')
+    # predictor.molecularDesign(lr=1e-3,rounds=100)
+    predictor.molecularRandomDesign(aimNumber=100,batchSize=500)
