@@ -2,45 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/QSAR-UI/smilesPredictor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/101_1_derivative_-1.92892.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/102_1_derivative_-3.32713.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/107_1_derivative_-4.73393.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/110_1_derivative_-2.40949.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/118_1_derivative_-1.25908.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/120_1_derivative_-1.42422.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/122_1_derivative_-0.55044.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/12_1_derivative_-0.70802.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/131_1_derivative_-1.98617.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/135_1_derivative_-5.49208.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/140_1_derivative_-3.24245.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/16_1_derivative_-1.01228.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/20_1_derivative_-0.85722.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/25_1_derivative_-2.03204.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/26_1_derivative_-1.46764.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/29_1_derivative_-0.46296.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/30_1_derivative_-1.57997.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/35_1_derivative_-1.21457.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/38_1_derivative_-1.11640.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/41_1_derivative_-2.65231.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/48_1_derivative_-3.13147.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/49_1_derivative_-1.99046.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/51_1_derivative_-6.35909.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/56_1_derivative_-2.95195.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/57_1_derivative_-1.02947.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/68_1_derivative_-1.29918.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/70_1_derivative_-1.11929.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/73_1_derivative_-1.91095.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/77_1_derivative_-0.43159.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/80_1_derivative_-2.65406.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/84_1_derivative_-1.41165.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/86_1_derivative_-0.66635.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/89_1_derivative_-2.36391.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/94_1_derivative_-1.84585.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/96_1_derivative_-2.34572.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/designed/97_1_derivative_-1.19953.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SMILES_RNN/tmp/latentModel.pt" beforeDir="false" afterPath="$PROJECT_DIR$/SMILES_RNN/tmp/latentModel.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QSAR-UI/tab4.py" beforeDir="false" afterPath="$PROJECT_DIR$/QSAR-UI/tab4.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -118,25 +82,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="ico" value="1" />
-          <entry key="py" value="7" />
+          <entry key="py" value="11" />
           <entry key="pyi" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Image" value="1" />
-          <entry key="Python" value="7" />
+          <entry key="Python" value="11" />
           <entry key="PythonStub" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="12070" />
+          <entry key="py" value="16256" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="12070" />
+          <entry key="Python" value="16256" />
         </counts>
       </usages-collector>
     </session>
@@ -167,7 +131,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="368">
@@ -184,6 +148,65 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/QSAR-UI/tab4.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-729">
+              <caret line="42" column="49" selection-start-line="42" selection-start-column="49" selection-end-line="42" selection-end-column="49" />
+              <folding>
+                <element signature="e#54#63#0" expanded="true" />
+                <marker date="1577560577493" expanded="true" signature="937:2806" ph="..." />
+                <marker date="1577560577493" expanded="true" signature="10887:11022" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesPredictor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="194">
+              <caret line="253" column="33" selection-start-line="253" selection-start-column="33" selection-end-line="253" selection-end-column="33" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#1234#1399#0" />
+                <element signature="e#1434#1650#0" />
+                <element signature="e#1685#2025#0" />
+                <element signature="e#2077#2228#0" />
+                <element signature="e#2264#2429#0" />
+                <element signature="e#2478#2603#0" />
+                <element signature="e#3254#3789#0" />
+                <element signature="e#8631#9152#0" />
+                <element signature="e#9191#10049#0" />
+                <element signature="e#18171#18339#0" />
+                <element signature="e#20700#23531#0" />
+                <marker date="1577561264852" expanded="true" signature="4480:4740" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-621">
+              <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/QSAR-UI/tab1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="116" column="18" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="18" />
+              <folding>
+                <element signature="e#54#63#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-203">
@@ -191,15 +214,6 @@
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/QSAR-DNN/_QSAR_DNN_.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="150" column="16" selection-start-line="150" selection-start-column="16" selection-end-line="150" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -224,16 +238,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>self.DNN</find>
-      <find>Worker</find>
-      <find>DNN</find>
-      <find>getF</find>
-      <find>self.transformed</find>
-      <find>setHorizon</find>
-      <find>plotW</find>
-      <find>self.plotW</find>
-      <find>outputSave</find>
-      <find>columnSelectS</find>
       <find>outputSaveB</find>
       <find>outputSaveS</find>
       <find>pd</find>
@@ -243,7 +247,6 @@
       <find>VAE</find>
       <find>Pad</find>
       <find>vaeLossF</find>
-      <find>vaeLoss</find>
       <find>vaeNet</find>
       <find>DNNR</find>
       <find>PCA</find>
@@ -251,7 +254,20 @@
       <find>middleRe</find>
       <find>identi</find>
       <find>encode</find>
+      <find>startTrainingSlot</find>
+      <find>self.DNN</find>
+      <find>QSARDNN</find>
+      <find>train</find>
+      <find>columnS</find>
+      <find>DesignerT</find>
+      <find>modelSelectSl</find>
+      <find>trainLatent</find>
+      <find>smilesDesi</find>
+      <find>model</find>
+      <find>designBtn</find>
       <find>random</find>
+      <find>vaeLoss</find>
+      <find>designSlot</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -268,6 +284,8 @@
         <option value="$PROJECT_DIR$/QSAR-UI/tab0.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" />
+        <option value="$PROJECT_DIR$/QSAR-UI/tab4.py" />
+        <option value="$PROJECT_DIR$/QSAR-UI/smilesPredictor.py" />
       </list>
     </option>
   </component>
@@ -327,6 +345,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\AI-QSAR\QSAR-UI" />
       <recent name="E:\AI-QSAR\SMILES_RNN" />
     </key>
   </component>
@@ -359,9 +378,9 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.25" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -433,16 +452,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-UI/tab1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="79" column="12" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
-          <folding>
-            <element signature="e#54#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QSAR-UI/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-614">
@@ -464,29 +473,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4127">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QSAR-UI/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-198">
           <caret line="87" selection-start-line="87" selection-end-line="87" />
           <folding>
             <element signature="e#54#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-203">
-          <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -514,6 +506,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/tab1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="116" column="18" selection-start-line="116" selection-start-column="13" selection-end-line="116" selection-end-column="18" />
+          <folding>
+            <element signature="e#54#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SMILES_RNN/dataProcess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-203">
+          <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-621">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SMILES_RNN/smilesCNN.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
@@ -524,6 +543,40 @@
             <element signature="e#3216#3751#0" />
             <element signature="e#3785#5082#0" />
             <marker date="1577547257044" expanded="true" signature="10114:11687" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/tab4.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-729">
+          <caret line="42" column="49" selection-start-line="42" selection-start-column="49" selection-end-line="42" selection-end-column="49" />
+          <folding>
+            <element signature="e#54#63#0" expanded="true" />
+            <marker date="1577560577493" expanded="true" signature="937:2806" ph="..." />
+            <marker date="1577560577493" expanded="true" signature="10887:11022" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesPredictor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="253" column="33" selection-start-line="253" selection-start-column="33" selection-end-line="253" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1234#1399#0" />
+            <element signature="e#1434#1650#0" />
+            <element signature="e#1685#2025#0" />
+            <element signature="e#2077#2228#0" />
+            <element signature="e#2264#2429#0" />
+            <element signature="e#2478#2603#0" />
+            <element signature="e#3254#3789#0" />
+            <element signature="e#8631#9152#0" />
+            <element signature="e#9191#10049#0" />
+            <element signature="e#18171#18339#0" />
+            <element signature="e#20700#23531#0" />
+            <marker date="1577561264852" expanded="true" signature="4480:4740" ph="..." />
           </folding>
         </state>
       </provider>

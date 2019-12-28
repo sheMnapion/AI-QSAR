@@ -4,15 +4,17 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import torch
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem
 from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
+from PyQt5.QtCore import QThread, pyqtSignal
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
 from types import MethodType
-
+import time
 from utils import resetFolderList, getFolder, getFile, getIcon, saveModel, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH, SMILE_REGEX
 
@@ -22,7 +24,51 @@ from PIL.ImageQt import ImageQt
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
+from smilesPredictor import SmilesDesigner
 
+class SmilesDesignerTrainThread(QThread):
+    """wrapper class for carrying out smiles designing procedures"""
+    _signal=pyqtSignal(str)
+
+    def __init__(self, moleculeDesigner):
+        super(SmilesDesignerTrainThread, self).__init__()
+        self.moleculeDesigner=moleculeDesigner
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        """run training process"""
+        self._signal.emit('---------------------------------Start Training------------------------------------------------')
+        self.moleculeDesigner.trainVAE(nRounds=12,lr=3e-4,batchSize=25,signal=self._signal)
+        self._signal.emit('Training finished.')
+        self.moleculeDesigner.encodeDataset()
+        self._signal.emit('Dataset encoded into latent space.')
+        self.moleculeDesigner.trainLatentModel(lr=3e-4,batchSize=20,nRounds=1000,earlyStopEpoch=20)
+        tempDict=self.moleculeDesigner.decodeDict
+        tempVAE=torch.load('/tmp/tmpBestModel.pt')
+        tempLatentModel=torch.load('/tmp/latentModel.pt')
+        torch.save([tempVAE,tempLatentModel,tempDict],'/tmp/totalVAEModel.pt')
+        self._signal.emit('Regression model on latent space trained.')
+
+class SmilesDesignerDesignThread(QThread):
+    """wrapper class for carrying out smiles designing procedures"""
+    _signal=pyqtSignal(str)
+    _finishSignal=pyqtSignal(bool)
+
+    def __init__(self, moleculeDesigner):
+        super(SmilesDesignerDesignThread, self).__init__()
+        self.moleculeDesigner=moleculeDesigner
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        """run training process"""
+        self._signal.emit('---------------------------------Start Designing------------------------------------------------')
+        self.moleculeDesigner.molecularRandomDesign(aimNumber=100,batchSize=20)
+        self._finishSignal.emit(True)
+        self._signal.emit('Regression model on latent space trained.')
 
 class Tab4(QMainWindow):
     def __init__(self):
@@ -123,9 +169,11 @@ class Tab4(QMainWindow):
             self._debugPrint("Current Model File Not Found")
             return
 
-        if re.match(".+.pxl$", model):
+        if re.match(".+.pxl$", model) or re.match(".+.pt", model):
             try:
-                # Load Model Here: TODO
+                print('Path:',model)
+                self.designer=SmilesDesigner()
+                self.designer.initFromModel(model)
                 self._debugPrint("Model Loaded: {}".format(model))
             except:
                 self._debugPrint("Load Model Error!")
@@ -218,13 +266,39 @@ class Tab4(QMainWindow):
         """
         if not self.designBtn.isEnabled():
             return
+        self.designerDesignThread=SmilesDesignerDesignThread(self.designer)
+        self.designerDesignThread._signal.connect(self.getTrainResults) # use same for showing debug information
+        self.designerDesignThread._finishSignal.connect(self.getDesignedMolecules)
+        self.designerDesignThread.start()
 
     def startTrainingSlot(self):
         """
-        Slot Function of Training After Loading Data and Model: TODO
+        Slot Function of Training After Loading Data and Model
         """
         if not self.trainBtn.isEnabled():
             return
+        propName=self.columnSelectComboBox.currentText()
+        smilesName=self.smilesSelectComboBox.currentText()
+        propColumn=np.array(self.data[propName])
+        smilesColumn=np.array(self.data[smilesName])
+        try:
+            self.designer=SmilesDesigner()
+            self.designer.initFromSmilesAndProps(smilesColumn,propColumn)
+        except ValueError as e:
+            self._debugPrint("Error loading the model! Please check the columns selected.")
+            return
+        self.designerThread = SmilesDesignerTrainThread(self.designer)
+        self.designerThread._signal.connect(self.getTrainResults)
+        self.designerThread.start()
+
+    def getTrainResults(self, msg):
+        """receiving results of training"""
+        self._debugPrint(msg)
+
+    def getDesignedMolecules(self, state):
+        """receive bool state for identifying success or not"""
+        if state==True:
+            print("DESIGNING FINISHED!")
 
     def _debugPrint(self, msg):
         """
