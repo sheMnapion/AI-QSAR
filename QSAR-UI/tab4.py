@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import torch
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel
 from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -40,7 +40,7 @@ class SmilesDesignerTrainThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
-        self.moleculeDesigner.trainVAE(nRounds=12,lr=3e-4,batchSize=25,signal=self._signal)
+        self.moleculeDesigner.trainVAE(nRounds=200,lr=3e-4,batchSize=30,signal=self._signal)
         self._signal.emit('Training finished.')
         self.moleculeDesigner.encodeDataset()
         self._signal.emit('Dataset encoded into latent space.')
@@ -66,9 +66,10 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        self.moleculeDesigner.molecularRandomDesign(aimNumber=100,batchSize=20)
+        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=10,batchSize=20,signal=self._signal)
+        np.save('/tmp/designed',designed)
         self._finishSignal.emit(True)
-        self._signal.emit('Regression model on latent space trained.')
+        self._signal.emit('---------------------------------End Designing--------------------------------------------------')
 
 class Tab4(QMainWindow):
     def __init__(self):
@@ -179,7 +180,7 @@ class Tab4(QMainWindow):
                 self._debugPrint("Load Model Error!")
                 return
         else:
-            self._debugPrint("Not a .pxl pytorch model!")
+            self._debugPrint("Not a pytorch model!")
             return
 
         self._currentModelFile = model
@@ -262,7 +263,7 @@ class Tab4(QMainWindow):
 
     def designSlot(self):
         """
-        Slot Function of Design Molecules after Training: TODO
+        Slot Function of Design Molecules after Training
         """
         if not self.designBtn.isEnabled():
             return
@@ -299,6 +300,25 @@ class Tab4(QMainWindow):
         """receive bool state for identifying success or not"""
         if state==True:
             print("DESIGNING FINISHED!")
+            molecules=np.load('/tmp/designed.npy')
+            nMol=molecules.shape[0]
+            nColumns=6
+            nRows=int(np.ceil(nMol/nColumns))
+            self.designTable.setRowCount(nRows*2); self.designTable.setColumnCount(nColumns)
+            for i in range(nRows):
+                for j in range(nColumns):
+                    index=i*nColumns+j
+                    if index>=nMol: break
+                    molValue=molecules[index][0]
+                    molSmiles=molecules[index][1]
+                    tempItem = QTableWidgetItem()
+                    tempItem.setText(molValue)
+                    self.designTable.setItem(2*i+1, j, tempItem)
+                    tempMol=Chem.MolFromSmiles(molSmiles)
+                    pixmap=Draw.MolToQPixmap(tempMol)
+                    tempLabel=QLabel()
+                    tempLabel.setPixmap(pixmap)
+                    self.designTable.setCellWidget(2*i,j,tempLabel)
 
     def _debugPrint(self, msg):
         """

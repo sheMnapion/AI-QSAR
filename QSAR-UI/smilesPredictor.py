@@ -235,7 +235,7 @@ class SmilesDesigner(object):
         correctRatios=np.array(correctRatios)
         print('Average correct translation ratio:',np.mean(correctRatios))
 
-    def molecularRandomDesign(self,aimNumber=100,batchSize=10):
+    def molecularRandomDesign(self,aimNumber=100,batchSize=10,signal=None):
         """design [aimNumber] molecules by randomly sampling from latent space"""
         designedNumber=0
         designedMolecules=set()
@@ -260,7 +260,9 @@ class SmilesDesigner(object):
                     print('[%d]: %s | (%d)' % (designedNumber+1,translation,i))
                     designedMoleculesPairs.append([properties[i].item(),translation])
                     designedNumber+=1
-                except ValueError as e:
+                    if signal is not None:
+                        signal.emit(str.format("No. %d molecule designed!" % designedNumber))
+                except:
                     continue
         designedMoleculesPairs=np.array(designedMoleculesPairs)
         propertyIndex=np.argsort(designedMoleculesPairs[:,0])
