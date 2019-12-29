@@ -306,7 +306,7 @@ class Tab4(QMainWindow):
             nRows=int(np.ceil(nMol/nColumns))
             self.designTable.setRowCount(nRows*2); self.designTable.setColumnCount(nColumns)
             self.designTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-            # self.designTable.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            self.designTable.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
             for i in range(nRows):
                 for j in range(nColumns):
                     index=i*nColumns+j

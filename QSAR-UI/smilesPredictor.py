@@ -86,7 +86,7 @@ def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum):
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     print(BCE,KLD)
-    return 3000*BCE + KLD
+    return 5000*BCE + KLD
 
 class DNNRegressor(nn.Module):
     """
@@ -258,6 +258,7 @@ class SmilesDesigner(object):
                     mol=Chem.MolFromSmiles(translation)
                     Draw.MolToImageFile(mol,str.format('/tmp/designed_%d_%.5f.png' % (designedNumber,properties[i].item())))
                     print('[%d]: %s | (%d)' % (designedNumber+1,translation,i))
+                    designedMolecules.add(translation)
                     designedMoleculesPairs.append([properties[i].item(),translation])
                     designedNumber+=1
                     if signal is not None:

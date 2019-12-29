@@ -95,12 +95,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="17446" />
+          <entry key="py" value="17472" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="17446" />
+          <entry key="Python" value="17472" />
         </counts>
       </usages-collector>
     </session>
@@ -144,32 +144,32 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/QSAR-UI/tab4.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="333">
-              <caret line="319" column="73" selection-start-line="319" selection-start-column="73" selection-end-line="319" selection-end-column="73" />
+            <state relative-caret-position="878">
+              <caret line="321" column="47" lean-forward="true" selection-start-line="321" selection-start-column="47" selection-end-line="321" selection-end-column="47" />
               <folding>
                 <element signature="e#54#63#0" expanded="true" />
                 <element signature="e#6921#7128#0" />
                 <element signature="e#7181#7512#0" />
                 <element signature="e#7552#9397#0" />
                 <element signature="e#9433#9887#0" />
-                <marker date="1577598767543" expanded="true" signature="965:2960" ph="..." />
-                <marker date="1577598767543" expanded="true" signature="11030:12303" ph="..." />
+                <marker date="1577599360334" expanded="true" signature="965:2960" ph="..." />
+                <marker date="1577599360334" expanded="true" signature="11030:12301" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesPredictor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="366" column="34" lean-forward="true" selection-start-line="366" selection-start-column="34" selection-end-line="366" selection-end-column="34" />
+            <state relative-caret-position="306">
+              <caret line="260" column="54" selection-start-line="260" selection-start-column="54" selection-end-line="260" selection-end-column="54" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1577598613295" expanded="true" signature="4480:4740" ph="..." />
+                <marker date="1577599467817" expanded="true" signature="4480:4740" ph="..." />
               </folding>
             </state>
           </provider>
@@ -228,7 +228,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>_add</find>
       <find>self.canvas</find>
       <find>VAE</find>
       <find>Pad</find>
@@ -258,6 +257,7 @@
       <find>Random</find>
       <find>set</find>
       <find>design</find>
+      <find>vaeL</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -274,8 +274,8 @@
         <option value="$PROJECT_DIR$/QSAR-UI/tab0.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/dataProcess.py" />
         <option value="$PROJECT_DIR$/SMILES_RNN/smilesCNN.py" />
-        <option value="$PROJECT_DIR$/QSAR-UI/smilesPredictor.py" />
         <option value="$PROJECT_DIR$/QSAR-UI/tab4.py" />
+        <option value="$PROJECT_DIR$/QSAR-UI/smilesPredictor.py" />
       </list>
     </option>
   </component>
@@ -522,29 +522,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesPredictor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="366" column="34" lean-forward="true" selection-start-line="366" selection-start-column="34" selection-end-line="366" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1577598613295" expanded="true" signature="4480:4740" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QSAR-UI/tab4.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="319" column="73" selection-start-line="319" selection-start-column="73" selection-end-line="319" selection-end-column="73" />
+        <state relative-caret-position="878">
+          <caret line="321" column="47" lean-forward="true" selection-start-line="321" selection-start-column="47" selection-end-line="321" selection-end-column="47" />
           <folding>
             <element signature="e#54#63#0" expanded="true" />
             <element signature="e#6921#7128#0" />
             <element signature="e#7181#7512#0" />
             <element signature="e#7552#9397#0" />
             <element signature="e#9433#9887#0" />
-            <marker date="1577598767543" expanded="true" signature="965:2960" ph="..." />
-            <marker date="1577598767543" expanded="true" signature="11030:12303" ph="..." />
+            <marker date="1577599360334" expanded="true" signature="965:2960" ph="..." />
+            <marker date="1577599360334" expanded="true" signature="11030:12301" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesPredictor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="260" column="54" selection-start-line="260" selection-start-column="54" selection-end-line="260" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1577599467817" expanded="true" signature="4480:4740" ph="..." />
           </folding>
         </state>
       </provider>
