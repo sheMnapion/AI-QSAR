@@ -272,6 +272,9 @@ class Tab4(QMainWindow):
         self.designerDesignThread._finishSignal.connect(self.getDesignedMolecules)
         self.designerDesignThread.start()
 
+    def analyzeSlot(self):
+        self.designSlot()
+
     def startTrainingSlot(self):
         """
         Slot Function of Training After Loading Data and Model
