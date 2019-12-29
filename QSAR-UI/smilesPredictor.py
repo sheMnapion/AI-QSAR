@@ -251,7 +251,7 @@ class SmilesDesigner(object):
                 translations.append(translation)
             for i in range(batchSize):
                 translation=translations[i]
-                print(translation)
+                # print(translation)
                 if designedNumber==aimNumber: break
                 if translation in designedMolecules: continue
                 try:
@@ -342,6 +342,28 @@ class SmilesDesigner(object):
             encode the input string to have unitary coding format
             also split data
         """
+        # split first
+        smilesSplit = []
+        for smiles in self.origSmiles:
+            smilesLength = len(smiles)
+            nameStr = []
+            index = 0
+            while index < smilesLength:
+                tempAlpha = smiles[index]
+                if index < smilesLength - 1 and tempAlpha >= 'A' and tempAlpha <= 'Z':
+                    anotherAlpha = smiles[index + 1]
+                    if anotherAlpha == ' ':  # error, need cleaning
+                        index += 1
+                        continue
+                    if anotherAlpha >= 'a' and anotherAlpha <= 'z':
+                        elements = ['He', 'Li', 'Be','Ne', 'Na','Mg','Al','Si','Br','Cl']
+                        if smiles[index:index + 2] in elements:
+                            tempAlpha += anotherAlpha
+                            index += 1
+                nameStr.append(tempAlpha)
+                index += 1
+            smilesSplit.append(nameStr)
+        self.origSmiles=np.array(smilesSplit)
         recodeDict=dict([('@',0)])
         dictKey=1
         nItems=len(self.origSmiles)

@@ -6,10 +6,10 @@ import pandas as pd
 import numpy as np
 import torch
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel, QHeaderView
 from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QSize
 from matplotlib.backends.backend_qt4agg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar)
@@ -66,7 +66,7 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=10,batchSize=20,signal=self._signal)
+        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=30,signal=self._signal)
         np.save('/tmp/designed',designed)
         self._finishSignal.emit(True)
         self._signal.emit('---------------------------------End Designing--------------------------------------------------')
@@ -308,6 +308,8 @@ class Tab4(QMainWindow):
             nColumns=6
             nRows=int(np.ceil(nMol/nColumns))
             self.designTable.setRowCount(nRows*2); self.designTable.setColumnCount(nColumns)
+            self.designTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            # self.designTable.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
             for i in range(nRows):
                 for j in range(nColumns):
                     index=i*nColumns+j
@@ -318,7 +320,7 @@ class Tab4(QMainWindow):
                     tempItem.setText(molValue)
                     self.designTable.setItem(2*i+1, j, tempItem)
                     tempMol=Chem.MolFromSmiles(molSmiles)
-                    pixmap=Draw.MolToQPixmap(tempMol)
+                    pixmap=Draw.MolToQPixmap(tempMol).scaled(QSize(120,120))
                     tempLabel=QLabel()
                     tempLabel.setPixmap(pixmap)
                     self.designTable.setCellWidget(2*i,j,tempLabel)
