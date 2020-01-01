@@ -40,11 +40,12 @@ class SmilesDesignerTrainThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
-        self.moleculeDesigner.trainVAE(nRounds=200,lr=3e-4,batchSize=30,signal=self._signal)
+        self.moleculeDesigner.trainVAE(nRounds=200,lr=3e-4,batchSize=50,signal=self._signal)
         self._signal.emit('Training finished.')
         self.moleculeDesigner.encodeDataset()
         self._signal.emit('Dataset encoded into latent space.')
-        self.moleculeDesigner.trainLatentModel(lr=3e-4,batchSize=20,nRounds=1000,earlyStopEpoch=20)
+        self.moleculeDesigner.identityRatio()
+        self.moleculeDesigner.trainLatentModel(lr=3e-4,batchSize=20,nRounds=1000,earlyStopEpoch=100)
         tempDict=self.moleculeDesigner.decodeDict
         tempVAE=torch.load('/tmp/tmpBestModel.pt')
         tempLatentModel=torch.load('/tmp/latentModel.pt')
@@ -66,7 +67,7 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=30,signal=self._signal)
+        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
         np.save('/tmp/designed',designed)
         self._finishSignal.emit(True)
         self._signal.emit('---------------------------------End Designing--------------------------------------------------')

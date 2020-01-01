@@ -179,6 +179,12 @@ class Tab1(QMainWindow):
             self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
 
             self.DNN.setPropertyNum(self.trainData.shape[1])
+            if self.trainingParams['fromModel']==True:
+                try:
+                    self.DNN.load(self.modelList.currentItem().text())
+                    print('LOADED AGAIN FOR SAFETY')
+                except:
+                    self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
 
             self._debugPrint("DNN's Set up")
         except:
