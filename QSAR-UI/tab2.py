@@ -149,7 +149,7 @@ class Tab2(QMainWindow):
 
         if self.modelStructureCheckBox.isChecked():
             pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
-            pixmap = pixmap.scaled(self.modelStructureLabel.size(),QtCore.Qt.KeepAspectRatio)
+            pixmap = pixmap.scaled(self.modelStructureLabel.size()) #,QtCore.Qt.KeepAspectRatio)
             self.modelStructureLabel.setPixmap(pixmap)
         else:
             self.modelStructureLabel.clear()
