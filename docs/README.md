@@ -16,7 +16,6 @@ Enter folder `QSAR-GUI` and run `python main.py`
 The name of the Software is **PyMolPredictor**. The window of the Software has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Molecule Design.
 
 #### Menubar
-<!-- ![](2020-01-03-10-52-14.png) -->
 <img src="./images/2020-01-03-10-52-14.png" width="300px"/>
 
 + Open Project: Browse and select the project's folder. Data folders in all main window's tabs will also be set to the project folder.
@@ -176,9 +175,9 @@ Browse and Select Data:
 <img src="./images/2020-01-03-15-53-38.png" width="300px"/>
 
 Browse and Select Model: 
-+ Select Target: Select the target feature of the test dataset.
-+ Select Smiles: Select the SMILES feature of the the test dataset. This feature is used for plotting molecule structures.
++ Select Target: Select the target feature of the train dataset.
++ Select Smiles: Select the SMILES feature of the the train dataset. This feature is used for plotting molecule structures.
 + Train: Click to start training the VAE model with selected trainset. When training is finished, the trained model **totalVAEModel.pt** is saved to directory `/tmp`.
 + Browse: Click to browse and add a model file to the model list.
 + Select(or double click): Click to select the highlighted model file in the current model list.
-+ Design: Start designing and plot molecules according to the loaded VAE model. 
++ Design: Start designing and plot molecules with top target value according to the loaded VAE model. 
