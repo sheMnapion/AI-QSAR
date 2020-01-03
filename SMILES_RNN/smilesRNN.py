@@ -21,7 +21,7 @@ class SmilesRnn(nn.Module):
     def __init__(self,maxLength):
         """RNN with only one variable, the maximal length of a possible smiles"""
         super(SmilesRnn,self).__init__()
-        self.embedding=nn.Embedding(33,EMBED_DIMENSION,padding_idx=0)
+        self.embedding=nn.Embedding(maxLength,EMBED_DIMENSION,padding_idx=0)
         self.lstm=nn.GRU(
             input_size=EMBED_DIMENSION,
             hidden_size=LATENT_DIMENSION,
@@ -51,7 +51,7 @@ class SmilesRNNPredictor(object):
         maxLength=np.max(smileStrLength)
         print("Max length for RNN input:",maxLength)
         self.maxLength=maxLength
-        self.net=SmilesRnn(maxLength)
+        # self.net=SmilesRnn(maxLength)
         self._processData()
 
     def train(self,nRounds=1000,lr=0.01,earlyStopEpoch=10,batchSize=12):
@@ -159,6 +159,7 @@ class SmilesRNNPredictor(object):
         # print(padData,padData.shape)
         print(nItems,dictKey,recodeDict)
         self.nKeys=dictKey
+        self.net=SmilesRnn(self.nKeys)
         self.decodeDict=dict([(recodeDict[key],key) for key in recodeDict.keys()])
         self.standardData=padData
         smilesTrain,smilesTest,propTrain,propTest=train_test_split(padData,self.origProperties,test_size=0.2,random_state=2019)

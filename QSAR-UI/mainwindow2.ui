@@ -474,8 +474,14 @@
            </item>
            <item>
             <widget class="QLabel" name="modelStructureLabel">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
