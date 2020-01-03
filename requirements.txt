@@ -5,5 +5,5 @@ pandas==0.25.3
 numpy==1.17.4
 Pillow==6.2.1
 PyQt5==5.14.0
-rdkit==2009.Q1-1
 scikit_learn==0.22
+#rdkit==2009.Q1-1
