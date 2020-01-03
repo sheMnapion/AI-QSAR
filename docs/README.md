@@ -86,11 +86,51 @@ Analysis Result:
 #### Main Window: Model Training
 This tab is used for training QSAR model.
 
+<img src="./images/2020-01-03-15-45-13.png" width="300px"/>
+
+Browse and Select Data: 
++ Browse: Set the current data folder.
++ Select(or double click): Select the highlighted data file in the current data folder.
++ Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
+
+<img src="./images/2020-01-03-15-45-46.png" width="300px"/>
+
+Browse and Select Model: 
++ Browse: Browse and add a model file to the model list.
++ Select(or double click): Select the highlighted model file in the current model list.
+
+<img src="./images/2020-01-03-15-46-17.png" width="300px"/>
+
+Training Parameters:
++ From Loaded Model: If it is checked, training will start from the loaded model. 
++ TargetType: Whether to train regression model or classification model. Only support regression currently.
++ Select Target: Select the target feature of training.
++ Learning Rate: Step size of Gradient Descent in the training process.
++ earlyStop: If it is checked, training will stop when the loss doesn't go down in **earlyStopEpochs** epochs. 
++ earlyStopEpochs: Set the epoch limit of earlyStop.
++ Batch Size: Size of training batch of Stochastic Gradient Descent in the training process.
++ Epochs: Maximum epochs of training.
++ Train: Start training model with all training parameters above.
++ Save: Browse and save the trained model.
+
 #### Main Window: Result Analysis
 This tab is used for analysing trained QSAR model.
+
+<img src="./images/2020-01-03-15-47-00.png" width="300px"/>
+
+<img src="./images/2020-01-03-15-47-49.png" width="300px"/>
+
 
 #### Main Window: Activity Prediction
 This tab is used for predicting QSAR on test datasets, plotting predicted molecule structure, and plot fitting curve.
 
+<img src="./images/2020-01-03-15-48-31.png" width="300px"/>
+
+<img src="./images/2020-01-03-15-50-05.png" width="300px"/>
+
 #### Main Window: Model Design
 This tab is used for training and analyzing VAE model to design molecules.
+
+<img src="./images/2020-01-03-15-52-04.png" width="300px"/>
+
+<img src="./images/2020-01-03-15-53-38.png" width="300px"/>
