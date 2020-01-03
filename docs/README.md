@@ -57,11 +57,14 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 #### Main Window: Data Processing
 This tab is used for preposessing and output .csv data for input of other tabs.
 
+<img src="./images/2020-01-03-14-06-13.png" width="300px"/>
+
 Browse and Select Data: 
 + Browse: Set the current data folder.
 + Select(or double click): Select the highlighted data file in the current data folder.
++ Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
 
-<img src="./images/2020-01-03-14-06-13.png" width="300px"/>
+<img src="./images/2020-01-03-14-08-00.png" width="300px"/>
 
 Data Preprocessing:
 + Outlier Operation: Select a missing value operation. 
@@ -71,7 +74,14 @@ Data Preprocessing:
 + Analyze: Analyzing the original and transformed dataset, and show on the right panel.
 + Output: Output the transformed trainset and testset to the output folder.
 
-<img src="./images/2020-01-03-14-08-00.png" width="300px"/>
+<img src="./images/2020-01-03-15-35-42.png" width="300px"/>
+
+Analysis Result:
++ Activity: The upper panel is used to plot the distribution of the selected column. The lower panel shows the first 100 rows of Original Data and Transformed Data.
+    + Select: Select a feature column and plot its distribution.
+    + Origin Data: Switch to the Original Data's table
+    + Transformed Data: Switch to the Transformed Data's table
++ Feature: This panel shows the 2-D plot of features after dimension reduction by PCA or SVD.
 
 #### Main Window: Model Training
 This tab is used for training QSAR model.
