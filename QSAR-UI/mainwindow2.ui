@@ -338,7 +338,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,1,1,1">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
@@ -478,13 +478,16 @@
            <item>
             <widget class="QLabel" name="modelStructureLabel">
              <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+              <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
               <string/>
              </property>
              <property name="scaledContents">
-              <bool>true</bool>
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
