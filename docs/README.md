@@ -13,7 +13,7 @@ For other packages, see `requirements.txt` and run `pip install -r requirement.t
 Enter folder `QSAR-GUI` and run `python main.py`
 
 ### GUI Description
-The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Model Design.
+The name of the Software is **PyMolPredictor**. The window of the Software has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Molecule Design.
 
 #### Menubar
 <!-- ![](2020-01-03-10-52-14.png) -->
@@ -21,7 +21,7 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 
 + Open Project: Browse and select the project's folder. Data folders in all main window's tabs will also be set to the project folder.
 
-+ Exit: Exit the GUI.
++ Exit: Exit the Software.
 
 <img src="./images/2020-01-03-12-57-56.png" width="300px"/>
 
@@ -55,13 +55,16 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 + About: Not Implemented yet.
 
 #### Main Window: Data Processing
+
+<img src="./images/2020-01-03-16-17-44.png" width="800px"/>
+
 This tab is used for preposessing and output .csv data for input of other tabs.
 
 <img src="./images/2020-01-03-14-06-13.png" width="300px"/>
 
 Browse and Select Data: 
-+ Browse: Set the current data folder.
-+ Select(or double click): Select the highlighted data file in the current data folder.
++ Browse: Click to set the current data folder.
++ Select(or double click): Click to select the highlighted data file in the current data folder.
 + Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
 
 <img src="./images/2020-01-03-14-08-00.png" width="300px"/>
@@ -70,9 +73,9 @@ Data Preprocessing:
 + Outlier Operation: Select a missing value operation. 
 + Feature Analysis: Select a dimension reduction method to reduce dimention of features in the data, and plot them in a 2-d plane.
 + Train : Test: The ratio of length of trainset to length of testset. Split the selected dataset into trainset and testset according to the given ratio.
-+ Browse: Set the output folder of preprocessed and splitted trainset and testset.
-+ Analyze: Analyzing the original and transformed dataset, and show on the right panel.
-+ Output: Output the transformed trainset and testset to the output folder.
++ Browse: Click to set the output folder of preprocessed and splitted trainset and testset.
++ Analyze: Click to analyze the original and transformed dataset, and show on the right panel.
++ Output: Click to output the transformed trainset and testset to the output folder.
 
 <img src="./images/2020-01-03-15-35-42.png" width="300px"/>
 
@@ -84,20 +87,23 @@ Analysis Result:
 + Feature: This panel shows the 2-D plot of features after dimension reduction by PCA or SVD.
 
 #### Main Window: Model Training
+
+<img src="./images/2020-01-03-16-19-04.png" width="800px"/>
+
 This tab is used for training QSAR model.
 
 <img src="./images/2020-01-03-15-45-13.png" width="300px"/>
 
 Browse and Select Data: 
-+ Browse: Set the current data folder.
-+ Select(or double click): Select the highlighted data file in the current data folder.
++ Browse: Click to set the current data folder.
++ Select(or double click): Click to select the highlighted data file in the current data folder.
 + Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
 
 <img src="./images/2020-01-03-15-45-46.png" width="300px"/>
 
 Browse and Select Model: 
-+ Browse: Browse and add a model file to the model list.
-+ Select(or double click): Select the highlighted model file in the current model list.
++ Browse: Click to browse and add a model file to the model list.
++ Select(or double click): Click to select the highlighted model file in the current model list.
 
 <img src="./images/2020-01-03-15-46-17.png" width="300px"/>
 
@@ -110,27 +116,69 @@ Training Parameters:
 + earlyStopEpochs: Set the epoch limit of earlyStop.
 + Batch Size: Size of training batch of Stochastic Gradient Descent in the training process.
 + Epochs: Maximum epochs of training.
-+ Train: Start training model with all training parameters above.
-+ Save: Browse and save the trained model.
++ Train: Click to start training model with all training parameters above.
++ Save: Click to browse and save the trained model.
 
 #### Main Window: Result Analysis
+
+<img src="./images/2020-01-03-16-19-30.png" width="800px"/>
+
 This tab is used for analysing trained QSAR model.
 
 <img src="./images/2020-01-03-15-47-00.png" width="300px"/>
 
+Training History: After each training process, the training history is saved to folder `QSAR-DNN/__trainingcache__` automatically. All training history files in the folder are displayed here.
++ Select(or double click): Click to select the highlighted training history.
+
 <img src="./images/2020-01-03-15-47-49.png" width="300px"/>
 
+Plot Settings:
++ Loss Curve: Whether to plot the Loss Curve.
++ Model Structure: Whether to plot the Model Structure. 
++ Precision Curve: Whether to plot the Precision Curve.
++ Analyze: Click to draw the analysis plots of the selected training history.
 
 #### Main Window: Activity Prediction
+
+<img src="./images/2020-01-03-16-19-57.png" width="800px"/>
+
 This tab is used for predicting QSAR on test datasets, plotting predicted molecule structure, and plot fitting curve.
 
 <img src="./images/2020-01-03-15-48-31.png" width="300px"/>
 
+Browse and Select Data: 
++ Browse: Click to set the current data folder.
++ Select(or double click): Click to select the highlighted data file in the current data folder.
++ Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
+
 <img src="./images/2020-01-03-15-50-05.png" width="300px"/>
 
-#### Main Window: Model Design
+Browse and Select Model: 
++ Select Target: Select the target feature of the test dataset.
++ Select Smiles: Select the SMILES feature of the the test dataset. This feature is used for plotting molecule structures.
++ Browse: Click to browse and add a model file to the model list.
++ Select(or double click): Click to select the highlighted model file in the current model list.
++ Analyze: Start calculating prediction informations, plotting molecules with top5 target value, and the fitting plot.
+
+#### Main Window: Molecule Design
+
+<img src="./images/2020-01-03-16-27-33.png" width="500px"/>
+
 This tab is used for training and analyzing VAE model to design molecules.
 
 <img src="./images/2020-01-03-15-52-04.png" width="300px"/>
 
+Browse and Select Data: 
++ Browse: Click to set the current data folder.
++ Select(or double click): Click to select the highlighted data file in the current data folder.
++ Header: If "Header" is checked, then the first row of the csv file is used as column names; otherwise, the column name is automatically generated.
+
 <img src="./images/2020-01-03-15-53-38.png" width="300px"/>
+
+Browse and Select Model: 
++ Select Target: Select the target feature of the test dataset.
++ Select Smiles: Select the SMILES feature of the the test dataset. This feature is used for plotting molecule structures.
++ Train: Click to start training the VAE model with selected trainset. When training is finished, the trained model **totalVAEModel.pt** is saved to directory `/tmp`.
++ Browse: Click to browse and add a model file to the model list.
++ Select(or double click): Click to select the highlighted model file in the current model list.
++ Design: Start designing and plot molecules according to the loaded VAE model. 
