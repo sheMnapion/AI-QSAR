@@ -20,12 +20,19 @@ def loadAugData():
     return np.array(augDataTrainX), np.array(augDataTrainY), np.array(augDataTestX), np.array(augDataTestY), \
         np.array(augDataValidX), np.array(augDataValidY)
 
+def loadTox21SmilesData():
+    """load data from Tox21 dataset where only smiles format and the aim property is extracted"""
+    tox21=pd.read_csv('../datasets/tox21_train.csv')
+    smileses=np.array(tox21['smiles'])
+    properties=np.array(tox21['NR-AR'])
+    return smileses, properties
+
 def loadEsolSmilesData():
     """load data from ESOL dataset where only smiles format and the aim is extracted"""
     esol=pd.read_csv('../datasets/delaney-processed.csv')
     smileses=np.array(esol['smiles'])
     smilesSplit=[]
-    smilesDict=dict()
+    # smilesDict=dict()
     for smiles in smileses:
         smilesLength=len(smiles)
         nameStr=[]
@@ -38,7 +45,7 @@ def loadEsolSmilesData():
                     index+=1
                     continue
                 if anotherAlpha>='a' and anotherAlpha<='z':
-                    elements=['He','Li','Be','Na','Br']
+                    elements=['He','Li','Be','Na','Br','Cl']
                     if smiles[index:index+2] in elements:
                         tempAlpha+=anotherAlpha
                         index+=1
@@ -47,7 +54,7 @@ def loadEsolSmilesData():
         smilesSplit.append(nameStr)
     # print(smilesSplit)
     properties=np.array(esol['measured log solubility in mols per litre'])
-    return np.array(smilesSplit), properties
+    return np.array(smileses), properties
 
 if __name__=='__main__':
     # loadEsolSmilesData()

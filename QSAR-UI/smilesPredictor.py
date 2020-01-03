@@ -25,13 +25,13 @@ class SmilesVAE(nn.Module):
         self.maxLength=maxLength
         self.keyNum=keyNum
         self.embedding=nn.Embedding(keyNum,keyNum)
-        self.fc1=nn.Linear(keyNum*maxLength,2000)
-        self.fc1_res=nn.Linear(2000,2000)
-        self.fc21=nn.Linear(2000,200)
-        self.fc22=nn.Linear(2000,200)
-        self.fc3=nn.Linear(200,2000)
-        self.fc3_res=nn.Linear(2000,2000)
-        self.fc4=nn.Linear(2000,keyNum*maxLength)
+        self.fc1=nn.Linear(keyNum*maxLength,3000)
+        # self.fc1_res=nn.Linear(3000,3000)
+        self.fc21=nn.Linear(3000,200)
+        self.fc22=nn.Linear(3000,200)
+        self.fc3=nn.Linear(200,3000)
+        # self.fc3_res=nn.Linear(3000,3000)
+        self.fc4=nn.Linear(3000,keyNum*maxLength)
         self.decodeFC=nn.Linear(keyNum,keyNum)
 
     def num_flat_features(self,x):
@@ -45,16 +45,16 @@ class SmilesVAE(nn.Module):
         """encode the input into two parts, mean mu and log variance"""
         x=self.embedding(x)
         x=x.view(-1,self.num_flat_features(x))
-        x=F.tanh(self.fc1(x))
+        x=torch.tanh(self.fc1(x))
         # x=self.fc1_res(z)+z # residual block
         return self.fc21(x), self.fc22(x)
 
     def decode(self, z):
         """decode the inner representation vibrated with random noise to the original size"""
         batchSize=z.shape[0]
-        z=F.tanh(self.fc3(z))
+        z=torch.tanh(self.fc3(z))
         # z=self.fc3_res(z)+z
-        z=F.tanh(self.fc4(z))
+        z=torch.tanh(self.fc4(z))
         z=z.view(-1,self.keyNum)
         z=self.decodeFC(z)
         z=z.view(batchSize,-1,self.keyNum)
@@ -90,7 +90,7 @@ def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum):
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     print(BCE,KLD)
-    return 10000*BCE + KLD
+    return 1000*BCE + KLD
 
 class DNNRegressor(nn.Module):
     """
@@ -366,11 +366,11 @@ class SmilesDesigner(object):
                                     'Rb','Sr','Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd','In','Sn',
                                     'Sb','Te','Xe','Cs','Ba','Lu','Hf','Ta','Re','Os','Ir','Pt','Au',
                                     'Hg','Tl','Pb','Bi','Po','At','Rn','La','Ce','Pr','Nd','Pm','Sm',
-                                    'Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','se']
+                                    'Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','se','cl']
                         if smiles[index:index + 2] in elements:
                             tempAlpha += anotherAlpha
                             index += 1
-                elif tempAlpha=='e':
+                elif tempAlpha=='n':
                     print(smiles)
                     exit(0)
                 nameStr.append(tempAlpha)
