@@ -55,11 +55,33 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 + About: Not Implemented yet.
 
 #### Main Window: Data Processing
+This tab is used for preposessing and output .csv data for input of other tabs.
 
 #### Main Window: Model Training
+This tab is used for training QSAR model.
+
+Browse and Select Data: 
++ Browse: Set the current data folder.
++ Select(or double click): Select the highlighted data file in the current data folder.
+
+<img src="./images/2020-01-03-14-06-13.png" width="300px"/>
+
+Data Preprocessing:
++ Outlier Operation: Select a missing value operation. 
++ Feature Analysis: Select a dimension reduction method to reduce dimention of features in the data, and plot them in a 2-d plane.
++ Train : Test: The ratio of length of trainset to length of testset. Split the selected dataset into trainset and testset according to the given ratio.
++ Browse: Set the output folder of preprocessed and splitted trainset and testset.
++ Analyze: Analyzing the original and transformed dataset, and show on the right panel.
++ Output: Output the transformed trainset and testset to the output folder.
+
+<img src="./images/2020-01-03-14-08-00.png" width="300px"/>
+
 
 #### Main Window: Result Analysis
+This tab is used for analysing trained QSAR model.
 
 #### Main Window: Activity Prediction
+This tab is used for predicting QSAR on test datasets, plotting predicted molecule structure, and plot fitting curve.
 
 #### Main Window: Model Design
+This tab is used for training and analyzing VAE model to design molecules.
