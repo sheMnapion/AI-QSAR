@@ -12,7 +12,7 @@ For other packages, see `requirements.txt` and run `pip install -r requirement.t
 ### Run
 Enter folder `QSAR-GUI` and run `python main.py`
 
-### GUI Description
+### Software Description
 The name of the Software is **PyMolPredictor**. The window of the Software has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Molecule Design.
 
 #### Menubar
