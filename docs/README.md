@@ -17,25 +17,25 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 
 #### Menubar
 <!-- ![](2020-01-03-10-52-14.png) -->
-<img src="2020-01-03-10-52-14.png" width="300px"/>
+<img src="./images/2020-01-03-10-52-14.png" width="300px"/>
 
 + Open Project: Browse and select the project's folder. Data folders in all main window's tabs will also be set to the project folder.
 
 + Exit: Exit the GUI.
 
-<img src="2020-01-03-12-57-56.png" width="300px"/>
+<img src="./images/2020-01-03-12-57-56.png" width="300px"/>
 
 + Open Data: Browse and select the data folder of the current tab.
 
 + Select Data: Select the currently highlighted data of the current tab.
 
-<img src="2020-01-03-13-07-09.png" width="300px"/>
+<img src="./images/2020-01-03-13-07-09.png" width="300px"/>
 
 + Load Model: Browse and load a model file in the current tab.
 
 + Select model: Select the currently highlighted model in the model list of the current tab.
 
-<img src="2020-01-03-13-13-37.png" width="300px"/>
+<img src="./images/2020-01-03-13-13-37.png" width="300px"/>
 
 + Select History: Select a training history file from the training history folder in "Result Analysis" tab.
 
@@ -43,14 +43,14 @@ The name of the GUI is **PyMolPredictor**. The window of the GUI has 3 parts: a 
 
 + Train: Trigger the "Train" pushButton to start training models in the current tab.
 
-<img src="2020-01-03-13-14-01.png" width="300px"/>
+<img src="./images/2020-01-03-13-14-01.png" width="300px"/>
 
 + Data Processing: Switch to "Data Processing" tab.
 + Model Training: Switch to "Model Training" tab.
 + Result Analysis: Switch to "Result Analysis" tab.
 + Molecule Design: Switch to "Molecule Design" tab.
 
-<img src="2020-01-03-13-14-15.png" width="300px"/>
+<img src="./images/2020-01-03-13-14-15.png" width="300px"/>
 
 + About: Not Implemented yet.
 
