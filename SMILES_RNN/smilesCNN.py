@@ -10,9 +10,88 @@ from torch.utils.data import DataLoader, Dataset, TensorDataset
 import time
 import matplotlib.pyplot as plt
 import copy
-from rdkit import Chem
-from rdkit.Chem import Draw
+import sys
+if sys.platform!='linux':
+    from rdkit import Chem
+    from rdkit.Chem import Draw
 from dataProcess import loadEsolSmilesData
+
+EMBED_DIMENSION  = 35
+LATENT_DIMENSION = 300
+
+useGPU=torch.cuda.is_available()
+
+class SmilesRNNVAE(nn.Module):
+    """
+        class for performing regression and generating new medicines directly
+        from smiles representation; using GRU-seq2seq structure as the core part
+        to encode SMILES sequence and decode accordingly
+    """
+    def __init__(self,maxLength,keyNum):
+        """seq2seq structures"""
+        super(SmilesRNNVAE,self).__init__()
+        self.maxLength=maxLength
+        self.keyNum=keyNum
+        self.embedding=nn.Embedding(keyNum,EMBED_DIMENSION,padding_idx=0)
+        self.encodeGRU=nn.GRU(
+            input_size=EMBED_DIMENSION,
+            hidden_size=LATENT_DIMENSION,
+            num_layers=3,
+            batch_first=True,
+            bidirectional=False
+        )
+        self.decodeGRU=nn.GRU(
+            input_size=LATENT_DIMENSION,
+            hidden_size=keyNum,
+            num_layers=3,
+            batch_first=True,
+            bidirectional=False
+        )
+        self.fc11=nn.Linear(LATENT_DIMENSION,LATENT_DIMENSION)
+        self.fc12=nn.Linear(LATENT_DIMENSION,LATENT_DIMENSION)
+        self.predFC1=nn.Linear(LATENT_DIMENSION,LATENT_DIMENSION)
+        self.predFC2=nn.Linear(LATENT_DIMENSION,1)
+
+    def encode(self, x):
+        """encode the input into two parts, mean mu and log variance"""
+        x=self.embedding(x)
+        # print(x.shape)
+        out, _=self.encodeGRU(x)
+        out=out[:,-1,:]
+        # x=self.fc1_res(z)+z # residual block
+        return self.fc11(out), self.fc12(out)
+
+    def decode(self, z):
+        """decode the inner representation vibrated with normalized noise to the original size"""
+        lastState=None
+        z=z.unsqueeze(1)
+        batchSize=z.shape[0]
+        retTensor=torch.randn(batchSize,0,self.keyNum,requires_grad=True)
+        if useGPU==True:
+            retTensor=retTensor.cuda()
+        for i in range(self.maxLength):
+            presentOut, lastState=self.decodeGRU(z,lastState)
+            retTensor=torch.cat([retTensor,presentOut],dim=1)
+            # print(retTensor.shape)
+        return torch.sigmoid(retTensor) # temporarily take this as the binary vector format
+
+    def reparameterize(self, mu, logvar):
+        """re-parameterization trick in training the net"""
+        std = torch.exp(0.5*logvar)
+        eps = torch.randn_like(std)
+        return mu + eps*std
+
+    def forward(self, x):
+        mu, logvar = self.encode(x)
+        z = self.reparameterize(mu, logvar)
+        pred=F.relu(self.predFC1(mu))
+        predY=self.predFC2(pred)
+        return self.decode(z), mu, logvar, predY # standard version also included
+
+    def middleRepresentation(self, x):
+        """return representation in latent space"""
+        mu, logVar = self.encode(x)
+        return self.reparameterize(mu,logVar)
 
 class SmilesVAE(nn.Module):
     """
@@ -77,7 +156,7 @@ class SmilesVAE(nn.Module):
         mu, logVar = self.encode(x)
         return self.reparameterize(mu,logVar)
 
-def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum):
+def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum, predY, y):
     # batchSize=x.shape[0]
     reconstructedX=reconstructedX.view(-1,keyNum)
     x=x.view(-1)
@@ -90,8 +169,10 @@ def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum):
     # https://arxiv.org/abs/1312.6114
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    print(BCE,KLD)
-    return 1000*BCE + KLD
+    REGRE=nn.MSELoss()
+    REGRESS=REGRE(y,predY)
+    print(BCE,KLD,REGRESS)
+    return BCE + KLD + REGRESS
 
 class DNNRegressor(nn.Module):
     """
@@ -127,7 +208,11 @@ class SmilesDesigner(object):
         self.maxLength=int(np.ceil(maxLength/4.0)*4)
         print("Pad to %d" % (self.maxLength))
         self._processData()
-        self.vaeNet=SmilesVAE(self.maxLength,self.nKeys)
+        # self.vaeNet=SmilesVAE(self.maxLength,self.nKeys)
+        # NOW START USING RNN REPRESENTATION
+        self.vaeNet=SmilesRNNVAE(self.maxLength,self.nKeys)
+        if useGPU==True:
+            self.vaeNet=self.vaeNet.cuda()
 
     def initFromModel(self, path):
         """now only create a model from vae"""
@@ -156,19 +241,27 @@ class SmilesDesigner(object):
         testSet=TensorDataset(self.smilesTest,self.propTest)
         trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2)
         testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2)
+        self.vaeNet.decodeGRU.weight_hh_l0.requires_grad_(False)
+        self.vaeNet.decodeGRU.bias_hh_l0.requires_grad_(False)
+        self.vaeNet.decodeGRU.weight_ih_l0.requires_grad_(False)
+        self.vaeNet.decodeGRU.weight_ih_l0.requires_grad_(False)
         optimizer=optim.Adam(self.vaeNet.parameters(),lr=lr,weight_decay=1e-8)
         consecutiveRounds=0
         bestLoss=1e9
+        lossFunc1=nn.MSELoss()
         start=time.time()
         for epoch in range(nRounds):
             losses=[]
             for i, (x,y) in enumerate(trainLoader):
-                w,h=x.shape[:2]
-                x.unsqueeze_(1)
+                # w,h=x.shape[:2]
+                # x.unsqueeze_(1)
                 y.unsqueeze_(1) # ; y.unsqueeze_(1)
-                reconstructedX,mu,logVar,origX=self.vaeNet(x)
-                loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys)
-                # print(loss)
+                if useGPU==True:
+                    x=x.cuda(); y=y.cuda()
+                # print(x.shape,y.shape)
+                reconstructedX,mu,logVar,predY=self.vaeNet(x)
+                # loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y)
+                loss=lossFunc1(predY,y)
                 losses.append(loss.item())
                 optimizer.zero_grad()
                 loss.backward()
@@ -178,11 +271,61 @@ class SmilesDesigner(object):
             valLosses=[]; pred=[]; true=[]
             with torch.no_grad():
                 for i, (x,y) in enumerate(testLoader):
-                    w,h = x.shape[:2]
-                    x.unsqueeze_(1)
+                    # w,h = x.shape[:2]
+                    # x.unsqueeze_(1)
                     y.unsqueeze_(1) #; y.unsqueeze_(1)
-                    reconstructedX,mu,logVar,origX=self.vaeNet(x)
-                    loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys)
+                    if useGPU==True:
+                        x=x.cuda(); y=y.cuda()
+                    reconstructedX,mu,logVar,predY=self.vaeNet(x)
+                    # loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y)
+                    loss=lossFunc1(predY,y)
+                    valLosses.append(loss.item())
+            valLoss=np.mean(valLosses)
+            if bestLoss>valLoss:
+                consecutiveRounds=0
+                bestLoss=valLoss
+                torch.save(self.vaeNet.state_dict(),'/tmp/tmpBestModel.pt')
+            else:
+                consecutiveRounds+=1
+                if consecutiveRounds>=earlyStopEpoch and earlyStop:
+                    print("No better performance after %d rounds, break." % (earlyStopEpoch))
+                    break
+            print("Round [%d]: {%.5f,%.5f|%.5f} after %.3f seconds" % (epoch+1,np.mean(losses),np.mean(valLosses),bestLoss,time.time()-start))
+            if signal is not None:
+                msg=str.format("Round [%d]: (%.5f,%.5f|%.5f) after %.5f seconds" % (epoch+1,np.mean(losses),np.mean(valLosses),bestLoss,time.time()-start))
+                # print(msg)
+                signal.emit(msg)
+        self.vaeNet.decodeGRU.weight_hh_l0.requires_grad_(True)
+        self.vaeNet.decodeGRU.bias_hh_l0.requires_grad_(True)
+        self.vaeNet.decodeGRU.weight_ih_l0.requires_grad_(True)
+        self.vaeNet.decodeGRU.weight_ih_l0.requires_grad_(True)
+        print('Start phase 2')
+        optimizer=optim.Adam(self.vaeNet.parameters(),lr=lr,weight_decay=1e-8)
+        consecutiveRounds=0
+        bestLoss=1e9
+        for epoch in range(nRounds):
+            losses=[]
+            for i, (x,y) in enumerate(trainLoader):
+                y.unsqueeze_(1) # ; y.unsqueeze_(1)
+                if useGPU==True:
+                    x=x.cuda(); y=y.cuda()
+                # print(x.shape,y.shape)
+                reconstructedX,mu,logVar,predY=self.vaeNet(x)
+                loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y)
+                losses.append(loss.item())
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+            losses=np.array(losses)
+            print("Train mean loss:",np.mean(losses))
+            valLosses=[]; pred=[]; true=[]
+            with torch.no_grad():
+                for i, (x,y) in enumerate(testLoader):
+                    y.unsqueeze_(1) #; y.unsqueeze_(1)
+                    if useGPU==True:
+                        x=x.cuda(); y=y.cuda()
+                    reconstructedX,mu,logVar,predY=self.vaeNet(x)
+                    loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y)
                     valLosses.append(loss.item())
             valLoss=np.mean(valLosses)
             if bestLoss>valLoss:
@@ -205,9 +348,12 @@ class SmilesDesigner(object):
     def encodeDataset(self):
         """encode dataset with trained VAE to obtain its representation in latent space"""
         trainSet=self.smilesTrain
-        trainSet.unsqueeze_(1)
+        # trainSet.unsqueeze_(1)
         testSet=self.smilesTest
-        testSet.unsqueeze_(1)
+        # testSet.unsqueeze_(1)
+        if useGPU==True:
+            trainSet=trainSet.cuda()
+            testSet=testSet.cuda()
         trainRet=self.vaeNet.middleRepresentation(trainSet)
         print('Train repr shape:',trainRet.shape)
         self.trainRepr=trainRet.detach().clone()

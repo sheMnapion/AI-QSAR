@@ -13,6 +13,39 @@ import time
 EMBED_DIMENSION = 25
 LATENT_DIMENSION = 400
 
+
+class CollateFn(object):
+    """part for dealing with vari-len inputs"""
+
+    def __init__(self):
+        pass
+
+    def _collate(self, batch):
+        batchX = [b[0] for b in batch]
+        batchY = [b[1].item() for b in batch]
+        batchY = np.array(batchY)
+        trueLengths=[]
+        maxLength=len(batchX[0])
+        for bx in batchX:
+            start=0
+            for j in range(maxLength):
+                if bx[j]==0:
+                    break
+                start+=1
+            trueLengths.append(start)
+        trueLengths=np.array(trueLengths)
+        maxLen = max(trueLengths)
+        batchSize=len(batchY)
+        finalBatchX = torch.zeros(batchSize,maxLen,dtype=torch.long)
+        for i in range(batchSize):
+            finalBatchX[i]=batchX[i][:maxLen]
+        finalBatchY = torch.tensor(batchY,dtype=torch.float32)
+        # print(finalBatchX.shape,finalBatchY.shape)
+        return (finalBatchX, finalBatchY)
+
+    def __call__(self, batch):
+        return self._collate(batch)
+
 class SmilesRnn(nn.Module):
     """class for performing regression or classification directly from smiles representation
         smiles and property pairs needed to initialize
@@ -59,8 +92,8 @@ class SmilesRNNPredictor(object):
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
         print(self.smilesTest.shape)
-        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2)
-        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2)
+        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2) #,collate_fn=CollateFn())
+        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2) #,collate_fn=CollateFn())
         optimizer=optim.Adam(self.net.parameters(),lr=lr,weight_decay=1e-8)
         lossFunc=nn.MSELoss()
         consecutiveRounds=0
@@ -149,14 +182,17 @@ class SmilesRNNPredictor(object):
         recodeDict=dict([('@',0)])
         dictKey=1
         nItems=len(self.origSmiles)
-        padData=np.zeros((nItems,self.maxLength),dtype=np.int32)
+        self.origLengths=np.array([len(origSmile) for origSmile in self.origSmiles])
+        self.maxLength=np.max(self.origLengths)
+        padData=np.zeros((nItems,self.maxLength))
         for i, s in enumerate(self.origSmiles):
+            # tempData=[]
             for j, sChar in enumerate(s):
                 if sChar not in recodeDict.keys():
                     recodeDict[sChar]=dictKey
                     dictKey+=1
                 padData[i][j]=recodeDict[sChar]
-        # print(padData,padData.shape)
+        print(padData,padData.shape)
         print(nItems,dictKey,recodeDict)
         self.nKeys=dictKey
         self.net=SmilesRnn(self.nKeys)
@@ -166,8 +202,6 @@ class SmilesRNNPredictor(object):
         self.origSmilesTrain=smilesTrain # this stores smiles sequences for molecular design rip out usage
         nTrain=len(smilesTrain); nTest=len(smilesTest)
         print("Train test #:",nTrain,nTest)
-        smilesTrain=torch.tensor(smilesTrain).to(torch.long)
-        smilesTest=torch.tensor(smilesTest).to(torch.long)
         matrixEncode=False
         if matrixEncode is True:
             self.smilesTrain=torch.zeros(nTrain,self.maxLength,self.nKeys,dtype=torch.float32)
@@ -183,11 +217,12 @@ class SmilesRNNPredictor(object):
                     for j, s in enumerate(smilesTest[i]):
                         self.smilesTest[i][j]=Q[int(s)]
         else:
-            self.smilesTrain=smilesTrain #torch.zeros(nTrain,self.maxLength-1,dtype=torch.long)
-            self.smilesTest=smilesTest #torch.zeros(nTest,self.maxLength-1,dtype=torch.long)
+            self.smilesTrain=torch.tensor(smilesTrain,dtype=torch.long) #torch.zeros(nTrain,self.maxLength-1,dtype=torch.long)
+            self.smilesTest=torch.tensor(smilesTest,dtype=torch.long) #torch.zeros(nTest,self.maxLength-1,dtype=torch.long)
+        # print(self.smilesTrain)
+        # print(self.smilesTest)
         self.propTrain=torch.tensor(propTrain,dtype=torch.float32)
         self.propTest=torch.tensor(propTest,dtype=torch.float32)
-        print("Dataset prepared, shapes are",self.smilesTrain.shape,self.smilesTest.shape,self.propTrain.shape,self.propTest.shape)
 
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
