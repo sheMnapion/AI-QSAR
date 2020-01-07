@@ -103,7 +103,7 @@ def clearLayout(layout):
 
 
 def getSmilesColumnName(data: pd.DataFrame):
-    for column in data.columnsss:
+    for column in data.columns:
         datacol = data[column]
         mol = Chem.MolFromSmiles(datacol[0])
         try:
