@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog, QListWidgetItem, QFileIconProvider, QListWidget
 from PyQt5.QtCore import QRunnable, QObject, pyqtSignal
 from os.path import expanduser
-import numpy as np
+import numpy as np, pandas as pd
 
 DEFAULT_ICON = "images/stock_media-play.png"
 DNN_PATH = os.path.abspath('../QSAR-DNN')
@@ -97,6 +97,10 @@ def clearLayout(layout):
             child.widget().deleteLater()
         elif child.layout() is not None:
             clearLayout(child.layout())
+
+
+def getSmilesColumnIndex(data: pd.DataFrame):
+    pass
 
 
 class Worker(QRunnable):
