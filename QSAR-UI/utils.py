@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QFileDialog, QListWidgetItem, QFileIconProvider, QLi
 from PyQt5.QtCore import QRunnable, QObject, pyqtSignal
 from os.path import expanduser
 import numpy as np, pandas as pd
+import random as r
 
 from rdkit import Chem
 from rdkit.Chem import Draw
@@ -110,8 +111,9 @@ def getSmilesColumnName(data: pd.DataFrame):
     columnNames=data.columns
     checkNumber=20
     checkRows=min(checkNumber,nRows)
+    randIndexes=r.sample(range(nRows),checkRows)
     for i in range(nColumns):
-        properties=data[columnNames[i]].loc[:checkRows]
+        properties=data[columnNames[i]].loc[randIndexes]
         validNumber=0
         for prop in properties:
             try:
