@@ -7,6 +7,9 @@ from PyQt5.QtCore import QRunnable, QObject, pyqtSignal
 from os.path import expanduser
 import numpy as np, pandas as pd
 
+from rdkit import Chem
+from rdkit.Chem import Draw
+
 DEFAULT_ICON = "images/stock_media-play.png"
 DNN_PATH = os.path.abspath('../QSAR-DNN')
 CACHE_PATH = os.path.join(DNN_PATH, "__trainingcache__")
@@ -99,9 +102,17 @@ def clearLayout(layout):
             clearLayout(child.layout())
 
 
-def getSmilesColumnIndex(data: pd.DataFrame):
-    pass
+def getSmilesColumnName(data: pd.DataFrame):
+    for column in data.columnsss:
+        datacol = data[column]
+        mol = Chem.MolFromSmiles(datacol[0])
+        try:
+            Draw.MolToQPixmap(mol)
+        except:
+            continue
 
+        return column
+    return None
 
 class Worker(QRunnable):
     '''
