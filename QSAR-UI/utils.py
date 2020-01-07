@@ -103,15 +103,26 @@ def clearLayout(layout):
 
 
 def getSmilesColumnName(data: pd.DataFrame):
-    for column in data.columns:
-        datacol = data[column]
-        mol = Chem.MolFromSmiles(datacol[0])
-        try:
-            Draw.MolToQPixmap(mol)
-        except:
-            continue
-
-        return column
+    """try to find column which contains valid smiles strs
+        if no valid found, return None
+    """
+    nRows,nColumns=data.shape[:2]
+    columnNames=data.columns
+    checkNumber=20
+    checkRows=min(checkNumber,nRows)
+    for i in range(nColumns):
+        properties=data[columnNames[i]].loc[:checkRows]
+        validNumber=0
+        for prop in properties:
+            try:
+                tempMol=Chem.MolFromSmiles(prop)
+                tempPILImage=Draw.MolToImage(tempMol)
+                validNumber+=1
+            except:
+                continue
+        validRatio=validNumber/checkRows
+        if validRatio>=0.5:
+            return columnNames[i]
     return None
 
 class Worker(QRunnable):

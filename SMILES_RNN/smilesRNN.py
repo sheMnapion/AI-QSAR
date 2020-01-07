@@ -9,10 +9,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from torch.utils.data import DataLoader, Dataset, TensorDataset
 import time
+import matplotlib.pyplot as plt
 
 EMBED_DIMENSION = 25
 LATENT_DIMENSION = 400
 
+useGPU=torch.cuda.is_available()
 
 class CollateFn(object):
     """part for dealing with vari-len inputs"""
@@ -40,6 +42,7 @@ class CollateFn(object):
         for i in range(batchSize):
             finalBatchX[i]=batchX[i][:maxLen]
         finalBatchY = torch.tensor(batchY,dtype=torch.float32)
+        print(np.max(trueLengths),np.min(trueLengths))
         # print(finalBatchX.shape,finalBatchY.shape)
         return (finalBatchX, finalBatchY)
 
@@ -92,8 +95,8 @@ class SmilesRNNPredictor(object):
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
         print(self.smilesTest.shape)
-        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2) #,collate_fn=CollateFn())
-        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2) #,collate_fn=CollateFn())
+        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
+        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
         optimizer=optim.Adam(self.net.parameters(),lr=lr,weight_decay=1e-8)
         lossFunc=nn.MSELoss()
         consecutiveRounds=0
@@ -183,16 +186,22 @@ class SmilesRNNPredictor(object):
         dictKey=1
         nItems=len(self.origSmiles)
         self.origLengths=np.array([len(origSmile) for origSmile in self.origSmiles])
+        # indexes=np.argsort(self.origLengths)
+        # plt.hist(self.origLengths); plt.show()
+        # self.origProperties=self.origProperties[indexes]
+        # self.origSmiles=self.origSmiles[indexes]
         self.maxLength=np.max(self.origLengths)
-        padData=np.zeros((nItems,self.maxLength))
+        padData=[]
         for i, s in enumerate(self.origSmiles):
-            # tempData=[]
+            tempData=[]
             for j, sChar in enumerate(s):
                 if sChar not in recodeDict.keys():
                     recodeDict[sChar]=dictKey
                     dictKey+=1
-                padData[i][j]=recodeDict[sChar]
-        print(padData,padData.shape)
+                tempData.append(recodeDict[sChar])
+            padData.append(tempData)
+        padData=np.array(padData)
+        print(padData)
         print(nItems,dictKey,recodeDict)
         self.nKeys=dictKey
         self.net=SmilesRnn(self.nKeys)
@@ -217,8 +226,26 @@ class SmilesRNNPredictor(object):
                     for j, s in enumerate(smilesTest[i]):
                         self.smilesTest[i][j]=Q[int(s)]
         else:
-            self.smilesTrain=torch.tensor(smilesTrain,dtype=torch.long) #torch.zeros(nTrain,self.maxLength-1,dtype=torch.long)
-            self.smilesTest=torch.tensor(smilesTest,dtype=torch.long) #torch.zeros(nTest,self.maxLength-1,dtype=torch.long)
+            trainLengths=np.array([len(sT) for sT in smilesTrain])
+            trainMaxLength=np.max(trainLengths)
+            nTrain=len(trainLengths)
+            trainPadData=np.zeros((nTrain,trainMaxLength))
+            for i in range(nTrain):
+                trainPadData[i][:trainLengths[i]]=smilesTrain[i]
+            trainIndexes=np.argsort(trainLengths)
+            propTrain=propTrain[trainIndexes]
+            trainPadData=trainPadData[trainIndexes]
+            self.smilesTrain=torch.tensor(trainPadData,dtype=torch.long)
+            testLengths=np.array([len(sT) for sT in smilesTest])
+            testMaxLength=np.max(testLengths)
+            nTest=len(testLengths)
+            testPadData=np.zeros((nTest,testMaxLength))
+            for i in range(nTest):
+                testPadData[i][:testLengths[i]]=smilesTest[i]
+            testIndexes=np.argsort(testLengths)
+            propTest=propTest[testIndexes]
+            testPadData=testPadData[testIndexes]
+            self.smilesTest=torch.tensor(testPadData,dtype=torch.long)
         # print(self.smilesTrain)
         # print(self.smilesTest)
         self.propTrain=torch.tensor(propTrain,dtype=torch.float32)
@@ -227,4 +254,4 @@ class SmilesRNNPredictor(object):
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesRNNPredictor(smiles,properties)
-    predictor.train(nRounds=1000,lr=3e-4,batchSize=80)
+    predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
