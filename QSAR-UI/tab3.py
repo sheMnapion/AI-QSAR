@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QErrorMessage
 from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
@@ -22,7 +22,7 @@ from PIL.ImageQt import ImageQt
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
-
+from SmilesRNN import SmilesRNNPredictor
 
 class Tab3(QMainWindow):
     def __init__(self):
@@ -48,6 +48,7 @@ class Tab3(QMainWindow):
         self._currentModelFile = None
 
         self.DNN = QSARDNN()
+        self.RNN = SmilesRNNPredictor()
 
         self._bind()
 
@@ -113,24 +114,32 @@ class Tab3(QMainWindow):
         """
         if not self.modelSelectBtn.isEnabled():
             return
-
+        self.selectedModel='NONE'
         try:
             model = self.modelList.currentItem().text()
         except:
             self._debugPrint("Current Model File Not Found")
             return
 
-        if re.match(".+.pxl$", model):
+        if re.match(".+.pxl$", model) or re.match(".+.pt$",model):
             try:
                 # If not set, loading will fail without a correct propertyNum
                 self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
                 self.DNN.load(model)
-                self._debugPrint("Model Loaded: {}".format(model))
+                self.selectedModel='DNN'
+                self._debugPrint("DNN Model Loaded: {}".format(model))
             except:
-                self._debugPrint("Load Model Error!")
-                return
+                print('Not a DNN; is it RNN?')
+                try:
+                    self.RNN.loadFromModel(model)
+                    self.selectedModel='RNN'
+                    self._debugPrint("RNN Model Loaded: {}".format(model))
+                except:
+                    self.RNN=SmilesRNNPredictor()
+                    self._debugPrint("Load Model Error!")
+                    return
         else:
-            self._debugPrint("Not a .pxl pytorch model!")
+            self._debugPrint("Not a .pxl or .pt pytorch model!")
             return
 
         self._currentModelFile = model
@@ -224,12 +233,22 @@ class Tab3(QMainWindow):
 
         labelColumn = self.columnSelectComboBox.currentText()
         smilesColumn = self.smilesSelectComboBox.currentText()
+        smilesData=self.data[smilesColumn]
         predColumn = 'predict'
 
         self.testLabel = self.numericData[labelColumn].values.reshape(-1, 1)
         self.testData = self.numericData.loc[:, self.numericData.columns != labelColumn]
 
-        self.testPred = self.DNN.test(self.testData.values, self.testLabel)
+        try:
+            if self.selectedModel=='DNN':
+                self.testPred = self.DNN.test(self.testData.values, self.testLabel)
+            else:
+                self.testPred = self.RNN.predict(smilesData)
+        except:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle("Predicting properties")
+            errorMsg.showMessage("Cannot make prediction on given data by selected model! Please check whether your model is coordinate\
+                                 with your data format.")
         self.testPred = pd.DataFrame(data = { predColumn : self.testPred.reshape(-1) })
 
         # Include non numeric columns to testDataWithPred

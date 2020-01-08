@@ -193,10 +193,12 @@ class SmilesRNNPredictor(object):
 
     def loadFromModel(self,modelPath):
         """load model from given path"""
+        print(modelPath)
         if useGPU==False:
             modelData=torch.load(modelPath,map_location='cpu')
         else:
             modelData=torch.load(modelPath,map_location='cuda:0')
+        print('TRY LOADING FROM',modelPath)
         stateDict=modelData[0]
         self.decodeDict=modelData[1]
         self.recodeDict=dict([(self.decodeDict[i],i) for i in self.decodeDict.keys()])
