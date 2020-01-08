@@ -29,6 +29,7 @@ from SmilesRNN import SmilesRNNPredictor
 class SmilesRNNPredictorTrainThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
     _signal=pyqtSignal(str)
+    _finishSignal=pyqtSignal(bool)
 
     def __init__(self, smilesPredictor,nRounds,lr,batchSize,earlyStop,earlyStopEpoch,trainData=None,trainLabel=None):
         super(SmilesRNNPredictorTrainThread, self).__init__()
@@ -51,6 +52,7 @@ class SmilesRNNPredictorTrainThread(QThread):
                                       earlyStop=self.earlyStop,earlyStopEpoch=self.earlyStopEpoch,trainData=self.trainData,
                                       trainProp=self.trainLabel)
         self._signal.emit('Training finished.')
+        self._finishSignal.emit(True)
 
 class Tab1(QMainWindow):
     def __init__(self):
@@ -147,6 +149,12 @@ class Tab1(QMainWindow):
         self.progressBar.setValue(self.progressBar.maximum())
         self._debugPrint("{} saved to {}".format(outputName, CACHE_PATH))
 
+    def RNNFinishCallback(self, state):
+        """callback interface for RNN training; when state is True, everything is done."""
+        if state==False: return
+        result=np.load('/tmp/tmpRNNResults.npy')
+        self._setTrainingReturnsSlot(result)
+
     def startTrainingSlot(self):
         """
         The Training Function Given Data and Training Parameters
@@ -207,6 +215,7 @@ class Tab1(QMainWindow):
             self.RNNTrainThread=SmilesRNNPredictorTrainThread(self.RNN,num_epoches,learning_rate,batch_size,early_stop,max_tolerance,trainData=trainData,
                                                               trainLabel=trainLabel)
             self.RNNTrainThread._signal.connect(self._appendDebugInfoSlot)
+            self.RNNTrainThread._finishSignal.connect(self.RNNFinishCallback)
             self.RNNTrainThread.start()
         self.lastTrainedModelName=modelName # use this to guide model saving
         self.progressBar.setMinimum(0)
@@ -258,11 +267,15 @@ class Tab1(QMainWindow):
                         print('LOADED AGAIN FOR SAFETY')
                     except:
                         self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
-            else:
-                self.RNN.loadFromModel(self.modelList.currentItem().text())
+            else: # RNN model
+                if self.trainingParams['fromModel']==True:
+                    self.RNN.loadFromModel(self.modelList.currentItem().text())
+                else:
+                    self.RNN=SmilesRNNPredictor()
             self._debugPrint(str.format("%s Set up" % modelName))
         except:
             self.DNN = self.trainData = self.testData = self.trainLabel = self.testLabel = None
+            self.RNN=SmilesRNNPredictor()
             self._debugPrint(str.format("Fail to Set up %s" % modelName))
 
     def modelBrowseSlot(self):

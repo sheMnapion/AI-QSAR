@@ -117,6 +117,12 @@ class SmilesRNNPredictor(object):
             self.smilesTest=torch.from_numpy(smilesTest).to(torch.long)
             self.propTrain=torch.from_numpy(propTrain).to(torch.float32)
             self.propTest=torch.from_numpy(propTest).to(torch.float32)
+        result=dict() # result for recording all training data
+        result["numEpochs"]=0
+        result["lossList"]=[]
+        result["mseList"]=[]
+        result["testPred"]=[]
+        result["testLabel"]=[]
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
         print(self.smilesTest.shape)
@@ -140,6 +146,7 @@ class SmilesRNNPredictor(object):
                 loss.backward()
                 optimizer.step()
             losses=np.array(losses)
+            result['lossList'].append(np.mean(losses))
             valLosses=[]; pred=[]; true=[]
             for i, (x,y) in enumerate(testLoader):
                 with torch.no_grad():
@@ -150,29 +157,35 @@ class SmilesRNNPredictor(object):
                     # print(y.shape,prediction.shape)
                     # print(prediction,prediction.shape)
                     for j, p in enumerate(prediction[:,0]):
-                        pred.append(p)
-                        true.append(y[j][0])
+                        pred.append(p.item())
+                        true.append(y[j][0].item())
                     loss=lossFunc(prediction,y)
                     valLosses.append(loss.item())
+            result['mseList'].append(np.mean(valLosses))
             print("Round [%d]: {%.5f,%.5f} total time: %.5f seconds" % (epoch+1,np.mean(losses),np.mean(valLosses),time.time()-start))
             tempR2Score=r2_score(true,pred)
             print("r^2 score:",tempR2Score)
             if tempR2Score>bestR2:
                 consecutiveRounds=0
                 bestR2=tempR2Score
+                result['testPred']=pred
+                result['testLabel']=true
                 tempData=[self.net.state_dict(),self.decodeDict]
                 torch.save(tempData,'/tmp/tmpRNNState.pt')
             else:
                 consecutiveRounds+=1
             if signal is not None:
-                signal.emit(str.format("%d/%d" % (epoch,nRounds)))
-                signal.emit(str.format("[%d/%d]: temporary best score %.3f" % (epoch,nRounds,bestR2)))
+                signal.emit(str.format("%d/%d" % (epoch+1,nRounds)))
+                signal.emit(str.format("[%d/%d]: temporary best score %.3f" % (epoch+1,nRounds,bestR2)))
             if consecutiveRounds>=earlyStopEpoch and earlyStop==True:
                 print("No better performance after %d rounds, break." % (earlyStopEpoch))
                 if signal is not None:
                     signal.emit(str.format("No better performance after %d rounds, early stop." % earlyStopEpoch))
                 break
         print("Best r2 score:",bestR2)
+        result['numEpochs']=epoch+1
+        result['modelName']='RNN'
+        np.save('/tmp/tmpRNNResults',result)
 
     def saveModel(self,modelPath):
         """save model to [modelPath]"""

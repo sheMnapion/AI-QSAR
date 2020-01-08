@@ -123,11 +123,11 @@ class QSARDNN():
                         progress_callback.emit('\n***********Finish Training***********\n')
 
                         return epoch + 1, self.loss_list, self.mse_list
+            progress_callback.emit(str.format("%d/%d" % (epoch+1,num_epoches)))
             if epoch % 10 == 9:
                 progress_callback.emit('epoch [{}/{}]'.format(epoch + 1, num_epoches))
                 progress_callback.emit('*' * 10)
                 progress_callback.emit('validation R2 score : {}'.format(old_loss))
-                progress_callback.emit(str.format("%d/%d" % (epoch,num_epoches)))
 
         progress_callback.emit('\n***********Finish Training***********\n')
 
@@ -166,7 +166,7 @@ class QSARDNN():
 
         result = {"numEpochs": num_epoches, "lossList": loss_list,
                   "testPred": test_pred, "mseList": mse_list,
-                  "model": self.model.state_dict(), "testLabel": test_label}
+                  "model": self.model.state_dict(), "testLabel": test_label, 'modelName': 'DNN'}
 
         result_callback.emit(result)
 

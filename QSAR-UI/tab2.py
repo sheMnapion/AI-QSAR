@@ -6,7 +6,7 @@ import pandas as pd
 from types import MethodType
 
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QErrorMessage
 from PyQt5.QtGui import QPixmap
 from utils import resetFolderList, mousePressEvent, clearLayout
 from utils import DNN_PATH, CACHE_PATH
@@ -89,7 +89,8 @@ class Tab2(QMainWindow):
                         len(self.result["mseList"]),
                         len(self.result["testPred"]),
                         len(self.result["testLabel"])))
-
+            if 'modelName' not in self.result: # make it compatible with former training history
+                self.result['modelName']='DNN'
         else:
             self._debugPrint("Not a Training History(*.npy)!")
             return
@@ -113,46 +114,55 @@ class Tab2(QMainWindow):
         if not self.analyzeBtn.isEnabled():
             return
 
-        if self.precisionCurveCheckBox.isChecked():
-            fig = Figure()
-            ax1f1 = fig.add_subplot(111)
-            x1 = self.result["testPred"]
-            y1 = self.result["testLabel"]
-            ax1f1.scatter(x1, y1)
-            ax1f1.set_title('Precision Curve')
-            ax1f1.set_xlabel('Predict Value')
-            ax1f1.set_ylabel('Real Value')
+        try:
+            if self.precisionCurveCheckBox.isChecked():
+                fig = Figure()
+                ax1f1 = fig.add_subplot(111)
+                x1 = self.result["testPred"]
+                y1 = self.result["testLabel"]
+                ax1f1.scatter(x1, y1)
+                ax1f1.set_title('Precision Curve')
+                ax1f1.set_xlabel('Predict Value')
+                ax1f1.set_ylabel('Real Value')
 
-            lims = [
-                np.min([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # min of both axes
-                np.max([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # max of both axes
-            ]
-            # now plot both limits against eachother
-            ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+                lims = [
+                    np.min([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # min of both axes
+                    np.max([ax1f1.get_xlim(), ax1f1.get_ylim()]),  # max of both axes
+                ]
+                # now plot both limits against eachother
+                ax1f1.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
 
-            self._addmpl(self.precisionCurveWidget, fig)
-        else:
-            clearLayout(self.precisionCurveLayout)
+                self._addmpl(self.precisionCurveWidget, fig)
+            else:
+                clearLayout(self.precisionCurveLayout)
 
-        if self.lossCurveCheckBox.isChecked():
-            fig = Figure()
-            ax1f1 = fig.add_subplot(111)
-            y1 = self.result["mseList"]
-            x1 = np.linspace(0, len(y1) - 1, len(y1))
-            ax1f1.plot(x1, y1)
-            ax1f1.set_title('Training Loss Curve')
-            ax1f1.set_xlabel('Epochs')
-            ax1f1.set_ylabel('MSE')
-            self._addmpl(self.lossCurveWidget, fig)
-        else:
-            clearLayout(self.lossCurveLayout)
+            if self.lossCurveCheckBox.isChecked():
+                fig = Figure()
+                ax1f1 = fig.add_subplot(111)
+                y1 = self.result["mseList"]
+                x1 = np.linspace(0, len(y1) - 1, len(y1))
+                ax1f1.plot(x1, y1)
+                ax1f1.set_title('Training Loss Curve')
+                ax1f1.set_xlabel('Epochs')
+                ax1f1.set_ylabel('MSE')
+                self._addmpl(self.lossCurveWidget, fig)
+            else:
+                clearLayout(self.lossCurveLayout)
 
-        if self.modelStructureCheckBox.isChecked():
-            pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
-            pixmap = pixmap.scaled(self.modelStructureLabel.size()) #,QtCore.Qt.KeepAspectRatio)
-            self.modelStructureLabel.setPixmap(pixmap)
-        else:
-            self.modelStructureLabel.clear()
+            if self.modelStructureCheckBox.isChecked():
+                if self.result['modelName']=='DNN':
+                    pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
+                    pixmap = pixmap.scaled(self.modelStructureLabel.size()) #,QtCore.Qt.KeepAspectRatio)
+                    self.modelStructureLabel.setPixmap(pixmap)
+                else:
+                    assert(0)
+            else:
+                self.modelStructureLabel.clear()
+        except:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle("Analyzing results")
+            errorMsg.showMessage("The training history contains messages that cannot be interpreted correctly. Please check your training process\
+                                 for more information.")
 
     def _debugPrint(self, msg):
         """
