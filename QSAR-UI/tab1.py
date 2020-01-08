@@ -6,8 +6,9 @@ import torch
 
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider, QErrorMessage
 from PyQt5.QtCore import QThreadPool, QRunnable
+from PyQt5.QtCore import QThread, pyqtSignal, QSize
 from os.path import expanduser
 from types import MethodType
 
@@ -16,14 +17,37 @@ import pandas as pd
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 
-from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mousePressEvent, Worker
+from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mousePressEvent, Worker, getSmilesColumnName
 from utils import DNN_PATH, RNN_PATH, CACHE_PATH
 
 sys.path.append(DNN_PATH)
 sys.path.append(RNN_PATH)
 
 from QSAR_DNN import QSARDNN
-from smilesRNN import SmilesRNNPredictor as QSARRNN
+from SmilesRNN import SmilesRNNPredictor
+
+class SmilesRNNPredictorTrainThread(QThread):
+    """wrapper class for carrying out smiles designing procedures"""
+    _signal=pyqtSignal(str)
+
+    def __init__(self, smilesPredictor,nRounds,lr,batchSize,earlyStop,earlyStopEpoch):
+        super(SmilesRNNPredictorTrainThread, self).__init__()
+        self.smilesRNNPredictor=smilesPredictor
+        self.nRounds=nRounds
+        self.lr=lr
+        self.batchSize=batchSize
+        self.earlyStop=earlyStop
+        self.earlyStopEpoch=earlyStopEpoch
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        """run training process"""
+        self._signal.emit('---------------------------------Start Training------------------------------------------------')
+        self.smilesRNNPredictor.train(nRounds=self.nRounds,lr=self.lr,batchSize=self.batchSize,signal=self._signal,
+                                      earlyStop=self.earlyStop,earlyStopEpoch=self.earlyStopEpoch)
+        self._signal.emit('Training finished.')
 
 class Tab1(QMainWindow):
     def __init__(self):
@@ -68,7 +92,7 @@ class Tab1(QMainWindow):
         self.testLabel = None
 
         self.DNN = QSARDNN()
-#        self.RNN = QSARRNN()
+        self.RNN = SmilesRNNPredictor()
         self._bind()
 
     def _bind(self):
@@ -127,6 +151,7 @@ class Tab1(QMainWindow):
         if not self.trainParamsBtn.isEnabled():
             return
 
+        self.progressBar.setValue(0)
         self._updateTrainingParams()
 
         modelName=self.trainingParams['modelType']
@@ -150,12 +175,32 @@ class Tab1(QMainWindow):
             self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
             self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
             self.threadPool.start(self.trainer)
-            self.progressBar.setMinimum(0)
-            numEpochs=int(self.trainingParams['epochs'])
-            self.progressBar.setMaximum(int(numEpochs))
-            self.progressBar.setValue(0)
         else:
-            pass
+            try:
+                smilesColumn=getSmilesColumnName(self.data)
+                smilesData=np.array(self.data[smilesColumn])
+                properties=np.array(self.rawLabels)
+                batch_size = int(self.trainingParams["batchSize"])
+                learning_rate = float(self.trainingParams["learningRate"])
+                num_epoches = int(self.trainingParams["epochs"])
+                early_stop = bool(self.trainingParams["earlyStop"])
+                max_tolerance = int(self.trainingParams["earlyStopEpochs"])
+                self.RNN.initFromData(smilesData,properties)
+                self._debugPrint('RNN model initialized.')
+            except:
+                self.RNN=SmilesRNNPredictor()
+                errorMessage=QErrorMessage(parent=self)
+                errorMessage.setWindowTitle("Error starting training!")
+                errorMessage.showMessage("Cannot initialize RNN from given csv! Please check whether\
+                your input csv contains valid smiles representations.")
+                return
+            self.RNNTrainThread=SmilesRNNPredictorTrainThread(self.RNN,num_epoches,learning_rate,batch_size,early_stop,max_tolerance)
+            self.RNNTrainThread._signal.connect(self._appendDebugInfoSlot)
+            self.RNNTrainThread.start()
+        self.lastTrainedModelName=modelName # use this to guide model saving
+        self.progressBar.setMinimum(0)
+        numEpochs = int(self.trainingParams['epochs'])
+        self.progressBar.setMaximum(int(numEpochs))
 
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)
@@ -178,32 +223,36 @@ class Tab1(QMainWindow):
         if self.trainingParams["fromModel"] is False:
             self._debugPrint("Remove loaded model(if any)")
             self.DNN = QSARDNN()
+            self.RNN = SmilesRNNPredictor()
 
         self._debugPrint(str(self.trainingParams.items()))
 
+        modelName=self.trainingParams['modelType']
         try:
             self.trainData, self.testData = train_test_split(self.numericData,
                     test_size = 0.2, shuffle = False)
             labelColumn = self.trainingParams["targetColumn"]
 
+            self.rawLabels=self.data[labelColumn]
             self.trainLabel = self.trainData[labelColumn].values.reshape(-1,1)
             self.trainData = self.trainData.loc[:, self.trainData.columns != labelColumn].values
 
             self.testLabel = self.testData[labelColumn].values.reshape(-1,1)
             self.testData = self.testData.loc[:, self.testData.columns != labelColumn].values
-
-            self.DNN.setPropertyNum(self.trainData.shape[1])
-            if self.trainingParams['fromModel']==True:
-                try:
-                    self.DNN.load(self.modelList.currentItem().text())
-                    print('LOADED AGAIN FOR SAFETY')
-                except:
-                    self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
-
-            self._debugPrint("DNN's Set up")
+            if modelName=='DNN':
+                self.DNN.setPropertyNum(self.trainData.shape[1])
+                if self.trainingParams['fromModel']==True:
+                    try:
+                        self.DNN.load(self.modelList.currentItem().text())
+                        print('LOADED AGAIN FOR SAFETY')
+                    except:
+                        self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
+            else:
+                self.RNN.loadFromModel(self.modelList.currentItem().text())
+            self._debugPrint(str.format("%s Set up" % modelName))
         except:
             self.DNN = self.trainData = self.testData = self.trainLabel = self.testLabel = None
-            self._debugPrint("Fail to Set up DNN")
+            self._debugPrint(str.format("Fail to Set up %s" % modelName))
 
     def modelBrowseSlot(self):
         """
@@ -232,11 +281,21 @@ class Tab1(QMainWindow):
         path = saveModel()
         if path is not None:
             self._currentOutputPath = path
-            try:
-                self.DNN.save(path)
-                self._debugPrint('File {} saved'.format(path))
-            except:
-                self._debugPrint('DNN not Available yet, or Path Invalid!')
+            if self.lastTrainedModelName=='DNN':
+                try:
+                    self.DNN.save(path)
+                    self._debugPrint('File {} saved'.format(path))
+                except:
+                    self._debugPrint('DNN not Available yet, or Path Invalid!')
+            elif self.lastTrainedModelName=='RNN':
+                try:
+                    self.RNN.saveModel(path)
+                    self._debugPrint('File {} saved.'.format(path))
+                except:
+                    errorMsg=QErrorMessage(self)
+                    errorMsg.setWindowTitle('Error saving model')
+                    errorMsg.showMessage('Cannot write in! Please check your disk for more info.')
+
 
     def modelSelectSlot(self):
         """

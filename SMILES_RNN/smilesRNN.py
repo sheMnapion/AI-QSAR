@@ -61,7 +61,7 @@ class SmilesRnn(nn.Module):
         self.lstm=nn.GRU(
             input_size=EMBED_DIMENSION,
             hidden_size=LATENT_DIMENSION,
-            num_layers=2,
+            num_layers=1,
             batch_first=True,
             bidirectional=False
         )
@@ -94,13 +94,13 @@ class SmilesRNNPredictor(object):
         # self.net=SmilesRnn(maxLength)
         self._processData()
 
-    def train(self,nRounds=1000,lr=0.01,earlyStopEpoch=10,batchSize=12):
+    def train(self,nRounds=1000,lr=0.01,earlyStop=True,earlyStopEpoch=10,batchSize=12):
         """train the RNN for [nRounds] with learning rate [lr]"""
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
         print(self.smilesTest.shape)
-        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
-        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
+        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=True,num_workers=2,collate_fn=CollateFn())
+        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2,collate_fn=CollateFn())
         optimizer=optim.Adam(self.net.parameters(),lr=lr,weight_decay=1e-8)
         lossFunc=nn.MSELoss()
         consecutiveRounds=0
@@ -110,6 +110,8 @@ class SmilesRNNPredictor(object):
             losses=[]
             for i, (x,y) in enumerate(trainLoader):
                 y.unsqueeze_(1) #; y.unsqueeze_(1)
+                if useGPU==True:
+                    x=x.cuda(); y=y.cuda()
                 prediction=self.net(x)
                 loss=lossFunc(prediction,y)
                 losses.append(loss.item())
@@ -121,6 +123,8 @@ class SmilesRNNPredictor(object):
             for i, (x,y) in enumerate(testLoader):
                 with torch.no_grad():
                     y.unsqueeze_(1) #; y.unsqueeze_(1)
+                    if useGPU==True:
+                        x=x.cuda(); y=y.cuda()
                     prediction=self.net(x)
                     # print(y.shape,prediction.shape)
                     # print(prediction,prediction.shape)
@@ -132,24 +136,30 @@ class SmilesRNNPredictor(object):
             print("Round [%d]: {%.5f,%.5f} total time: %.5f seconds" % (epoch+1,np.mean(losses),np.mean(valLosses),time.time()-start))
             tempR2Score=r2_score(true,pred)
             print("r^2 score:",tempR2Score)
-            if tempR2Score>bestR2:
-                consecutiveRounds=0
-                bestR2=tempR2Score
-                tempData=[self.net.state_dict(),self.decodeDict]
-                torch.save(tempData,'/tmp/tmpRNNState.pt')
-            else:
-                consecutiveRounds+=1
-                if consecutiveRounds>=earlyStopEpoch:
-                    print("No better performance after %d rounds, break." % (earlyStopEpoch))
-                    break
+            if earlyStop==True:
+                if tempR2Score>bestR2:
+                    consecutiveRounds=0
+                    bestR2=tempR2Score
+                    tempData=[self.net.state_dict(),self.decodeDict]
+                    torch.save(tempData,'/tmp/tmpRNNState.pt')
+                else:
+                    consecutiveRounds+=1
+                    if consecutiveRounds>=earlyStopEpoch:
+                        print("No better performance after %d rounds, break." % (earlyStopEpoch))
+                        break
         print("Best r2 score:",bestR2)
 
     def loadFromModel(self,modelPath):
         """load model from given path"""
-        modelData=torch.load(modelPath)
+        if useGPU==False:
+            modelData=torch.load(modelPath,map_location='cpu')
+        else:
+            modelData=torch.load(modelPath,map_location='cuda:0')
         stateDict=modelData[0]
         self.decodeDict=modelData[1]
         self.recodeDict=dict([(self.decodeDict[i],i) for i in self.decodeDict.keys()])
+        # print(self.decodeDict)
+        # print(self.recodeDict)
         self.nKeys=len(self.decodeDict.keys())
         self.net=SmilesRnn(self.nKeys)
         self.net.load_state_dict(stateDict)
@@ -172,15 +182,22 @@ class SmilesRNNPredictor(object):
         testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
         preds=[]
         for (x,y) in testLoader:
+            tempBatchSize=len(y)
             if useGPU==True:
                 x=x.cuda(); y=y.cuda()
-            pred=self.net(x)
-            print(pred.shape)
+            with torch.no_grad():
+                pred=self.net(x)
+                for i in range(tempBatchSize):
+                    preds.append(pred[i][0].item())
+        preds=np.array(preds)
+        return preds
 
     def _parseSmiles(self,testSmiles):
         """parse smiles and get its valid representation"""
         smilesSplit = []
+        print(testSmiles)
         for smiles in testSmiles:
+            smiles=''.join(smiles)
             smilesLength = len(smiles)
             nameStr = []
             index = 0
@@ -238,6 +255,8 @@ class SmilesRNNPredictor(object):
         self.nKeys=dictKey
         self.recodeDict=recodeDict
         self.net=SmilesRnn(self.nKeys)
+        if useGPU==True:
+            self.net=self.net.cuda()
         self.decodeDict=dict([(recodeDict[key],key) for key in recodeDict.keys()])
         self.standardData=padData
         smilesTrain,smilesTest,propTrain,propTest=train_test_split(padData,self.origProperties,test_size=0.2,random_state=2019)
@@ -283,5 +302,5 @@ if __name__=='__main__':
     predictor=SmilesRNNPredictor()
     # predictor.initFromData(smiles,properties)
     # predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
-    predictor.loadFromModel('tmpRNNState.pt')
+    predictor.loadFromModel('tmpRNN_0.88.pt')
     predictor.predict(smiles)
