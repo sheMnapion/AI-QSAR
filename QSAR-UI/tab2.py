@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow, QErrorMessage
 from PyQt5.QtGui import QPixmap
 from utils import resetFolderList, mousePressEvent, clearLayout
-from utils import DNN_PATH, CACHE_PATH
+from utils import DNN_PATH, CACHE_PATH, RNN_PATH
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import (
@@ -83,7 +83,7 @@ class Tab2(QMainWindow):
                 return
 
             self._debugPrint("Training History {} loaded".format(selectedFile))
-            self._debugPrint("(n, len(loss), len(mse), len(testPred), len(testLabel):\n( {}, {}, {}, {} )".format(
+            self._debugPrint("(n, len(loss), len(mse), len(testPred), len(testLabel):\n( {}, {}, {}, {}, {} )".format(
                         self.result["numEpochs"],
                         len(self.result["lossList"]),
                         len(self.result["mseList"]),
@@ -152,10 +152,10 @@ class Tab2(QMainWindow):
             if self.modelStructureCheckBox.isChecked():
                 if self.result['modelName']=='DNN':
                     pixmap = QPixmap(os.path.join(DNN_PATH, 'architecture.png'))
-                    pixmap = pixmap.scaled(self.modelStructureLabel.size()) #,QtCore.Qt.KeepAspectRatio)
-                    self.modelStructureLabel.setPixmap(pixmap)
                 else:
-                    assert(0)
+                    pixmap = QPixmap(os.path.join(RNN_PATH, 'architecture.png'))
+                pixmap = pixmap.scaled(self.modelStructureLabel.size()) #,QtCore.Qt.KeepAspectRatio)
+                self.modelStructureLabel.setPixmap(pixmap)
             else:
                 self.modelStructureLabel.clear()
         except:
