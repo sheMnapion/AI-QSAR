@@ -42,7 +42,7 @@ class CollateFn(object):
         for i in range(batchSize):
             finalBatchX[i]=batchX[i][:maxLen]
         finalBatchY = torch.tensor(batchY,dtype=torch.float32)
-        print(np.max(trueLengths),np.min(trueLengths))
+        # print(np.max(trueLengths),np.min(trueLengths))
         # print(finalBatchX.shape,finalBatchY.shape)
         return (finalBatchX, finalBatchY)
 
@@ -232,9 +232,6 @@ class SmilesRNNPredictor(object):
             trainPadData=np.zeros((nTrain,trainMaxLength))
             for i in range(nTrain):
                 trainPadData[i][:trainLengths[i]]=smilesTrain[i]
-            trainIndexes=np.argsort(trainLengths)
-            propTrain=propTrain[trainIndexes]
-            trainPadData=trainPadData[trainIndexes]
             self.smilesTrain=torch.tensor(trainPadData,dtype=torch.long)
             testLengths=np.array([len(sT) for sT in smilesTest])
             testMaxLength=np.max(testLengths)
@@ -242,9 +239,6 @@ class SmilesRNNPredictor(object):
             testPadData=np.zeros((nTest,testMaxLength))
             for i in range(nTest):
                 testPadData[i][:testLengths[i]]=smilesTest[i]
-            testIndexes=np.argsort(testLengths)
-            propTest=propTest[testIndexes]
-            testPadData=testPadData[testIndexes]
             self.smilesTest=torch.tensor(testPadData,dtype=torch.long)
         # print(self.smilesTrain)
         # print(self.smilesTest)

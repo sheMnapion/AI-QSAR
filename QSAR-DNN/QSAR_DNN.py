@@ -123,10 +123,11 @@ class QSARDNN():
                         progress_callback.emit('\n***********Finish Training***********\n')
 
                         return epoch + 1, self.loss_list, self.mse_list
-            if epoch % 10 == 0:
-                progress_callback.emit('epoch [{}/{}]'.format(epoch + 10, num_epoches))
+            if epoch % 10 == 9:
+                progress_callback.emit('epoch [{}/{}]'.format(epoch + 1, num_epoches))
                 progress_callback.emit('*' * 10)
                 progress_callback.emit('validation R2 score : {}'.format(old_loss))
+                progress_callback.emit(str.format("%d/%d" % (epoch,num_epoches)))
 
         progress_callback.emit('\n***********Finish Training***********\n')
 

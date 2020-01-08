@@ -117,6 +117,7 @@ class Tab1(QMainWindow):
         np.save(os.path.join(CACHE_PATH, outputName), result)
 
         self.trainingReturnLineEdit.setText(outputName)
+        self.progressBar.setValue(self.progressBar.maximum())
         self._debugPrint("{} saved to {}".format(outputName, CACHE_PATH))
 
     def startTrainingSlot(self):
@@ -128,25 +129,33 @@ class Tab1(QMainWindow):
 
         self._updateTrainingParams()
 
-        try:
-            self.trainer = Worker(fn = self.DNN.train_and_test,
-                             train_set = self.trainData,
-                             train_label = self.trainLabel,
-                             test_set = self.testData,
-                             test_label = self.testLabel,
-                             batch_size = int(self.trainingParams["batchSize"]),
-                             learning_rate = float(self.trainingParams["learningRate"]),
-                             num_epoches = int(self.trainingParams["epochs"]),
-                             early_stop = bool(self.trainingParams["earlyStop"]),
-                             max_tolerance = int(self.trainingParams["earlyStopEpochs"])
-                          )
-        except:
-            self._debugPrint("DNN Fail to Start")
-            return
+        modelName=self.trainingParams['ModelType']
+        if modelName=='DNN':
+            try:
+                self.trainer = Worker(fn = self.DNN.train_and_test,
+                                 train_set = self.trainData,
+                                 train_label = self.trainLabel,
+                                 test_set = self.testData,
+                                 test_label = self.testLabel,
+                                 batch_size = int(self.trainingParams["batchSize"]),
+                                 learning_rate = float(self.trainingParams["learningRate"]),
+                                num_epoches = int(self.trainingParams["epochs"]),
+                                early_stop = bool(self.trainingParams["earlyStop"]),
+                                max_tolerance = int(self.trainingParams["earlyStopEpochs"])
+                            )
+            except:
+                self._debugPrint("DNN Fail to Start")
+                return
 
-        self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
-        self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
-        self.threadPool.start(self.trainer)
+            self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
+            self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
+            self.threadPool.start(self.trainer)
+            self.progressBar.setMinimum(0)
+            numEpochs=int(self.trainingParams['epochs'])
+            self.progressBar.setMaximum(int(numEpochs))
+            self.progressBar.setValue(0)
+        else:
+            self._debugPrint('STILL DOING!')
 
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)
@@ -329,6 +338,15 @@ class Tab1(QMainWindow):
     def _debugPrint(self, msg):
         """
         Print Debug Info on the UI
+        NOW ADD ONE MORE FUNCTION:
+            if the msg is in the format of %d/%d, then interpret it as the information of progress
         """
-        self.trainingList.addItem(msg)
-        self.trainingList.repaint()
+        try:
+            tempMsgs=msg.split('/')
+            # print(tempMsgs)
+            progress=int(tempMsgs[0])
+            total=int(tempMsgs[1])
+            self.progressBar.setValue(progress)
+        except:
+            self.trainingList.addItem(msg)
+            self.trainingList.repaint()
