@@ -13,6 +13,7 @@ from rdkit.Chem import Draw
 
 DEFAULT_ICON = "images/stock_media-play.png"
 DNN_PATH = os.path.abspath('../QSAR-DNN')
+RNN_PATH = os.path.abspath('../SMILES_RNN')
 CACHE_PATH = os.path.join(DNN_PATH, "__trainingcache__")
 SMILE_REGEX = "[s|S][m|M][i|I][l|L]|[e|E][s|S]"
 

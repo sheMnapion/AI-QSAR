@@ -17,10 +17,13 @@ from datetime import datetime
 from sklearn.model_selection import train_test_split
 
 from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mousePressEvent, Worker
-from utils import DNN_PATH, CACHE_PATH
+from utils import DNN_PATH, RNN_PATH, CACHE_PATH
 
 sys.path.append(DNN_PATH)
+sys.path.append(RNN_PATH)
+
 from QSAR_DNN import QSARDNN
+from smilesRNN import SmilesRNNPredictor as QSARRNN
 
 class Tab1(QMainWindow):
     def __init__(self):
@@ -49,7 +52,8 @@ class Tab1(QMainWindow):
             "earlyStopEpochsSpinBox": "earlyStopEpochs",
             "targetTypeComboBox": "targetType",
             "columnSelectComboBox": "targetColumn",
-            "fromLoadedModelCheckBox": "fromModel"
+            "fromLoadedModelCheckBox": "fromModel",
+            "modelTypeComboBox": "modelType"
         }
 
         self.dataList.mousePressEvent = MethodType(mousePressEvent, self.dataList)
@@ -64,6 +68,7 @@ class Tab1(QMainWindow):
         self.testLabel = None
 
         self.DNN = QSARDNN()
+#        self.RNN = QSARRNN()
         self._bind()
 
     def _bind(self):
