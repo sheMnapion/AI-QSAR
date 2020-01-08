@@ -30,7 +30,7 @@ class SmilesRNNPredictorTrainThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
     _signal=pyqtSignal(str)
 
-    def __init__(self, smilesPredictor,nRounds,lr,batchSize,earlyStop,earlyStopEpoch):
+    def __init__(self, smilesPredictor,nRounds,lr,batchSize,earlyStop,earlyStopEpoch,trainData=None,trainLabel=None):
         super(SmilesRNNPredictorTrainThread, self).__init__()
         self.smilesRNNPredictor=smilesPredictor
         self.nRounds=nRounds
@@ -38,6 +38,8 @@ class SmilesRNNPredictorTrainThread(QThread):
         self.batchSize=batchSize
         self.earlyStop=earlyStop
         self.earlyStopEpoch=earlyStopEpoch
+        self.trainData=trainData
+        self.trainLabel=trainLabel
 
     def __del__(self):
         self.wait()
@@ -46,7 +48,8 @@ class SmilesRNNPredictorTrainThread(QThread):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
         self.smilesRNNPredictor.train(nRounds=self.nRounds,lr=self.lr,batchSize=self.batchSize,signal=self._signal,
-                                      earlyStop=self.earlyStop,earlyStopEpoch=self.earlyStopEpoch)
+                                      earlyStop=self.earlyStop,earlyStopEpoch=self.earlyStopEpoch,trainData=self.trainData,
+                                      trainProp=self.trainLabel)
         self._signal.emit('Training finished.')
 
 class Tab1(QMainWindow):
@@ -185,8 +188,15 @@ class Tab1(QMainWindow):
                 num_epoches = int(self.trainingParams["epochs"])
                 early_stop = bool(self.trainingParams["earlyStop"])
                 max_tolerance = int(self.trainingParams["earlyStopEpochs"])
-                self.RNN.initFromData(smilesData,properties)
-                self._debugPrint('RNN model initialized.')
+                if self.trainingParams['fromModel']==False:
+                    self.RNN.initFromData(smilesData,properties)
+                    self._debugPrint('RNN model initialized.')
+                    trainData=None
+                    trainLabel=None
+                else:
+                    self._debugPrint('START TRAINING ON FORMER MODEL')
+                    trainData=smilesData
+                    trainLabel=properties
             except:
                 self.RNN=SmilesRNNPredictor()
                 errorMessage=QErrorMessage(parent=self)
@@ -194,7 +204,8 @@ class Tab1(QMainWindow):
                 errorMessage.showMessage("Cannot initialize RNN from given csv! Please check whether\
                 your input csv contains valid smiles representations.")
                 return
-            self.RNNTrainThread=SmilesRNNPredictorTrainThread(self.RNN,num_epoches,learning_rate,batch_size,early_stop,max_tolerance)
+            self.RNNTrainThread=SmilesRNNPredictorTrainThread(self.RNN,num_epoches,learning_rate,batch_size,early_stop,max_tolerance,trainData=trainData,
+                                                              trainLabel=trainLabel)
             self.RNNTrainThread._signal.connect(self._appendDebugInfoSlot)
             self.RNNTrainThread.start()
         self.lastTrainedModelName=modelName # use this to guide model saving
@@ -310,17 +321,22 @@ class Tab1(QMainWindow):
             self._debugPrint("Current Model File Not Found")
             return
 
-        if re.match(".+.pxl$", model):
+        if re.match(".+.pxl$", model) or re.match(".+.pt", model):
             try:
                 # If not set, loading will fail without a correct propertyNum
                 self.DNN.setPropertyNum(self.numericData.shape[1] - 1)
                 self.DNN.load(model)
-                self._debugPrint("Model Loaded: {}".format(model))
+                self._debugPrint("DNN Model Loaded: {}".format(model))
             except:
-                self._debugPrint("Load Model Error!")
-                return
+                try:
+                    self.RNN=SmilesRNNPredictor()
+                    self.RNN.loadFromModel(model)
+                    self._debugPrint("RNN Model Loaded: {}".format(model))
+                except:
+                    self._debugPrint("Load Model Error!")
+                    return
         else:
-            self._debugPrint("Not a .pxl pytorch model!")
+            self._debugPrint("Not a .pxl or .pt pytorch model!")
             return
 
         self._currentModelFile = model

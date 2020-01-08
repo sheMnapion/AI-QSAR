@@ -94,8 +94,29 @@ class SmilesRNNPredictor(object):
         # self.net=SmilesRnn(maxLength)
         self._processData()
 
-    def train(self,nRounds=1000,lr=0.01,earlyStop=True,earlyStopEpoch=10,batchSize=12,signal=None):
+    def train(self,trainData=None,trainProp=None,nRounds=1000,lr=0.01,earlyStop=True,earlyStopEpoch=10,batchSize=12,signal=None):
         """train the RNN for [nRounds] with learning rate [lr]"""
+        if trainData is not None and trainProp is not None:
+            self.origSmiles=trainData
+            self.origProperties=trainProp
+            smileStrLength=np.array([len(s) for s in trainData])
+            maxLength=np.max(smileStrLength)
+            print("Max length for RNN input:",maxLength)
+            self.maxLength=maxLength
+            smilesSplit=self._parseSmiles(self.origSmiles)
+            smilesSplit = np.array(smilesSplit)
+            lengths = [len(sS) for sS in smilesSplit]
+            maxLength = max(lengths)
+            nTests = len(smilesSplit)
+            padData = np.zeros((nTests, maxLength))
+            for i, smiles in enumerate(smilesSplit):
+                for j, s in enumerate(smiles):
+                    padData[i][j] = self.recodeDict[s]
+            smilesTrain,smilesTest,propTrain,propTest=train_test_split(padData,self.origProperties,test_size=0.2,shuffle=True,random_state=2019)
+            self.smilesTrain=torch.from_numpy(smilesTrain).to(torch.long)
+            self.smilesTest=torch.from_numpy(smilesTest).to(torch.long)
+            self.propTrain=torch.from_numpy(propTrain).to(torch.float32)
+            self.propTest=torch.from_numpy(propTest).to(torch.float32)
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
         print(self.smilesTest.shape)
@@ -183,7 +204,7 @@ class SmilesRNNPredictor(object):
         for i, smiles in enumerate(smilesSplit):
             for j, s in enumerate(smiles):
                 padData[i][j]=self.recodeDict[s]
-        print(padData)
+        # print(padData)
         padData=torch.from_numpy(padData)
         padProp=torch.zeros(nTests)
         testSet=TensorDataset(padData,padProp)
@@ -203,7 +224,7 @@ class SmilesRNNPredictor(object):
     def _parseSmiles(self,testSmiles):
         """parse smiles and get its valid representation"""
         smilesSplit = []
-        print(testSmiles)
+        # print(testSmiles)
         for smiles in testSmiles:
             smiles=''.join(smiles)
             smilesLength = len(smiles)

@@ -61,7 +61,7 @@ class Tab2(QMainWindow):
         if not os.path.exists(CACHE_PATH):
             os.mkdir(CACHE_PATH)
 
-        resetFolderList(self.trainingHistoryList, CACHE_PATH)
+        resetFolderList(self.trainingHistoryList, CACHE_PATH, lastModified=True)
 
     def trainingHistorySelectSlot(self):
         """
