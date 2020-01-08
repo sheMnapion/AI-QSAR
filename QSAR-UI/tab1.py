@@ -129,7 +129,7 @@ class Tab1(QMainWindow):
 
         self._updateTrainingParams()
 
-        modelName=self.trainingParams['ModelType']
+        modelName=self.trainingParams['modelType']
         if modelName=='DNN':
             try:
                 self.trainer = Worker(fn = self.DNN.train_and_test,
@@ -155,7 +155,7 @@ class Tab1(QMainWindow):
             self.progressBar.setMaximum(int(numEpochs))
             self.progressBar.setValue(0)
         else:
-            self._debugPrint('STILL DOING!')
+            pass
 
     def _appendDebugInfoSlot(self, info):
         self._debugPrint(info)

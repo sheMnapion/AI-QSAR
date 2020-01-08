@@ -54,10 +54,10 @@ class SmilesRnn(nn.Module):
         smiles and property pairs needed to initialize
         using simple RNN structure to finish the work
     """
-    def __init__(self,maxLength):
-        """RNN with only one variable, the maximal length of a possible smiles"""
+    def __init__(self,nKeys):
+        """RNN with only one variable, the number of keys of possible smiles representations"""
         super(SmilesRnn,self).__init__()
-        self.embedding=nn.Embedding(maxLength,EMBED_DIMENSION,padding_idx=0)
+        self.embedding=nn.Embedding(nKeys,EMBED_DIMENSION,padding_idx=0)
         self.lstm=nn.GRU(
             input_size=EMBED_DIMENSION,
             hidden_size=LATENT_DIMENSION,
@@ -79,8 +79,12 @@ class SmilesRnn(nn.Module):
 
 class SmilesRNNPredictor(object):
     """wrapper class for receiving data and training"""
-    def __init__(self,smiles,properties):
+    def __init__(self):
         """get smiles and property pairs for regression"""
+        pass
+
+    def initFromData(self,smiles,properties):
+        """init total model from data offered by smiles and properties"""
         self.origSmiles=smiles
         self.origProperties=properties
         smileStrLength=np.array([len(s) for s in smiles])
@@ -115,30 +119,24 @@ class SmilesRNNPredictor(object):
             losses=np.array(losses)
             valLosses=[]; pred=[]; true=[]
             for i, (x,y) in enumerate(testLoader):
-                y.unsqueeze_(1) #; y.unsqueeze_(1)
-                prediction=self.net(x)
-                # print(y.shape,prediction.shape)
-                # print(prediction,prediction.shape)
-                for j, p in enumerate(prediction[:,0]):
-                    pred.append(p)
-                    true.append(y[j][0])
-                loss=lossFunc(prediction,y)
-                valLosses.append(loss.item())
+                with torch.no_grad():
+                    y.unsqueeze_(1) #; y.unsqueeze_(1)
+                    prediction=self.net(x)
+                    # print(y.shape,prediction.shape)
+                    # print(prediction,prediction.shape)
+                    for j, p in enumerate(prediction[:,0]):
+                        pred.append(p)
+                        true.append(y[j][0])
+                    loss=lossFunc(prediction,y)
+                    valLosses.append(loss.item())
             print("Round [%d]: {%.5f,%.5f} total time: %.5f seconds" % (epoch+1,np.mean(losses),np.mean(valLosses),time.time()-start))
             tempR2Score=r2_score(true,pred)
             print("r^2 score:",tempR2Score)
-            import matplotlib.pyplot as plt
-            pred=np.array(pred); true=np.array(true)
-            print(pred.shape,true.shape)
-            # plt.scatter(pred,true)
-            minX=min(np.min(pred),np.min(true))
-            maxX=max(np.max(pred),np.max(true))
-            # plotX=np.linspace(minX,maxX,1000)
-            # plt.plot(plotX,plotX)
-            # plt.show()
             if tempR2Score>bestR2:
                 consecutiveRounds=0
                 bestR2=tempR2Score
+                tempData=[self.net.state_dict(),self.decodeDict]
+                torch.save(tempData,'/tmp/tmpRNNState.pt')
             else:
                 consecutiveRounds+=1
                 if consecutiveRounds>=earlyStopEpoch:
@@ -146,15 +144,43 @@ class SmilesRNNPredictor(object):
                     break
         print("Best r2 score:",bestR2)
 
-    def _processData(self):
-        """
-            padding data for smile strings to have same input length;
-            encode the input string to have unitary coding format
-            also split data
-        """
-        # split first
+    def loadFromModel(self,modelPath):
+        """load model from given path"""
+        modelData=torch.load(modelPath)
+        stateDict=modelData[0]
+        self.decodeDict=modelData[1]
+        self.recodeDict=dict([(self.decodeDict[i],i) for i in self.decodeDict.keys()])
+        self.nKeys=len(self.decodeDict.keys())
+        self.net=SmilesRnn(self.nKeys)
+        self.net.load_state_dict(stateDict)
+
+    def predict(self,smiles,batchSize=50):
+        """make prediction on test smiles strings"""
+        smilesSplit=self._parseSmiles(smiles)
+        smilesSplit=np.array(smilesSplit)
+        lengths=[len(sS) for sS in smilesSplit]
+        maxLength=max(lengths)
+        nTests=len(smiles)
+        padData=np.zeros((nTests,maxLength))
+        for i, smiles in enumerate(smilesSplit):
+            for j, s in enumerate(smiles):
+                padData[i][j]=self.recodeDict[s]
+        print(padData)
+        padData=torch.from_numpy(padData)
+        padProp=torch.zeros(nTests)
+        testSet=TensorDataset(padData,padProp)
+        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=1,collate_fn=CollateFn())
+        preds=[]
+        for (x,y) in testLoader:
+            if useGPU==True:
+                x=x.cuda(); y=y.cuda()
+            pred=self.net(x)
+            print(pred.shape)
+
+    def _parseSmiles(self,testSmiles):
+        """parse smiles and get its valid representation"""
         smilesSplit = []
-        for smiles in self.origSmiles:
+        for smiles in testSmiles:
             smilesLength = len(smiles)
             nameStr = []
             index = 0
@@ -181,15 +207,21 @@ class SmilesRNNPredictor(object):
                 nameStr.append(tempAlpha)
                 index += 1
             smilesSplit.append(nameStr)
+        return smilesSplit
+
+    def _processData(self):
+        """
+            padding data for smile strings to have same input length;
+            encode the input string to have unitary coding format
+            also split data
+        """
+        # split first
+        smilesSplit=self._parseSmiles(self.origSmiles)
         self.origSmiles=np.array(smilesSplit)
         recodeDict=dict([('@',0)])
         dictKey=1
         nItems=len(self.origSmiles)
         self.origLengths=np.array([len(origSmile) for origSmile in self.origSmiles])
-        # indexes=np.argsort(self.origLengths)
-        # plt.hist(self.origLengths); plt.show()
-        # self.origProperties=self.origProperties[indexes]
-        # self.origSmiles=self.origSmiles[indexes]
         self.maxLength=np.max(self.origLengths)
         padData=[]
         for i, s in enumerate(self.origSmiles):
@@ -201,9 +233,10 @@ class SmilesRNNPredictor(object):
                 tempData.append(recodeDict[sChar])
             padData.append(tempData)
         padData=np.array(padData)
-        print(padData)
+        # print(padData)
         print(nItems,dictKey,recodeDict)
         self.nKeys=dictKey
+        self.recodeDict=recodeDict
         self.net=SmilesRnn(self.nKeys)
         self.decodeDict=dict([(recodeDict[key],key) for key in recodeDict.keys()])
         self.standardData=padData
@@ -247,5 +280,8 @@ class SmilesRNNPredictor(object):
 
 if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
-    predictor=SmilesRNNPredictor(smiles,properties)
-    predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
+    predictor=SmilesRNNPredictor()
+    # predictor.initFromData(smiles,properties)
+    # predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
+    predictor.loadFromModel('tmpRNNState.pt')
+    predictor.predict(smiles)

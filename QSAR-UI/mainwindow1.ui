@@ -74,7 +74,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0,2,0,2,1,0,0">
             <property name="spacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
@@ -390,7 +390,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,17">
           <property name="spacing">
-           <number>-1</number>
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="label_6">
@@ -523,13 +523,10 @@
                <double>1.000000000000000</double>
               </property>
               <property name="singleStep">
-               <double>0.010000000000000</double>
-              </property>
-              <property name="stepType">
-               <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
+               <double>0.001000000000000</double>
               </property>
               <property name="value">
-               <double>0.010000000000000</double>
+               <double>0.001000000000000</double>
               </property>
              </widget>
             </item>
@@ -575,7 +572,7 @@
                <number>500</number>
               </property>
               <property name="value">
-               <number>30</number>
+               <number>10</number>
               </property>
              </widget>
             </item>
