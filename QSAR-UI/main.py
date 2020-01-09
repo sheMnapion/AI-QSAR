@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
 import os
+import webbrowser
 from PyQt5 import uic, QtWidgets, QtGui, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QTabWidget, QMainWindow, QFileDialog, QListWidgetItem, QFileIconProvider
@@ -99,6 +100,9 @@ class MainWindow(QMainWindow):
         self.actionResult_Analysis_A.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab2))
         self.actionActivity_Prediction_P.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab3))
         self.actionMolecule_Design_M.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab4))
+
+        self.actionAbout_A.triggered.connect(lambda:
+            webbrowser.open_new_tab('https://skyscrapers1999.github.io/AI-QSAR/'))
 
     def projectSetSlot(self, folder):
         """
