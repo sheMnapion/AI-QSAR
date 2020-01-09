@@ -16,6 +16,7 @@ DNN_PATH = os.path.abspath('../QSAR-DNN')
 RNN_PATH = os.path.abspath('../SMILES_RNN')
 CACHE_PATH = os.path.join(DNN_PATH, "__trainingcache__")
 SMILE_REGEX = "[s|S][m|M][i|I][l|L]|[e|E][s|S]"
+MANUAL_PATH = os.path.realpath('../docs/index.html')
 
 def resetFolderList(List, folder, lastModified=False, showParent=True):
     """

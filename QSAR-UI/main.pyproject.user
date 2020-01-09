@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2020-01-09T23:10:55. -->
+<!-- Written by QtCreator 4.11.0, 2020-01-10T01:26:39. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -85,7 +85,7 @@
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{6a06529b-f5d6-4dc2-9a30-1e7465d746ea}</value>
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">-1</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
-   <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
+   <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">3</value>
    <value type="int" key="ProjectExplorer.Target.BuildConfigurationCount">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.DeployConfiguration.0">
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
@@ -159,11 +159,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/main.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/main.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">utils2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/utils.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/utils.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{e93ad01d-faf0-413f-a8e7-7427d4a2a29f}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/utils.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -172,8 +172,9 @@
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseTerminal">false</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
     <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
@@ -235,11 +236,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab1</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab1.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab1.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{c59676ee-391e-4288-a11d-3fef798161fd}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab1.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">smilesRNN2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -249,7 +250,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.10">
     <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
@@ -311,11 +312,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SmilesRNN</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">index</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/docs/index.html</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/docs/index.html</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/docs/index.html</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -387,11 +388,87 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">smilesPredictor</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab32</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab3.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab3.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab3.py</value>
+    <value type="QString" key="RunConfiguration.Arguments"></value>
+    <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
+    <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
+    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
+    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
+    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
+    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
+   </valuemap>
+   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.12">
+    <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
+    <valuelist type="QVariantList" key="Analyzer.Perf.Events">
+     <value type="QString">cpu-cycles</value>
+    </valuelist>
+    <valuelist type="QVariantList" key="Analyzer.Perf.ExtraArguments"/>
+    <value type="int" key="Analyzer.Perf.Frequency">250</value>
+    <valuelist type="QVariantList" key="Analyzer.Perf.RecordArguments">
+     <value type="QString">-e</value>
+     <value type="QString">cpu-cycles</value>
+     <value type="QString">--call-graph</value>
+     <value type="QString">dwarf,4096</value>
+     <value type="QString">-F</value>
+     <value type="QString">250</value>
+    </valuelist>
+    <value type="QString" key="Analyzer.Perf.SampleMode">-F</value>
+    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+    <value type="int" key="Analyzer.Perf.StackSize">4096</value>
+    <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
+    <value type="bool" key="Analyzer.QmlProfiler.FlushEnabled">false</value>
+    <value type="uint" key="Analyzer.QmlProfiler.FlushInterval">1000</value>
+    <value type="QString" key="Analyzer.QmlProfiler.LastTraceFile"></value>
+    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
+    <valuelist type="QVariantList" key="Analyzer.Valgrind.AddedSuppressionFiles"/>
+    <value type="bool" key="Analyzer.Valgrind.Callgrind.CollectBusEvents">false</value>
+    <value type="bool" key="Analyzer.Valgrind.Callgrind.CollectSystime">false</value>
+    <value type="bool" key="Analyzer.Valgrind.Callgrind.EnableBranchSim">false</value>
+    <value type="bool" key="Analyzer.Valgrind.Callgrind.EnableCacheSim">false</value>
+    <value type="bool" key="Analyzer.Valgrind.Callgrind.EnableEventToolTips">true</value>
+    <value type="double" key="Analyzer.Valgrind.Callgrind.MinimumCostRatio">0.01</value>
+    <value type="double" key="Analyzer.Valgrind.Callgrind.VisualisationMinimumCostRatio">10</value>
+    <value type="bool" key="Analyzer.Valgrind.FilterExternalIssues">true</value>
+    <value type="QString" key="Analyzer.Valgrind.KCachegrindExecutable">kcachegrind</value>
+    <value type="int" key="Analyzer.Valgrind.LeakCheckOnFinish">1</value>
+    <value type="int" key="Analyzer.Valgrind.NumCallers">25</value>
+    <valuelist type="QVariantList" key="Analyzer.Valgrind.RemovedSuppressionFiles"/>
+    <value type="int" key="Analyzer.Valgrind.SelfModifyingCodeDetection">1</value>
+    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
+    <value type="bool" key="Analyzer.Valgrind.ShowReachable">false</value>
+    <value type="bool" key="Analyzer.Valgrind.TrackOrigins">true</value>
+    <value type="QString" key="Analyzer.Valgrind.ValgrindExecutable">valgrind</value>
+    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
+     <value type="int">0</value>
+     <value type="int">1</value>
+     <value type="int">2</value>
+     <value type="int">3</value>
+     <value type="int">4</value>
+     <value type="int">5</value>
+     <value type="int">6</value>
+     <value type="int">7</value>
+     <value type="int">8</value>
+     <value type="int">9</value>
+     <value type="int">10</value>
+     <value type="int">11</value>
+     <value type="int">12</value>
+     <value type="int">13</value>
+     <value type="int">14</value>
+    </valuelist>
+    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">smilesPredictor2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/smilesPredictor.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -463,11 +540,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab2.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab2.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab02</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab0.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab0.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab2.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab0.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -539,11 +616,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab3</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab3.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab3.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab3.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/main.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{e93ad01d-faf0-413f-a8e7-7427d4a2a29f}</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/main.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -553,7 +630,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
     <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
@@ -615,11 +692,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab0</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab0.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab0.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab42</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab4.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab4.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab0.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab4.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -691,11 +768,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">utils</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/utils.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/utils.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">QSAR_DNN2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/utils.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -767,11 +844,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">QSAR_DNN</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab22</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab2.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab2.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/QSAR_DNN.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab2.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -843,11 +920,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">architecture</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/architecture.png</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/architecture.png</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SmilesRNN2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-DNN/architecture.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/SmilesRNN.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -919,11 +996,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab4</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab4.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab4.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">architecture2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/architecture.png</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/architecture.png</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI/tab4.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-DNN/architecture.png</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -995,11 +1072,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">smilesRNN</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">tab12</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab1.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab1.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/SMILES_RNN/smilesRNN.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/impulse/Documents/NJU/AI-YangGao/AI-QSAR/QSAR-UI/tab1.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -1011,7 +1088,7 @@
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
    </valuemap>
-   <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">12</value>
+   <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">13</value>
   </valuemap>
  </data>
  <data>
@@ -1110,7 +1187,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/Users/impulse/Documents/NJU/人工智能-高阳/AI-QSAR/QSAR-UI</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

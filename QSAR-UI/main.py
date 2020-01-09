@@ -14,7 +14,7 @@ from tab3 import Tab3
 from tab4 import Tab4
 
 from types import MethodType
-from utils import resetFolderList, getFolder, mousePressEvent
+from utils import resetFolderList, getFolder, mousePressEvent, MANUAL_PATH
 
 
 class MainWindow(QMainWindow):
@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
         self.actionMolecule_Design_M.triggered.connect(lambda: self.tabWidget.setCurrentWidget(self.tab4))
 
         self.actionAbout_A.triggered.connect(lambda:
-            webbrowser.open_new_tab('https://skyscrapers1999.github.io/AI-QSAR/'))
+            webbrowser.open_new_tab('file://' + MANUAL_PATH))
 
     def projectSetSlot(self, folder):
         """
