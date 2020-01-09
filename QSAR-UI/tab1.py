@@ -152,7 +152,7 @@ class Tab1(QMainWindow):
     def RNNFinishCallback(self, state):
         """callback interface for RNN training; when state is True, everything is done."""
         if state==False: return
-        result=np.load('/tmp/tmpRNNResults.npy')
+        result=np.load('/tmp/tmpRNNResults.npy',allow_pickle=True)
         self._setTrainingReturnsSlot(result)
 
     def startTrainingSlot(self):
