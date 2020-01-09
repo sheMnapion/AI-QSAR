@@ -21,7 +21,7 @@ from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mouse
 from utils import DNN_PATH, RNN_PATH, CACHE_PATH
 
 sys.path.append(DNN_PATH)
-sys.path.append(RNN_PATH)
+#sys.path.append(RNN_PATH)
 
 from QSAR_DNN import QSARDNN
 from SmilesRNN import SmilesRNNPredictor
@@ -152,7 +152,7 @@ class Tab1(QMainWindow):
     def RNNFinishCallback(self, state):
         """callback interface for RNN training; when state is True, everything is done."""
         if state==False: return
-        result=np.load('/tmp/tmpRNNResults.npy')
+        result=np.load('/tmp/tmpRNNResults.npy', allow_pickle=True)
         self._setTrainingReturnsSlot(result)
 
     def startTrainingSlot(self):
@@ -435,6 +435,6 @@ class Tab1(QMainWindow):
             progress=int(tempMsgs[0])
             total=int(tempMsgs[1])
             self.progressBar.setValue(progress)
-        except:
+        except ValueError as e:
             self.trainingList.addItem(msg)
             self.trainingList.repaint()
