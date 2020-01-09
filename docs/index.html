@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="file:////Users/impulse/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.5.0/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      <link rel="stylesheet" href="file:////Users/impulse/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.5.1/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
       
       
 
@@ -278,6 +278,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <p>Enter folder <code>QSAR-GUI</code> and run <code>python main.py</code></p>
 <h3 class="mume-header" id="software-description">Software Description</h3>
 
+<img src="./images/2020-01-09-16-42-25.png" width="500px">
 <p>The name of the Software is <strong>PyMolPredictor</strong>. The window of the Software has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Molecule Design.</p>
 <h4 class="mume-header" id="menubar">Menubar</h4>
 
@@ -385,6 +386,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <p>Training Parameters:</p>
 <ul>
 <li>From Loaded Model: If it is checked, training will start from the loaded model.</li>
+<li>Model Type: Whether to train DNN model or RNN model.</li>
 <li>TargetType: Whether to train regression model or classification model. Only support regression currently.</li>
 <li>Select Target: Select the target feature of training.</li>
 <li>Learning Rate: Step size of Gradient Descent in the training process.</li>
@@ -398,7 +400,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <h4 class="mume-header" id="main-window-result-analysis">Main Window: Result Analysis</h4>
 
 <img src="./images/2020-01-03-16-19-30.png" width="800px">
-<p>This tab is used for analysing trained QSAR model.</p>
+<p>This tab is used for asnalysing trained QSAR model.</p>
 <img src="./images/2020-01-03-15-47-00.png" width="300px">
 <p>Training History: After each training process, the training history is saved to folder <code>QSAR-DNN/__trainingcache__</code> automatically. All training history files in the folder are displayed here.</p>
 <ul>
