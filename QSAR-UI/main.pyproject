@@ -1,3 +1,3 @@
 {
-    "files": ["../QSAR-DNN/QSAR_DNN.py","tab1.py","mainwindow1.ui","../QSAR-DNN/architecture.png","tab4.py","images.qrc","mainwindow4.ui","icons.qrc","tab3.py","../QSAR-DNN/QSAR-DNN.py","utils.py","tab2.py","main.py","mainwindow0.ui","mainwindow2.ui","tab0.py","test.py","mainwindow3.ui","mainwindow.ui","../SMILES_RNN/smilesRNN.py"]
+    "files": ["../QSAR-DNN/QSAR_DNN.py","tab1.py","mainwindow1.ui","../QSAR-DNN/architecture.png","tab4.py","mainwindow4.ui","images.qrc","icons.qrc","tab3.py","../QSAR-DNN/QSAR-DNN.py","../SMILES_RNN/smilesRNN.py","utils.py","tab2.py","main.py","mainwindow0.ui","mainwindow2.ui","tab0.py","test.py","mainwindow3.ui","mainwindow.ui","smilesPredictor.py","SmilesRNN.py"]
 }

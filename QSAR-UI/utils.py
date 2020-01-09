@@ -17,7 +17,7 @@ RNN_PATH = os.path.abspath('../SMILES_RNN')
 CACHE_PATH = os.path.join(DNN_PATH, "__trainingcache__")
 SMILE_REGEX = "[s|S][m|M][i|I][l|L]|[e|E][s|S]"
 
-def resetFolderList(List, folder, lastModified=False):
+def resetFolderList(List, folder, lastModified=False, showParent=True):
     """
     Reset a QListWidget Which List Files in Folders with a New Folder
     """
@@ -33,7 +33,9 @@ def resetFolderList(List, folder, lastModified=False):
         files=files[indexes]
         files=files[::-1] # rank from newest to oldest
     for file in files:
-        if file in ['.']:
+        if file == '.':
+            continue
+        if not showParent and file == '..':
             continue
         icon = getIcon(os.path.join(folder, file))
         List.addItem(QListWidgetItem(icon, file))

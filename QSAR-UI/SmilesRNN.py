@@ -246,12 +246,12 @@ class SmilesRNNPredictor(object):
             index = 0
             while index < smilesLength:
                 tempAlpha = smiles[index]
-                if index < smilesLength - 1 and ((tempAlpha >= 'A' and tempAlpha <= 'Z') or (tempAlpha>='a' and tempAlpha<='z')):
+                if index < smilesLength - 1 and tempAlpha.isalpha():
                     anotherAlpha = smiles[index + 1]
                     if anotherAlpha == ' ':  # error, need cleaning
                         index += 1
                         continue
-                    if anotherAlpha >= 'a' and anotherAlpha <= 'z':
+                    if anotherAlpha.isalpha():
                         elements = ['He', 'Li', 'Be','Ne', 'Na','Mg','Al','Si','Br','Ar','Ca','Sc','Ti',
                                     'Cl','Cr','Mn','Fe','Co','Ni','Cu','Zn','Ga','Ge','As','Se','Kr',
                                     'Rb','Sr','Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd','In','Sn',

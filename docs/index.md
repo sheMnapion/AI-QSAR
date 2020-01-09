@@ -13,6 +13,9 @@ For other packages, see `requirements.txt` and run `pip install -r requirement.t
 Enter folder `QSAR-GUI` and run `python main.py`
 
 ### Software Description
+
+<img src="./images/2020-01-09-16-42-25.png" width="500px"/>
+
 The name of the Software is **PyMolPredictor**. The window of the Software has 3 parts: a menubar on the top, a toolbar below the menubar, and the main window under the memubar. The menubar consists of various kinds of operations. The toolbar is made up of shortcuts of operations in the menubar. The main window is the main part for loading data and model, making prediction and design, output and save model and so on. In the main window, there are 4 tabs: Data Processing, Model Training, Result Analysis, Activity Prediction, and Molecule Design.
 
 #### Menubar
@@ -108,6 +111,7 @@ Browse and Select Model:
 
 Training Parameters:
 + From Loaded Model: If it is checked, training will start from the loaded model. 
++ Model Type: Whether to train DNN model or RNN model.
 + TargetType: Whether to train regression model or classification model. Only support regression currently.
 + Select Target: Select the target feature of training.
 + Learning Rate: Step size of Gradient Descent in the training process.
@@ -122,7 +126,7 @@ Training Parameters:
 
 <img src="./images/2020-01-03-16-19-30.png" width="800px"/>
 
-This tab is used for analysing trained QSAR model.
+This tab is used for asnalysing trained QSAR model.
 
 <img src="./images/2020-01-03-15-47-00.png" width="300px"/>
 

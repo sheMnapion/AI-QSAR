@@ -4,7 +4,7 @@ import re
 import matplotlib
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QListWidget, QFileIconProvider
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QListWidgetItem, QListWidget, QFileIconProvider, QErrorMessage
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 from os.path import expanduser
 import numpy as np
@@ -143,10 +143,15 @@ class Tab0(QMainWindow):
 
         pcaUsageData = self.transformedData.select_dtypes(include = np.number)
 
-        if self.featureAnalysisComboBox.currentText() == 'PCA':
-            self._updatePCAResults(np.array(pcaUsageData))
-        elif self.featureAnalysisComboBox.currentText() == 'SVD':
-            self._updateSVDResults(np.array(pcaUsageData))
+        if self.transformedData.isna().values.any():
+            errorMessage=QErrorMessage(parent=self)
+            errorMessage.setWindowTitle("Error Dimension Reduction!")
+            errorMessage.showMessage("Cannot Operate PCA or SVD because of missing value.")
+        else:
+            if self.featureAnalysisComboBox.currentText() == 'PCA':
+                self._updatePCAResults(np.array(pcaUsageData))
+            elif self.featureAnalysisComboBox.currentText() == 'SVD':
+                self._updateSVDResults(np.array(pcaUsageData))
 
         clearLayout(self.plotLayout)
         self._debugPrint("Analyzing {}".format(self._currentDataFile))

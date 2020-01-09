@@ -21,7 +21,7 @@ from utils import resetFolderList, getFolder, getFile, saveModel, getIcon, mouse
 from utils import DNN_PATH, RNN_PATH, CACHE_PATH
 
 sys.path.append(DNN_PATH)
-sys.path.append(RNN_PATH)
+#sys.path.append(RNN_PATH)
 
 from QSAR_DNN import QSARDNN
 from SmilesRNN import SmilesRNNPredictor
@@ -165,8 +165,14 @@ class Tab1(QMainWindow):
         self.progressBar.setValue(0)
         self._updateTrainingParams()
 
-        modelName=self.trainingParams['modelType']
+        modelName = self.trainingParams['modelType']
+
         if modelName=='DNN':
+            if self.numericData.isna().values.any():
+                errorMessage=QErrorMessage(parent=self)
+                errorMessage.setWindowTitle("Error starting training!")
+                errorMessage.showMessage("Data Contains missing value!")
+                return
             try:
                 self.trainer = Worker(fn = self.DNN.train_and_test,
                                  train_set = self.trainData,
@@ -187,6 +193,11 @@ class Tab1(QMainWindow):
             self.trainer.sig.result.connect(lambda result: self._setTrainingReturnsSlot(result))
             self.threadPool.start(self.trainer)
         else:
+            if self.rawLabels.isna().values.any():
+                errorMessage=QErrorMessage(parent=self)
+                errorMessage.setWindowTitle("Error starting training!")
+                errorMessage.showMessage("Target Properties Contain Missing Value!")
+                return
             try:
                 smilesColumn=getSmilesColumnName(self.data)
                 smilesData=np.array(self.data[smilesColumn])
@@ -435,6 +446,6 @@ class Tab1(QMainWindow):
             progress=int(tempMsgs[0])
             total=int(tempMsgs[1])
             self.progressBar.setValue(progress)
-        except:
+        except ValueError as e:
             self.trainingList.addItem(msg)
             self.trainingList.repaint()
