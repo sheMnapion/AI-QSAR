@@ -69,8 +69,11 @@ class Tab2(QMainWindow):
         """
         try:
             file = self.trainingHistoryList.currentItem().text()
-        except:
-            self._debugPrint("Current Training History Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle("Error selecting training history")
+            errorMsg.showMessage("Current Training History Not Found: {}".format(e))
+#            self._debugPrint("Current Training History Not Found")
             return
 
         selectedFile = os.path.join(CACHE_PATH, file)
@@ -78,8 +81,11 @@ class Tab2(QMainWindow):
         if re.match(".+.npy$", file):
             try:
                 self.result = np.load(selectedFile, allow_pickle = 'TRUE').item()
-            except:
-                self._debugPrint("Load Training History Error!")
+            except Exception as e:
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle("Error loading training history")
+                errorMsg.showMessage("Load Training History Error: {}".format(e))
+#                self._debugPrint("Load Training History Error!")
                 return
 
             self._debugPrint("Training History {} loaded".format(selectedFile))
@@ -109,7 +115,7 @@ class Tab2(QMainWindow):
 
     def analyzeSlot(self):
         """
-        Slot Function of Updating Matplotlib Plots about Selected Training History
+        Slot Function of Updating Matplotlib Plots about wed Training History
         """
         if not self.analyzeBtn.isEnabled():
             return
@@ -158,11 +164,11 @@ class Tab2(QMainWindow):
                 self.modelStructureLabel.setPixmap(pixmap)
             else:
                 self.modelStructureLabel.clear()
-        except:
+        except Exception as e:
             errorMsg=QErrorMessage(self)
             errorMsg.setWindowTitle("Analyzing results")
             errorMsg.showMessage("The training history contains messages that cannot be interpreted correctly. Please check your training process\
-                                 for more information.")
+                                 for more information: {}".format(e))
 
     def _debugPrint(self, msg):
         """

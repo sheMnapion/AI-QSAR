@@ -97,7 +97,10 @@ class Tab0(QMainWindow):
 
         # Split and Save CSV Data
         if os.path.exists(self._currentOutputFolder) is not True:
-            self._debugPrint("Invalid Save Folder")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error setting save folder')
+            errorMsg.showMessage('Invalid Save Folder')
+#            self._debugPrint("Invalid Save Folder")
             return
 
         selectedFile = os.path.join(self._currentOutputFolder, self._currentDataFile)
@@ -126,8 +129,11 @@ class Tab0(QMainWindow):
         """
         try:
             self._processData()
-        except:
-            self._debugPrint("Data Processing Throw Error!")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error analyzing data')
+            errorMsg.showMessage('Data Processing Throw Error: {}'.format(e))
+#            self._debugPrint("Data Processing Throw Error!")
             return
 
         npTransformedData = np.array(self.transformedData)[:100]
@@ -191,8 +197,11 @@ class Tab0(QMainWindow):
         """
         try:
             file = self.dataList.currentItem().text()
-        except:
-            self._debugPrint("Current Data File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting data')
+            errorMsg.showMessage('Current Data File Not Found: {}'.format(e))
+#            self._debugPrint("Current Data File Not Found")
             return
 
         self._currentDataFile = file
@@ -215,7 +224,10 @@ class Tab0(QMainWindow):
             self._debugPrint("csv file {} loaded: {shape[0]} lines, {shape[1]} columns".format(
                                 file, shape = self.originalData.shape))
         else:
-            self._debugPrint("Not a csv file")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting .csv')
+            errorMsg.showMessage('Not a csv file.')
+#            self._debugPrint("Not a csv file")
             return
 
         self.outputSaveBtn.setEnabled(True)
@@ -230,8 +242,11 @@ class Tab0(QMainWindow):
         column = self.columnSelectComboBox.currentText()
         try:
             selectedColumn = self.transformedData[column]
-        except:
-            self._debugPrint("Column Selection Error. Column not Found!")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting column')
+            errorMsg.showMessage('Column Selection Error. Column not Found: {}'.format(e))
+#            self._debugPrint("Column Selection Error. Column not Found!")
             return
 
         # self.transformedDataList.addItem(str(selectedColumn.describe()))
@@ -310,18 +325,3 @@ class Tab0(QMainWindow):
         """
         self.infoList.addItem(msg)
         self.infoList.repaint()
-
-
-#        pcaUsageData = self.transformedData.copy()
-#        validColumns = []; nItems = pcaUsageData.shape[0]
-#        for i in range(len(pcaUsageData.columns)):
-#            column = pcaUsageData.iloc[:,i]
-#            valid = True
-#            for ele in column:
-#                try:
-#                    temp = float(ele)
-#                except ValueError as e:
-#                    valid = False
-#                    break
-#            if valid: validColumns.append(i)
-#        pcaUsageData = pcaUsageData.iloc[:,validColumns]

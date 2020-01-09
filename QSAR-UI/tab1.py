@@ -96,6 +96,8 @@ class Tab1(QMainWindow):
         self.testData = None
         self.testLabel = None
 
+        self.lastTrainedModelName = None
+
         self.DNN = QSARDNN()
         self.RNN = SmilesRNNPredictor()
         self._bind()
@@ -120,6 +122,7 @@ class Tab1(QMainWindow):
     def _resetTrainParamsBtn(self):
         if self.fromLoadedModelCheckBox.isChecked():
             if self._currentDataFile and self._currentModelFile \
+                    and getattr(self.DNN, "model", None) is not None \
                     and self.DNN.model.state_dict() is not None \
                     and self.numericData is not None \
                     and len(self.DNN.model.state_dict()["layer1.0.bias"]) == self.numericData.shape[1] - 1:
@@ -163,7 +166,10 @@ class Tab1(QMainWindow):
             return
 
         self.progressBar.setValue(0)
-        self._updateTrainingParams()
+        try:
+            self._updateTrainingParams()
+        except:
+            return
 
         modelName = self.trainingParams['modelType']
 
@@ -185,8 +191,11 @@ class Tab1(QMainWindow):
                                 early_stop = bool(self.trainingParams["earlyStop"]),
                                 max_tolerance = int(self.trainingParams["earlyStopEpochs"])
                             )
-            except:
-                self._debugPrint("DNN Fail to Start")
+            except Exception as e:
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error start training')
+                errorMsg.showMessage('DNN Fail to Start: {}'.format(e))
+#                self._debugPrint("DNN Fail to Start")
                 return
 
             self.trainer.sig.progress.connect(self._appendDebugInfoSlot)
@@ -216,12 +225,12 @@ class Tab1(QMainWindow):
                     self._debugPrint('START TRAINING ON FORMER MODEL')
                     trainData=smilesData
                     trainLabel=properties
-            except:
+            except Exception as e:
                 self.RNN=SmilesRNNPredictor()
                 errorMessage=QErrorMessage(parent=self)
                 errorMessage.setWindowTitle("Error starting training!")
                 errorMessage.showMessage("Cannot initialize RNN from given csv! Please check whether\
-                your input csv contains valid smiles representations.")
+                your input csv contains valid smiles representations: {}".format(e))
                 return
             self.RNNTrainThread=SmilesRNNPredictorTrainThread(self.RNN,num_epoches,learning_rate,batch_size,early_stop,max_tolerance,trainData=trainData,
                                                               trainLabel=trainLabel)
@@ -256,7 +265,7 @@ class Tab1(QMainWindow):
             self.DNN = QSARDNN()
             self.RNN = SmilesRNNPredictor()
 
-        self._debugPrint(str(self.trainingParams.items()))
+#        self._debugPrint(str(self.trainingParams.items()))
 
         modelName=self.trainingParams['modelType']
         try:
@@ -277,17 +286,26 @@ class Tab1(QMainWindow):
                         self.DNN.load(self.modelList.currentItem().text())
                         print('LOADED AGAIN FOR SAFETY')
                     except:
-                        self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
+                        raise Exception("fail to load DNN model")
+#                        self._debugPrint("BAD MODEL! Please check whether the model matches the input csv file.")
             else: # RNN model
-                if self.trainingParams['fromModel']==True:
-                    self.RNN.loadFromModel(self.modelList.currentItem().text())
-                else:
-                    self.RNN=SmilesRNNPredictor()
+                try:
+                    if self.trainingParams['fromModel']==True:
+                        self.RNN.loadFromModel(self.modelList.currentItem().text())
+                    else:
+                        self.RNN=SmilesRNNPredictor()
+                except:
+                    raise Exception("fail to load RNN model")
             self._debugPrint(str.format("%s Set up" % modelName))
-        except:
-            self.DNN = self.trainData = self.testData = self.trainLabel = self.testLabel = None
+        except Exception as e:
+            self.trainData = self.testData = self.trainLabel = self.testLabel = None
             self.RNN=SmilesRNNPredictor()
-            self._debugPrint(str.format("Fail to Set up %s" % modelName))
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error setting up model')
+            errorMsg.showMessage("Fail to Set up {}: {}".format(modelName, e))
+
+            raise Exception("fail to update params")
+#            self._debugPrint(stsr.format("Fail to Set up %s" % modelName))
 
     def modelBrowseSlot(self):
         """
@@ -320,16 +338,19 @@ class Tab1(QMainWindow):
                 try:
                     self.DNN.save(path)
                     self._debugPrint('File {} saved'.format(path))
-                except:
-                    self._debugPrint('DNN not Available yet, or Path Invalid!')
+                except Exception as e:
+                    errorMsg=QErrorMessage(self)
+                    errorMsg.setWindowTitle('Error saving model')
+                    errorMsg.showMessage('DNN not Available yet, or Path Invalid: {}'.format(e))
+#                    self._debugPrint('DNN not Available yet, or Path Invalid!')
             elif self.lastTrainedModelName=='RNN':
                 try:
                     self.RNN.saveModel(path)
                     self._debugPrint('File {} saved.'.format(path))
-                except:
+                except Exception as e:
                     errorMsg=QErrorMessage(self)
                     errorMsg.setWindowTitle('Error saving model')
-                    errorMsg.showMessage('Cannot write in! Please check your disk for more info.')
+                    errorMsg.showMessage('Cannot write in! Please check your disk for more info: {}'.format(e))
 
 
     def modelSelectSlot(self):
@@ -341,8 +362,11 @@ class Tab1(QMainWindow):
 
         try:
             model = self.modelList.currentItem().text()
-        except:
-            self._debugPrint("Current Model File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting model')
+            errorMsg.showMessage('Current Model File Not Found: {}'.format(e))
+#            self._debugPrint("Current Model File Not Found")
             return
 
         if re.match(".+.pxl$", model) or re.match(".+.pt", model):
@@ -356,8 +380,11 @@ class Tab1(QMainWindow):
                     self.RNN=SmilesRNNPredictor()
                     self.RNN.loadFromModel(model)
                     self._debugPrint("RNN Model Loaded: {}".format(model))
-                except:
-                    self._debugPrint("Load Model Error!")
+                except Exception as e:
+                    errorMsg=QErrorMessage(self)
+                    errorMsg.setWindowTitle('Error loading model')
+                    errorMsg.showMessage("Load Model Error: {}".format(e))
+#                    self._debugPrint("Load Model Error: {}".format(e))
                     return
         else:
             self._debugPrint("Not a .pxl or .pt pytorch model!")
@@ -401,8 +428,11 @@ class Tab1(QMainWindow):
         """
         try:
             file = self.dataList.currentItem().text()
-        except:
-            self._debugPrint("Current Data File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting data')
+            errorMsg.showMessage('Current Data File Not Found: {}'.format(e))
+#            self._debugPrint("Current Data File Not Found")
             return
 
         selectedFile = os.path.join(self._currentDataFolder, file)
@@ -414,16 +444,22 @@ class Tab1(QMainWindow):
                 self.numericData = self.data.select_dtypes(include = np.number)
                 self.columnSelectComboBox.clear()
                 self.columnSelectComboBox.addItems(self.numericData.columns)
-            except:
+            except Exception as e:
                 self.data = None
                 self.numericData = None
-                self._debugPrint("Load Data Error!")
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error selecting .csv')
+                errorMsg.showMessage('Load Data Error: {}'.format(e))
+#                self._debugPrint("Load Data Error!")
                 return
 
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:
-            self._debugPrint("Not a csv file!")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting .csv')
+            errorMsg.showMessage('Not a csv file.')
+#            self._debugPrint("Not a csv file!")
             return
 
         self.trainParamsBtn.setEnabled(True)

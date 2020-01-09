@@ -341,10 +341,10 @@ class SmilesRNNPredictor(object):
         self.propTrain=torch.tensor(propTrain,dtype=torch.float32)
         self.propTest=torch.tensor(propTest,dtype=torch.float32)
 
-if __name__=='__main__':
-    smiles,properties=loadEsolSmilesData()
-    predictor=SmilesRNNPredictor()
-    # predictor.initFromData(smiles,properties)
-    # predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
-    predictor.loadFromModel('tmpRNN_0.88.pt')
-    predictor.predict(smiles)
+#if __name__=='__main__':
+#    smiles,properties=loadEsolSmilesData()
+#    predictor=SmilesRNNPredictor()
+#    # predictor.initFromData(smiles,properties)
+#    # predictor.train(nRounds=1000,lr=3e-4,batchSize=50)
+#    predictor.loadFromModel('tmpRNN_0.88.pt')
+#    predictor.predict(smiles)

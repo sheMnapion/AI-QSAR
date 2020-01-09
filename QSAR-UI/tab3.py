@@ -117,8 +117,11 @@ class Tab3(QMainWindow):
         self.selectedModel='NONE'
         try:
             model = self.modelList.currentItem().text()
-        except:
-            self._debugPrint("Current Model File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting model')
+            errorMsg.showMessage('Current Model File Not Found: {}'.format(e))
+#            self._debugPrint("Current Model File Not Found")
             return
 
         if re.match(".+.pxl$", model) or re.match(".+.pt$",model):
@@ -134,9 +137,12 @@ class Tab3(QMainWindow):
                     self.RNN.loadFromModel(model)
                     self.selectedModel='RNN'
                     self._debugPrint("RNN Model Loaded: {}".format(model))
-                except:
+                except Exception as e:
                     self.RNN=SmilesRNNPredictor()
-                    self._debugPrint("Load Model Error!")
+                    errorMsg=QErrorMessage(self)
+                    errorMsg.setWindowTitle('Error loading model')
+                    errorMsg.showMessage("Load Model Error: {}".format(e))
+#                    self._debugPrint("Load Model Error!")
                     return
         else:
             self._debugPrint("Not a .pxl or .pt pytorch model!")
@@ -180,8 +186,11 @@ class Tab3(QMainWindow):
         """
         try:
             file = self.dataList.currentItem().text()
-        except:
-            self._debugPrint("Current Data File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting data')
+            errorMsg.showMessage('Current Data File Not Found: {}'.format(e))
+#            self._debugPrint("Current Data File Not Found")
             return
 
         selectedFile = os.path.join(self._currentDataFolder, file)
@@ -207,15 +216,21 @@ class Tab3(QMainWindow):
                             self.smilesSelectComboBox.repaint()
                             break
 
-            except:
+            except Exception as e:
                 self.data = self.numericData = self.nonNumericData = None
-                self._debugPrint("Load Data Error!")
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error selecting .csv')
+                errorMsg.showMessage('Load Data Error: {}'.format(e))
+#                self._debugPrint("Load Data Error!")
                 return
 
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:
-            self._debugPrint("Not a csv file!")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting .csv')
+            errorMsg.showMessage('Not a csv file.')
+#            self._debugPrint("Not a csv file!")
             return
 
         self.modelSelectBtn.setEnabled(True)
@@ -244,11 +259,11 @@ class Tab3(QMainWindow):
                 self.testPred = self.DNN.test(self.testData.values, self.testLabel)
             else:
                 self.testPred = self.RNN.predict(smilesData)
-        except:
+        except Exception as e:
             errorMsg=QErrorMessage(self)
             errorMsg.setWindowTitle("Predicting properties")
             errorMsg.showMessage("Cannot make prediction on given data by selected model! Please check whether your model is coordinate\
-                                 with your data format.")
+                                 with your data format: {}".format(e))
         self.testPred = pd.DataFrame(data = { predColumn : self.testPred.reshape(-1) })
 
         # Include non numeric columns to testDataWithPred
@@ -300,8 +315,11 @@ class Tab3(QMainWindow):
                     widget.setPixmap(pixmap)
                     label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
                     label.repaint()
-            except:
-                self._debugPrint("Cannot Plot With Selected SMILES Column")
+            except Exception as e:
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle("Error plotting molecules")
+                errorMsg.showMessage("Cannot Plot With Selected SMILES Column: {}".format(e))
+#                self._debugPrint("Cannot Plot With Selected SMILES Column")
         else:
             for i in range(5):
                 widget = self.molPlotLayout.itemAt(i).widget()

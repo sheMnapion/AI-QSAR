@@ -111,7 +111,7 @@ Browse and Select Model:
 
 Training Parameters:
 + From Loaded Model: If it is checked, training will start from the loaded model. 
-+ Model Type: Whether to train DNN model or RNN model.
++ ModelType: Whether to train DNN model or RNN model.
 + TargetType: Whether to train regression model or classification model. Only support regression currently.
 + Select Target: Select the target feature of training.
 + Learning Rate: Step size of Gradient Descent in the training process.

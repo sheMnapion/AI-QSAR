@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import torch
 from PyQt5 import QtCore, QtWidgets, uic
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel, QHeaderView
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel, QHeaderView, QErrorMessage
 from PyQt5.QtGui import QPixmap
 from matplotlib.figure import Figure
 from PyQt5.QtCore import QThread, pyqtSignal, QSize
@@ -167,8 +167,11 @@ class Tab4(QMainWindow):
         """
         try:
             model = self.modelList.currentItem().text()
-        except:
-            self._debugPrint("Current Model File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting model')
+            errorMsg.showMessage('Current Model File Not Found: {}'.format(e))
+#            self._debugPrint("Current Model File Not Found")
             return
 
         if re.match(".+.pxl$", model) or re.match(".+.pt", model):
@@ -177,8 +180,11 @@ class Tab4(QMainWindow):
                 self.designer=SmilesDesigner()
                 self.designer.initFromModel(model)
                 self._debugPrint("Model Loaded: {}".format(model))
-            except:
-                self._debugPrint("Load Model Error!")
+            except Exception as e:
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error loading model')
+                errorMsg.showMessage("Load Model Error: {}".format(e))
+#                self._debugPrint("Load Model Error!")
                 return
         else:
             self._debugPrint("Not a pytorch model!")
@@ -222,8 +228,11 @@ class Tab4(QMainWindow):
         """
         try:
             file = self.dataList.currentItem().text()
-        except:
-            self._debugPrint("Current Data File Not Found")
+        except Exception as e:
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting data')
+            errorMsg.showMessage('Current Data File Not Found: {}'.format(e))
+#            self._debugPrint("Current Data File Not Found")
             return
 
         selectedFile = os.path.join(self._currentDataFolder, file)
@@ -247,15 +256,21 @@ class Tab4(QMainWindow):
                             self.smilesSelectComboBox.setCurrentIndex(i)
                             self.smilesSelectComboBox.repaint()
                             break
-            except:
+            except Exception as e:
                 self.data = self.numericData = self.nonNumericData = None
-                self._debugPrint("Load Data Error!")
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error selecting .csv')
+                errorMsg.showMessage('Load Data Error: {}'.format(e))
+#                self._debugPrint("Load Data Error!")
                 return
 
             self._debugPrint("csv file {} loaded".format(file))
             self._debugPrint(str(self.data.head()))
         else:
-            self._debugPrint("Not a csv file!")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error selecting .csv')
+            errorMsg.showMessage('Not a csv file.')
+#            self._debugPrint("Not a csv file!")
             return
 
         self._currentDataFile = file
@@ -290,7 +305,10 @@ class Tab4(QMainWindow):
             self.designer=SmilesDesigner()
             self.designer.initFromSmilesAndProps(smilesColumn,propColumn)
         except ValueError as e:
-            self._debugPrint("Error loading the model! Please check the columns selected.")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error loading model')
+            errorMsg.showMessage("Error loading the model! Please check the columns selected: {}".format(e))
+#            self._debugPrint("Error loading the model! Please check the columns selected.")
             return
         self.designerThread = SmilesDesignerTrainThread(self.designer)
         self.designerThread._signal.connect(self.getTrainResults)
