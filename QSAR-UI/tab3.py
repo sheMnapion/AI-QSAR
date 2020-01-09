@@ -313,7 +313,7 @@ class Tab3(QMainWindow):
                     label = self.molLabelLayout.itemAt(i).widget()
                     pixmap = pixmap.scaled(widget.size())
                     widget.setPixmap(pixmap)
-                    label.setText('{} : {:.3f}'.format(shortLabelColumn, sortedTestDataWithPred.loc[i, predColumn]))
+                    label.setText('{:.3f}'.format(sortedTestDataWithPred.loc[i, predColumn]))
                     label.repaint()
             except Exception as e:
                 errorMsg=QErrorMessage(self)
