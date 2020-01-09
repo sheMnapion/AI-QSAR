@@ -57,7 +57,7 @@ def getFolder():
     return folder
 
 
-def getFile():
+def getFile(typeFormat="All Files (*)"):
     """
     Get File Path by File Browser
     """
@@ -66,7 +66,7 @@ def getFile():
     file = QFileDialog.getOpenFileName(None,
                                      "Open File",
                                      expanduser("."),
-                                     "All Files (*)")
+                                     typeFormat)
     return file[0]
 
 

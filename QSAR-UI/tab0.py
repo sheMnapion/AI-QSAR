@@ -186,10 +186,10 @@ class Tab0(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.dataList
         """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
-        if os.path.isfile(selectedFile):
-            self.dataSelectBtn.click()
-        elif os.path.isdir(selectedFile):
+        if os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
+        else:
+            self.dataSelectBtn.click()
 
     def dataSelectSlot(self):
         """

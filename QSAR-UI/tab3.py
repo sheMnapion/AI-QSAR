@@ -92,7 +92,7 @@ class Tab3(QMainWindow):
         """
         Slot Function of Loading the Model File
         """
-        file = getFile()
+        file = getFile(typeFormat="Pytorch Models (*.pxl *.pt)")
         if file:
             self._debugPrint("openning model file: " + file)
             icon = getIcon(os.path.join(os.getcwd(), file))
@@ -145,7 +145,10 @@ class Tab3(QMainWindow):
 #                    self._debugPrint("Load Model Error!")
                     return
         else:
-            self._debugPrint("Not a .pxl or .pt pytorch model!")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error loading model')
+            errorMsg.showMessage('Not a .pxl or .pt pytorch model!')
+#            self._debugPrint("Not a .pxl or .pt pytorch model!")
             return
 
         self._currentModelFile = model
@@ -175,10 +178,10 @@ class Tab3(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.dataList
         """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
-        if os.path.isfile(selectedFile):
-            self.dataSelectBtn.click()
-        elif os.path.isdir(selectedFile):
+        if os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
+        else:
+            self.dataSelectBtn.click()
 
     def dataSelectSlot(self):
         """

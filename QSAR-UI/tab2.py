@@ -110,8 +110,7 @@ class Tab2(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.trainingHistoryList
         """
         selectedFile = os.path.join(CACHE_PATH, item.text())
-        if os.path.isfile(selectedFile):
-            self.trainingHistorySelectBtn.click()
+        self.trainingHistorySelectBtn.click()
 
     def analyzeSlot(self):
         """

@@ -5,6 +5,7 @@ import sys
 import pandas as pd
 import numpy as np
 import torch
+from shutil import copyfile
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QListWidget, QTableWidgetItem, QLabel, QHeaderView, QErrorMessage
 from PyQt5.QtGui import QPixmap
@@ -29,6 +30,7 @@ from smilesPredictor import SmilesDesigner
 class SmilesDesignerTrainThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
     _signal=pyqtSignal(str)
+    _finishSignal=pyqtSignal(bool)
 
     def __init__(self, moleculeDesigner):
         super(SmilesDesignerTrainThread, self).__init__()
@@ -51,6 +53,7 @@ class SmilesDesignerTrainThread(QThread):
         tempLatentModel=torch.load('/tmp/latentModel.pt')
         torch.save([tempVAE,tempLatentModel,tempDict],'/tmp/totalVAEModel.pt')
         self._signal.emit('Regression model on latent space trained.')
+        self._finishSignal.emit(True)
 
 class SmilesDesignerDesignThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
@@ -89,6 +92,7 @@ class Tab4(QMainWindow):
         self._currentDataFolder = None
         self._currentDataFile = None
         self._currentModelFile = None
+        self._currentOutputPath = None
 
         self._bind()
 
@@ -100,6 +104,7 @@ class Tab4(QMainWindow):
         self.dataBrowseBtn.released.connect(self.dataBrowseSlot)
         self.modelBrowseBtn.released.connect(self.modelBrowseSlot)
         self.modelSelectBtn.released.connect(self.modelSelectSlot)
+        self.modelSaveBtn.released.connect(self.modelSaveSlot)
         self.dataList.itemDoubleClicked.connect(self.dataDoubleClickedSlot)
         self.modelList.itemDoubleClicked.connect(self.modelDoubleClickedSlot)
 
@@ -141,11 +146,18 @@ class Tab4(QMainWindow):
             self.designBtn.setEnabled(False)
             self.designBtn.repaint()
 
+    def _enableModelSaveBtn(self):
+        """
+        Enable modelSaveBtn
+        """
+        self.modelSaveBtn.setEnabled(True)
+        self.modelSaveBtn.repaint()
+
     def modelBrowseSlot(self):
         """
         Slot Function of Loading the Model File
         """
-        file = getFile()
+        file = getFile(typeFormat="Pytorch Models (*.pxl *.pt)")
         if file:
             self._debugPrint("openning model file: " + file)
             icon = getIcon(os.path.join(os.getcwd(), file))
@@ -158,8 +170,7 @@ class Tab4(QMainWindow):
         """
         if self.modelSelectBtn.isEnabled():
             selectedFile = item.text()
-            if os.path.isfile(selectedFile):
-                self.modelSelectBtn.click()
+            self.modelSelectBtn.click()
 
     def modelSelectSlot(self):
         """
@@ -187,12 +198,30 @@ class Tab4(QMainWindow):
 #                self._debugPrint("Load Model Error!")
                 return
         else:
-            self._debugPrint("Not a pytorch model!")
+            errorMsg=QErrorMessage(self)
+            errorMsg.setWindowTitle('Error loading model')
+            errorMsg.showMessage('Not a .pxl or .pt pytorch model!')
+#            self._debugPrint("Not a pytorch model!")
             return
 
         self._currentModelFile = model
 
         self._resetDesignBtn()
+
+    def modelSaveSlot(self):
+        """
+        Slot Function of Saving Model
+        """
+        path = saveModel()
+        if path is not None:
+            self._currentOutputPath = path
+            try:
+                copyfile('/tmp/totalVAEModel.pt', path)
+                self._debugPrint('File {} saved.'.format(path))
+            except Exception as e:
+                errorMsg=QErrorMessage(self)
+                errorMsg.setWindowTitle('Error saving model')
+                errorMsg.showMessage('Invalid model or cannot write in: {}'.format(e))
 
     def dataBrowseSlot(self):
         """
@@ -217,10 +246,10 @@ class Tab4(QMainWindow):
         Slot Function of Double Clicking a Folder or a File in self.dataList
         """
         selectedFile = os.path.join(self._currentDataFolder, item.text())
-        if os.path.isfile(selectedFile):
-            self.dataSelectBtn.click()
-        elif os.path.isdir(selectedFile):
+        if os.path.isdir(selectedFile):
             self.dataSetSlot(selectedFile)
+        else:
+            self.dataSelectBtn.click()
 
     def dataSelectSlot(self):
         """
@@ -312,6 +341,7 @@ class Tab4(QMainWindow):
             return
         self.designerThread = SmilesDesignerTrainThread(self.designer)
         self.designerThread._signal.connect(self.getTrainResults)
+        self.designerThread._finishSignal.connect(self._enableModelSaveBtn)
         self.designerThread.start()
 
     def getTrainResults(self, msg):
