@@ -184,4 +184,5 @@ Browse and Select Model:
 + Train: Click to start training the VAE model with selected trainset. When training is finished, the trained model **totalVAEModel.pt** is saved to directory `/tmp`.
 + Browse: Click to browse and add a model file to the model list.
 + Select(or double click): Click to select the highlighted model file in the current model list.
++ Save: Click to browse and save the trained model.
 + Design: Start designing and plot molecules with top target value according to the loaded VAE model. 
