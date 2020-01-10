@@ -56,6 +56,7 @@ class SmilesDesignerTrainThread(QThread):
         except Exception as e:
             self._signal.emit('ERROR IN TRAINING!')
             self._singal.emit(str(e))
+            print(e)
             self._finishSignal.emit(False)
 
 class SmilesDesignerDesignThread(QThread):
@@ -73,13 +74,14 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        try:
-            designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
-            np.save('/tmp/designed',designed)
-            self._finishSignal.emit(True)
-        except Exception as e:
-            self._signal.emit('ERROR DESIGNING!')
-            self._signal.emit(str(e))
+        # try:
+        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
+        np.save('/tmp/designed',designed)
+        self._finishSignal.emit(True)
+        # except Exception as e:
+        #     self._signal.emit('ERROR DESIGNING!')
+        #     self._signal.emit(str(e))
+        #     print(e)
         self._signal.emit('---------------------------------End Designing--------------------------------------------------')
 
 class Tab4(QMainWindow):
