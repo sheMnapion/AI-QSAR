@@ -169,7 +169,7 @@ class SmilesDesigner(object):
         self._processData()
         # self.vaeNet=SmilesVAE(self.maxLength,self.nKeys)
         # NOW START USING RNN REPRESENTATION
-        self.vaeNet=SmilesRNNVAE(self.maxLength,self.nKeys)
+        self.vaeNet=SmilesRNNVAE(self.nKeys)
         if useGPU==True:
             self.vaeNet=self.vaeNet.cuda()
 
@@ -344,7 +344,7 @@ class SmilesDesigner(object):
         designedMoleculesPairs=designedMoleculesPairs[propertyIndex]
         return designedMoleculesPairs
 
-    def textLatentModel(self,batchSize=12):
+    def testLatentModel(self,batchSize=12):
         """train the prediction model within latent space"""
         from sklearn.ensemble import RandomForestRegressor
         tempRegressor=RandomForestRegressor(n_estimators=100,verbose=True,n_jobs=2)
@@ -352,7 +352,6 @@ class SmilesDesigner(object):
         pred=tempRegressor.predict(self.testRepr.cpu())
         score=r2_score(self.propTest.cpu(),pred)
         print('Random forest prediction score:',score)
-        tempRegressor=DNNRegressor()
         if useGPU==True:
             self.trainRepr=self.trainRepr.cpu()
             self.propTrain=self.propTrain.cpu()

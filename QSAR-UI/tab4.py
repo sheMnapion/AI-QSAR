@@ -42,16 +42,21 @@ class SmilesDesignerTrainThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
-        self.moleculeDesigner.trainVAE(nRounds=10,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
-        self._signal.emit('Training finished.')
-        self.moleculeDesigner.encodeDataset()
-        self.moleculeDesigner.identityRatio()
-        self.moleculeDesigner.testLatentModel(batchSize=50)
-        tempDict=self.moleculeDesigner.decodeDict
-        tempVAE=torch.load('/tmp/tmpBestModel.pt')
-        torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
-        self._signal.emit('Molecule designer model (vae) trained.')
-        self._finishSignal.emit(True)
+        try:
+            self.moleculeDesigner.trainVAE(nRounds=10,lr=3e-4,batchSize=60,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
+            self._signal.emit('Training finished.')
+            self.moleculeDesigner.encodeDataset()
+            self.moleculeDesigner.identityRatio()
+            self.moleculeDesigner.testLatentModel(batchSize=60)
+            tempDict=self.moleculeDesigner.decodeDict
+            tempVAE=torch.load('/tmp/tmpBestModel.pt')
+            torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
+            self._signal.emit('Molecule designer model (vae) trained.')
+            self._finishSignal.emit(True)
+        except Exception as e:
+            self._signal.emit('ERROR IN TRAINING!')
+            self._singal.emit(str(e))
+            self._finishSignal.emit(False)
 
 class SmilesDesignerDesignThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
@@ -68,9 +73,13 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
-        np.save('/tmp/designed',designed)
-        self._finishSignal.emit(True)
+        try:
+            designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
+            np.save('/tmp/designed',designed)
+            self._finishSignal.emit(True)
+        except Exception as e:
+            self._signal.emit('ERROR DESIGNING!')
+            self._signal.emit(str(e))
         self._signal.emit('---------------------------------End Designing--------------------------------------------------')
 
 class Tab4(QMainWindow):
