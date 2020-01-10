@@ -43,11 +43,11 @@ class SmilesDesignerTrainThread(QThread):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
         try:
-            self.moleculeDesigner.trainVAE(nRounds=10,lr=3e-4,batchSize=60,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
+            self.moleculeDesigner.trainVAE(nRounds=20,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
             self._signal.emit('Training finished.')
             self.moleculeDesigner.encodeDataset()
             self.moleculeDesigner.identityRatio()
-            self.moleculeDesigner.testLatentModel(batchSize=60)
+            self.moleculeDesigner.testLatentModel(batchSize=50)
             tempDict=self.moleculeDesigner.decodeDict
             tempVAE=torch.load('/tmp/tmpBestModel.pt')
             torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
@@ -74,14 +74,14 @@ class SmilesDesignerDesignThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Designing------------------------------------------------')
-        # try:
-        designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
-        np.save('/tmp/designed',designed)
-        self._finishSignal.emit(True)
-        # except Exception as e:
-        #     self._signal.emit('ERROR DESIGNING!')
-        #     self._signal.emit(str(e))
-        #     print(e)
+        try:
+            designed=self.moleculeDesigner.molecularRandomDesign(aimNumber=12,batchSize=50,signal=self._signal)
+            np.save('/tmp/designed',designed)
+            self._finishSignal.emit(True)
+        except Exception as e:
+             self._signal.emit('ERROR DESIGNING!')
+             self._signal.emit(str(e))
+             print(e)
         self._signal.emit('---------------------------------End Designing--------------------------------------------------')
 
 class Tab4(QMainWindow):

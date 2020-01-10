@@ -287,7 +287,7 @@ class SmilesDesigner(object):
     def identityRatio(self):
         """check the extent of identity learned through our vae net"""
         temp=self.trainRepr
-        decoded=self.vaeNet.decode(temp)
+        decoded=self.vaeNet.decode(temp,100)
         print(decoded.shape)
         translated=torch.argmax(decoded,dim=2)
         correctRatios=[]

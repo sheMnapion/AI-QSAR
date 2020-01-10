@@ -16,6 +16,7 @@ if sys.platform!='linux':
     from rdkit.Chem import Draw
 from dataProcess import loadEsolSmilesData
 
+
 EMBED_DIMENSION  = 35
 LATENT_DIMENSION = 200
 
@@ -96,9 +97,8 @@ class SmilesRNNVAE(nn.Module):
         # x=self.fc1_res(z)+z # residual block
         return self.fc11(out), self.fc12(out)
 
-    def decode(self, z):
+    def decode(self, z, maxLength):
         """decode the inner representation vibrated with normalized noise to the original size"""
-        lastState=None
         z=z.unsqueeze(1)
         # print(z.shape)
         batchSize=z.shape[0]
@@ -108,7 +108,7 @@ class SmilesRNNVAE(nn.Module):
         lastWord=torch.zeros(batchSize,1,EMBED_DIMENSION,requires_grad=True) # first word always 0
         if useGPU==True:
             lastWord=lastWord.cuda()
-        for i in range(self.maxLength):
+        for i in range(maxLength):
             presentState=torch.cat([z,lastWord],dim=2)
             presentOut, _=self.decodeGRU(presentState)
             retTensor=torch.cat([retTensor,presentOut],dim=1)
@@ -123,12 +123,12 @@ class SmilesRNNVAE(nn.Module):
         return mu + eps*std
 
     def forward(self, x):
-        self.maxLength=x.shape[1]
+        maxLength=x.shape[1]
         mu, logvar = self.encode(x)
         z = self.reparameterize(mu, logvar)
         pred=F.relu(self.predFC1(mu))
         predY=self.predFC2(pred)
-        return self.decode(z), mu, logvar, predY # standard version also included
+        return self.decode(z, maxLength), mu, logvar, predY # standard version also included
 
     def middleRepresentation(self, x):
         """return representation in latent space"""
@@ -171,7 +171,7 @@ class SmilesDesigner(object):
         self._processData()
         # self.vaeNet=SmilesVAE(self.maxLength,self.nKeys)
         # NOW START USING RNN REPRESENTATION
-        self.vaeNet=SmilesRNNVAE(self.maxLength,self.nKeys)
+        self.vaeNet=SmilesRNNVAE(self.nKeys)
         if useGPU==True:
             self.vaeNet=self.vaeNet.cuda()
 
@@ -317,9 +317,13 @@ class SmilesDesigner(object):
         designedMolecules=set()
         designedMoleculesPairs=[]
         while designedNumber<aimNumber:
-            latentVector=torch.randn(batchSize,1,200)
-            properties=self.latentRegressor(latentVector)
-            translate=self.vaeNet.decode(latentVector)
+            latentVector=torch.randn(batchSize,200)
+            # print(latentVector.shape)
+            properties=F.relu(self.vaeNet.predFC1(latentVector))
+            properties=F.relu(self.vaeNet.predFC2(properties))
+            print(properties.shape)
+            translate=self.vaeNet.decode(latentVector,100)
+            print(translate.shape)
             validVectors=np.array(torch.argmax(translate,dim=2))
             translations=[]
             for validVector in validVectors:
@@ -346,7 +350,7 @@ class SmilesDesigner(object):
         designedMoleculesPairs=designedMoleculesPairs[propertyIndex]
         return designedMoleculesPairs
 
-    def textLatentModel(self,batchSize=12):
+    def testLatentModel(self,batchSize=12):
         """train the prediction model within latent space"""
         from sklearn.ensemble import RandomForestRegressor
         tempRegressor=RandomForestRegressor(n_estimators=100,verbose=True,n_jobs=2)
@@ -354,7 +358,6 @@ class SmilesDesigner(object):
         pred=tempRegressor.predict(self.testRepr.cpu())
         score=r2_score(self.propTest.cpu(),pred)
         print('Random forest prediction score:',score)
-        tempRegressor=DNNRegressor()
         if useGPU==True:
             self.trainRepr=self.trainRepr.cpu()
             self.propTrain=self.propTrain.cpu()
@@ -384,7 +387,7 @@ class SmilesDesigner(object):
             for i in range(len(y)):
                 true.append(y[i].item())
                 pred.append(predY[i][0].item())
-        print("Train score:",r2_score(true,pred))
+        print("Test score:",r2_score(true,pred))
 
     def _processData(self):
         """
