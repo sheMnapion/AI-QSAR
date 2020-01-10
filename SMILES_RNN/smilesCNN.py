@@ -21,7 +21,7 @@ LATENT_DIMENSION = 200
 
 useGPU=torch.cuda.is_available()
 if useGPU==True:
-    torch.cuda.set_device(2)
+    torch.cuda.set_device(1)
 
 class CollateFn(object):
     """part for dealing with vari-len inputs"""
@@ -62,10 +62,9 @@ class SmilesRNNVAE(nn.Module):
         from smiles representation; using GRU-seq2seq structure as the core part
         to encode SMILES sequence and decode accordingly
     """
-    def __init__(self,maxLength,keyNum):
+    def __init__(self,keyNum):
         """seq2seq structures"""
         super(SmilesRNNVAE,self).__init__()
-        self.maxLength=maxLength
         self.keyNum=keyNum
         self.embedding=nn.Embedding(keyNum,EMBED_DIMENSION,padding_idx=0)
         self.encodeGRU=nn.GRU(
@@ -106,7 +105,6 @@ class SmilesRNNVAE(nn.Module):
         retTensor=torch.randn(batchSize,0,EMBED_DIMENSION,requires_grad=True)
         if useGPU==True:
             retTensor=retTensor.cuda()
-        presentOut=z
         lastWord=torch.zeros(batchSize,1,EMBED_DIMENSION,requires_grad=True) # first word always 0
         if useGPU==True:
             lastWord=lastWord.cuda()
@@ -137,70 +135,7 @@ class SmilesRNNVAE(nn.Module):
         mu, logVar = self.encode(x)
         return mu #self.reparameterize(mu,logVar)
 
-class SmilesVAE(nn.Module):
-    """
-        class for performing regression/classification and generating new medicines directly
-        from smiles representation; using embedding structure as the core to encode SMILES sequence
-        and decode accordingly
-    """
-    def __init__(self,maxLength,keyNum):
-        """CNN structures"""
-        super(SmilesVAE,self).__init__()
-        self.maxLength=maxLength
-        self.keyNum=keyNum
-        self.embedding=nn.Embedding(keyNum,keyNum)
-        self.fc1=nn.Linear(keyNum*maxLength,3000)
-        # self.fc1_res=nn.Linear(3000,3000)
-        self.fc21=nn.Linear(3000,200)
-        self.fc22=nn.Linear(3000,200)
-        self.fc3=nn.Linear(200,3000)
-        # self.fc3_res=nn.Linear(3000,3000)
-        self.fc4=nn.Linear(3000,keyNum*maxLength)
-        self.decodeFC=nn.Linear(keyNum,keyNum)
-
-    def num_flat_features(self,x):
-        size=x.size()[1:] # all dimensions except the batch dimension
-        num_features=1
-        for s in size:
-            num_features *= s
-        return num_features
-
-    def encode(self, x):
-        """encode the input into two parts, mean mu and log variance"""
-        x=self.embedding(x)
-        x=x.view(-1,self.num_flat_features(x))
-        x=torch.tanh(self.fc1(x))
-        # x=self.fc1_res(z)+z # residual block
-        return self.fc21(x), self.fc22(x)
-
-    def decode(self, z):
-        """decode the inner representation vibrated with random noise to the original size"""
-        batchSize=z.shape[0]
-        z=torch.tanh(self.fc3(z))
-        # z=self.fc3_res(z)+z
-        z=torch.tanh(self.fc4(z))
-        z=z.view(-1,self.keyNum)
-        z=self.decodeFC(z)
-        z=z.view(batchSize,-1,self.keyNum)
-        return z # temporarily take this as the binary vector format
-
-    def reparameterize(self, mu, logvar):
-        """re-parameterization trick in training the net"""
-        std = torch.exp(0.5*logvar)
-        eps = torch.randn_like(std)
-        return mu + eps*std
-
-    def forward(self, x):
-        mu, logvar = self.encode(x)
-        z = self.reparameterize(mu, logvar)
-        return self.decode(z), mu, logvar, self.embedding(x) # standard version also included
-
-    def middleRepresentation(self, x):
-        """return representation in latent space"""
-        mu, logVar = self.encode(x)
-        return self.reparameterize(mu,logVar)
-
-def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum, predY, y, debug=True):
+def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum, predY, y, debug=True, weight=1):
     # batchSize=x.shape[0]
     reconstructedX=reconstructedX.contiguous().view(-1,keyNum)
     x=x.view(-1)
@@ -217,26 +152,7 @@ def vaeLossFunc(reconstructedX, x, mu, logvar, keyNum, predY, y, debug=True):
     REGRESS=REGRE(y,predY)
     if debug==True:
         print(BCE.item(),KLD.item(),REGRESS.item())
-    return 10000*BCE + KLD + 100*REGRESS
-
-class DNNRegressor(nn.Module):
-    """
-        class for performing regression with deep neural networks
-        has to use pytorch to enable optimization
-    """
-    def __init__(self):
-        """regressor on given data dimension (100)"""
-        super(DNNRegressor,self).__init__()
-        self.fc1=nn.Linear(200,200)
-        self.fc2=nn.Linear(200,200)
-        self.fc3=nn.Linear(200,200)
-        self.fc4=nn.Linear(200,1)
-
-    def forward(self, x):
-        x=F.relu(self.fc1(x))
-        x=F.relu(self.fc2(x))
-        x=F.relu(self.fc3(x))
-        return self.fc4(x)
+    return 100*BCE + weight*KLD + 10*REGRESS
 
 class SmilesDesigner(object):
     """wrapper class for receiving data and training"""
@@ -260,19 +176,17 @@ class SmilesDesigner(object):
             self.vaeNet=self.vaeNet.cuda()
 
     def initFromModel(self, path):
-        """now only create a model from vae"""
+        """now only create a model from vae
+            model content: [vaeState dict, decodeDict]
+        """
         vaeTotal=torch.load(path)
         vae=vaeTotal[0]
-        latentModel=vaeTotal[1]
-        decodeDict=vaeTotal[2]
+        decodeDict=vaeTotal[1]
         self.decodeDict=decodeDict
         self.nKeys=vae['embedding.weight'].shape[0]
-        self.maxLength=int(vae['fc1.weight'].shape[1]/self.nKeys)
-        print("Initialization from model:",self.nKeys,self.maxLength)
-        self.vaeNet=SmilesVAE(self.maxLength,self.nKeys)
+        print("Initialization from model:",path,self.nKeys)
+        self.vaeNet=SmilesRNNVAE(self.nKeys)
         self.vaeNet.load_state_dict(vae)
-        self.latentRegressor=DNNRegressor()
-        self.latentRegressor.load_state_dict(latentModel)
         print("Initialization done.")
 
     def loadVAE(self,path):
@@ -296,6 +210,12 @@ class SmilesDesigner(object):
         start=time.time()
         for epoch in range(nRounds):
             losses=[]
+            if epoch<100:
+                epochWeight=0
+            elif epoch>=100 and epoch<200:
+                epochWeight=(epoch-100)/10000
+            else:
+                epochWeight=0.01
             for i, (x,y) in enumerate(trainLoader):
                 # w,h=x.shape[:2]
                 # x.unsqueeze_(1)
@@ -303,7 +223,7 @@ class SmilesDesigner(object):
                 if useGPU==True:
                     x=x.cuda(); y=y.cuda()
                 reconstructedX,mu,logVar,predY=self.vaeNet(x)
-                loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y,debug=False)
+                loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y,debug=False,weight=epochWeight)
                 # loss=lossFunc1(predY,y)
                 losses.append(loss.item())
                 optimizer.zero_grad()
@@ -320,7 +240,7 @@ class SmilesDesigner(object):
                     if useGPU==True:
                         x=x.cuda(); y=y.cuda()
                     reconstructedX,mu,logVar,predY=self.vaeNet(x)
-                    loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y)
+                    loss=vaeLossFunc(reconstructedX,x,mu,logVar,self.nKeys,predY,y,weight=epochWeight)
                     # loss=lossFunc1(predY,y)
                     valLosses.append(loss.item())
             valLoss=np.mean(valLosses)
@@ -344,19 +264,24 @@ class SmilesDesigner(object):
         """encode dataset with trained VAE to obtain its representation in latent space"""
         trainSet=TensorDataset(self.smilesTrain,self.propTrain)
         testSet=TensorDataset(self.smilesTest,self.propTest)
-        if useGPU==True:
-            trainSet=trainSet.cuda()
-            testSet=testSet.cuda()
         trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=False,num_workers=2,collate_fn=CollateFn())
         testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2,collate_fn=CollateFn())
         trainRet=torch.zeros(0,LATENT_DIMENSION,dtype=torch.float32)
+        if useGPU==True:
+            trainRet=trainRet.cuda()
         for (x,y) in trainLoader:
+            if useGPU==True:
+                x=x.cuda(); y=y.cuda()
             tempRet=self.vaeNet.middleRepresentation(x)
             trainRet=torch.cat([trainRet,tempRet],dim=0)
         print('Train repr shape:',trainRet.shape)
         self.trainRepr=trainRet.detach().clone()
         testRet=torch.zeros(0,LATENT_DIMENSION,dtype=torch.float32)
+        if useGPU==True:
+            testRet=testRet.cuda()
         for (x,y) in testLoader:
+            if useGPU==True:
+                x=x.cuda(); y=y.cuda()
             tempRet=self.vaeNet.middleRepresentation(x)
             testRet=torch.cat([testRet,tempRet],dim=0)
         print('Test repr shape:',testRet.shape)
@@ -383,7 +308,6 @@ class SmilesDesigner(object):
                     break
                 if trans[j]==orig[j]:
                     correctCount+=1
-        print(correctRatios)
         correctRatios=np.array(correctRatios)
         print('Average correct translation ratio:',np.mean(correctRatios))
 
@@ -422,22 +346,25 @@ class SmilesDesigner(object):
         designedMoleculesPairs=designedMoleculesPairs[propertyIndex]
         return designedMoleculesPairs
 
-    def trainLatentModel(self,lr=1e-3,batchSize=12,nRounds=1000,earlyStopEpoch=10):
+    def textLatentModel(self,batchSize=12):
         """train the prediction model within latent space"""
         from sklearn.ensemble import RandomForestRegressor
         tempRegressor=RandomForestRegressor(n_estimators=100,verbose=True,n_jobs=2)
         tempRegressor.fit(self.trainRepr.cpu(),self.propTrain.cpu())
         pred=tempRegressor.predict(self.testRepr.cpu())
         score=r2_score(self.propTest.cpu(),pred)
-        print('predicted score:',score)
+        print('Random forest prediction score:',score)
         tempRegressor=DNNRegressor()
+        if useGPU==True:
+            self.trainRepr=self.trainRepr.cpu()
+            self.propTrain=self.propTrain.cpu()
+            self.testRepr=self.testRepr.cpu()
+            self.propTest=self.propTest.cpu()
+        print(self.trainRepr.shape,self.propTrain.shape)
         trainSet=TensorDataset(self.trainRepr,self.propTrain)
         testSet=TensorDataset(self.testRepr,self.propTest)
-        if useGPU==True:
-            trainSet=trainSet.cuda()
-            testSet=testSet.cuda()
-        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=False,num_workers=2)
-        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=2)
+        trainLoader=DataLoader(trainSet,batch_size=batchSize,shuffle=False,num_workers=1)
+        testLoader=DataLoader(testSet,batch_size=batchSize,shuffle=False,num_workers=1)
         true=[]; pred=[]
         for (x,y) in trainLoader:
             if useGPU==True:
@@ -458,60 +385,6 @@ class SmilesDesigner(object):
                 true.append(y[i].item())
                 pred.append(predY[i][0].item())
         print("Train score:",r2_score(true,pred))
-        exit(0)
-        optimizer=optim.Adam(tempRegressor.parameters(),lr=lr,weight_decay=1e-8)
-        lossFunc=nn.MSELoss()
-        consecutiveRounds=0
-        bestR2=-1.0
-        for epoch in range(nRounds):
-            losses=[]
-            for i, (x,y) in enumerate(trainLoader):
-                x.unsqueeze_(1)
-                y.unsqueeze_(1); y.unsqueeze_(1)
-                prediction=tempRegressor(x)
-                loss=lossFunc(prediction,y)
-                losses.append(loss.item())
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-            losses=np.array(losses)
-            valLosses=[]; pred=[]; true=[]
-            with torch.no_grad():
-                for i, (x,y) in enumerate(testLoader):
-                    x.unsqueeze_(1)
-                    y.unsqueeze_(1); y.unsqueeze_(1)
-                    prediction=tempRegressor(x)
-                    # print(prediction.shape)
-                    for i, p in enumerate(prediction[:,0,0]):
-                        pred.append(p)
-                        true.append(y[i][0])
-                    # print(pred)
-                    # print(true)
-                    loss=lossFunc(prediction,y)
-                    valLosses.append(loss.item())
-            if epoch%10==0:
-                print("Round [%d]: {%.5f,%.5f}|%.5f" % (epoch+1,np.mean(losses),np.mean(valLosses),bestR2))
-            true=np.array(true); pred=np.array(pred)
-            # print(true.shape,pred.shape)
-            tempR2Score=r2_score(true,pred)
-            # print("r^2 score:",tempR2Score)
-            if tempR2Score>bestR2:
-                consecutiveRounds=0
-                bestR2=tempR2Score
-                torch.save(tempRegressor.state_dict(),'/tmp/latentModel.pt')
-            else:
-                consecutiveRounds+=1
-                if consecutiveRounds>=earlyStopEpoch:
-                    print("No better performance after %d rounds, break." % (earlyStopEpoch))
-                    break
-        print("Best r2 score:",bestR2)
-        self.latentRegressor=DNNRegressor()
-        self.latentRegressor.load_state_dict(torch.load('/tmp/latentModel.pt'))
-
-    def loadLatentModel(self, path):
-        """load pretrained model on latent space from given [path]"""
-        self.latentRegressor=DNNRegressor()
-        self.latentRegressor.load_state_dict(torch.load(path))
 
     def _processData(self):
         """
@@ -596,12 +469,11 @@ if __name__=='__main__':
     smiles,properties=loadEsolSmilesData()
     predictor=SmilesDesigner()
     predictor.initFromSmilesAndProps(smiles,properties)
-    # predictor.train(nRounds=1000,lr=5e-4,batchSize=20)
-    predictor.loadVAE('tmpBestModel.pt')
-    # predictor.trainVAE(nRounds=500,lr=3e-4,earlyStop=True,earlyStopEpoch=30,batchSize=20)
-    predictor.encodeDataset(batchSize=30)
+    # predictor.loadVAE('/tmp/tmpBestModel.pt')
+    predictor.trainVAE(nRounds=10000,lr=3e-4,earlyStop=True,earlyStopEpoch=300,batchSize=50)
+    predictor.encodeDataset(batchSize=50)
     predictor.identityRatio()
-    predictor.trainLatentModel(lr=3e-4,batchSize=30,nRounds=10000,earlyStopEpoch=100)
+    predictor.testLatentModel(batchSize=50)
     # predictor.loadLatentModel('tmp/latentModel.pt')
     # predictor.molecularDesign(lr=1e-3,rounds=100)
     predictor.molecularRandomDesign(aimNumber=100,batchSize=500)

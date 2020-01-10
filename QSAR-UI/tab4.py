@@ -25,7 +25,7 @@ from PIL.ImageQt import ImageQt
 
 sys.path.append(DNN_PATH)
 from QSAR_DNN import QSARDNN
-from smilesPredictor import SmilesDesigner
+from smilesDesigner import SmilesDesigner
 
 class SmilesDesignerTrainThread(QThread):
     """wrapper class for carrying out smiles designing procedures"""
@@ -42,17 +42,15 @@ class SmilesDesignerTrainThread(QThread):
     def run(self):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
-        self.moleculeDesigner.trainVAE(nRounds=200,lr=3e-4,batchSize=50,signal=self._signal)
+        self.moleculeDesigner.trainVAE(nRounds=10,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
         self._signal.emit('Training finished.')
         self.moleculeDesigner.encodeDataset()
-        self._signal.emit('Dataset encoded into latent space.')
         self.moleculeDesigner.identityRatio()
-        self.moleculeDesigner.trainLatentModel(lr=3e-4,batchSize=20,nRounds=1000,earlyStopEpoch=100)
+        self.moleculeDesigner.testLatentModel(batchSize=50)
         tempDict=self.moleculeDesigner.decodeDict
         tempVAE=torch.load('/tmp/tmpBestModel.pt')
-        tempLatentModel=torch.load('/tmp/latentModel.pt')
-        torch.save([tempVAE,tempLatentModel,tempDict],'/tmp/totalVAEModel.pt')
-        self._signal.emit('Regression model on latent space trained.')
+        torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
+        self._signal.emit('Molecule designer model (vae) trained.')
         self._finishSignal.emit(True)
 
 class SmilesDesignerDesignThread(QThread):
