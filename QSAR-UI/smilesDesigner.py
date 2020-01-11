@@ -317,7 +317,7 @@ class SmilesDesigner(object):
             latentVector=torch.randn(batchSize,200)
             # print(latentVector.shape)
             properties=F.relu(self.vaeNet.predFC1(latentVector))
-            properties=F.relu(self.vaeNet.predFC2(properties))
+            properties=self.vaeNet.predFC2(properties)
             print(properties.shape)
             translate=self.vaeNet.decode(latentVector,100)
             print(translate.shape)
@@ -343,8 +343,11 @@ class SmilesDesigner(object):
                 except:
                     continue
         designedMoleculesPairs=np.array(designedMoleculesPairs)
-        propertyIndex=np.argsort(designedMoleculesPairs[:,0])
+        floatValues=[float(dmp[0]) for dmp in designedMoleculesPairs]
+        propertyIndex=np.argsort(floatValues)
+        print(propertyIndex)
         designedMoleculesPairs=designedMoleculesPairs[propertyIndex]
+        print(designedMoleculesPairs)
         return designedMoleculesPairs
 
     def testLatentModel(self,batchSize=12):
