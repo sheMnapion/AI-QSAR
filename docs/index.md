@@ -1,13 +1,13 @@
 # AI-QSAR
-The project is a software for QSAR prediction and SMILES design by deep learning. 
+The project is a software for QSAR prediction and molecule design by deep learning. 
 
 ### Environment
 Tested on python3.6(conda virtual environment)
 
 ### Requirements
-You have to install a valid version of **rdkit**. For python3.6 in conda virtual environment, you can install with `conda install conda-forge::rdkit`. To create a conda virtual enviroment for python3.6, run `conda create --name py36 python=3.6` and use `source activate py36` and `source deactivate py36` to activate and deactivate the virtual environment.
+See `requirements.txt` and run `pip install -r requirement.txt`.
 
-For other packages, see `requirements.txt` and run `pip install -r requirement.txt`
+You have to install a valid version of **rdkit**. For python3.6 in conda virtual environment, you can install with `conda install conda-forge::rdkit`. To create a conda virtual enviroment for python3.6, run `conda create --name py36 python=3.6` and use `source activate py36` and `source deactivate py36` to activate and deactivate the virtual environment.
 
 ### Run
 Enter folder `QSAR-GUI` and run `python main.py`
