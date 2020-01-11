@@ -119,7 +119,7 @@ Training Parameters:
 + earlyStopEpochs: Set the epoch limit of earlyStop.
 + Batch Size: Size of training batch of Stochastic Gradient Descent in the training process.
 + Epochs: Maximum epochs of training.
-+ Train: Click to start training model with all training parameters above.
++ Train: Click to start training model with all training parameters above. When training is finished, you can press **Save** to save the model.
 + Save: Click to browse and save the trained model.
 
 #### Main Window: Result Analysis
@@ -181,7 +181,7 @@ Browse and Select Data:
 Browse and Select Model: 
 + Select Target: Select the target feature of the train dataset.
 + Select Smiles: Select the SMILES feature of the the train dataset. This feature is used for plotting molecule structures.
-+ Train: Click to start training the VAE model with selected trainset. When training is finished, the trained model **totalVAEModel.pt** is saved to directory `/tmp`.
++ Train: Click to start training the VAE model with selected trainset. When training is finished, you can press **Save** to save the model.
 + Browse: Click to browse and add a model file to the model list.
 + Select(or double click): Click to select the highlighted model file in the current model list.
 + Save: Click to browse and save the trained model.
