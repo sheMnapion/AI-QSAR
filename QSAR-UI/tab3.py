@@ -303,9 +303,14 @@ class Tab3(QMainWindow):
 
         if smilesColumn is not None:
             shortLabelColumn = labelColumn if len(labelColumn) < 20 else labelColumn[:20] + '...'
+
+            smilesLoc = sortedTestDataWithPred.columns.get_loc(smilesColumn)
+            predLoc = sortedTestDataWithPred.columns.get_loc(predColumn)
+
             try:
+                print(sortedTestDataWithPred.head())
                 for i in range( min(5, len(sortedTestDataWithPred)) ):
-                    smiles = sortedTestDataWithPred.loc[i, smilesColumn]
+                    smiles = sortedTestDataWithPred.iloc[i, smilesLoc]
                     mol = Chem.MolFromSmiles(smiles)
 
                     im = Draw.MolToImage(mol)
@@ -316,7 +321,7 @@ class Tab3(QMainWindow):
                     label = self.molLabelLayout.itemAt(i).widget()
                     pixmap = pixmap.scaled(widget.size())
                     widget.setPixmap(pixmap)
-                    label.setText('{:.3f}'.format(sortedTestDataWithPred.loc[i, predColumn]))
+                    label.setText('{:.5f}'.format(sortedTestDataWithPred.iloc[i, predLoc]))
                     label.repaint()
             except Exception as e:
                 errorMsg=QErrorMessage(self)
