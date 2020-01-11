@@ -43,14 +43,14 @@ class SmilesDesignerTrainThread(QThread):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
         try:
-            self.moleculeDesigner.trainVAE(nRounds=40,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
+            self.moleculeDesigner.trainVAE(nRounds=300,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
+            tempDict=self.moleculeDesigner.decodeDict
+            tempVAE=torch.load('/tmp/tmpBestModel.pt')
+            torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
             self._signal.emit('Training finished.')
             self.moleculeDesigner.encodeDataset()
             self.moleculeDesigner.identityRatio()
             self.moleculeDesigner.testLatentModel(batchSize=50)
-            tempDict=self.moleculeDesigner.decodeDict
-            tempVAE=torch.load('/tmp/tmpBestModel.pt')
-            torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
             self._signal.emit('Molecule designer model (vae) trained.')
             self._finishSignal.emit(True)
         except Exception as e:

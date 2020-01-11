@@ -331,6 +331,7 @@ class SmilesDesigner(object):
                 # print(translation)
                 if designedNumber==aimNumber: break
                 if translation in designedMolecules: continue
+                if len(translation)==0: continue
                 try:
                     mol=Chem.MolFromSmiles(translation)
                     Draw.MolToImageFile(mol,str.format('/tmp/designed_%d_%.5f.png' % (designedNumber,properties[i].item())))
