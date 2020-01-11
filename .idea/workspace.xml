@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="" />
+    <list default="true" id="6ca511eb-bf93-44e2-9f65-d7fa2e9f9d3d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/docs/pymolDoc.docx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/pymolDoc.docx" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,13 +136,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesDesigner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="212" column="36" selection-start-line="212" selection-start-column="36" selection-end-line="212" selection-end-column="36" />
+            <state relative-caret-position="251">
+              <caret line="196" column="8" lean-forward="true" selection-start-line="196" selection-start-column="8" selection-end-line="196" selection-end-column="8" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#1722#4742#0" />
+                <element signature="e#4836#5542#0" />
               </folding>
             </state>
           </provider>
@@ -161,8 +165,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/QSAR-UI/SmilesRNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="17" selection-start-line="17" selection-end-line="48" selection-end-column="35" />
+            <state relative-caret-position="-2165">
+              <caret line="188" column="33" selection-start-line="188" selection-start-column="8" selection-end-line="188" selection-end-column="33" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <marker date="1578583358268" expanded="true" signature="7953:8069" ph="..." />
@@ -171,10 +175,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3864">
+            <state relative-caret-position="3726">
               <caret line="168" column="94" selection-start-line="168" selection-start-column="94" selection-end-line="168" selection-end-column="94" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -418,7 +422,7 @@
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32935154" />
@@ -526,17 +530,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-UI/SmilesRNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="17" selection-start-line="17" selection-end-line="48" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1578583358268" expanded="true" signature="7953:8069" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QSAR-UI/tab2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1748">
@@ -608,22 +601,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesDesigner.py">
+    <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="212" column="36" selection-start-line="212" selection-start-column="36" selection-end-line="212" selection-end-column="36" />
+        <state relative-caret-position="3726">
+          <caret line="168" column="94" selection-start-line="168" selection-start-column="94" selection-end-line="168" selection-end-column="94" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QSAR-DNN/QSAR_DNN.py">
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/SmilesRNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3864">
-          <caret line="168" column="94" selection-start-line="168" selection-start-column="94" selection-end-line="168" selection-end-column="94" />
+        <state relative-caret-position="-2165">
+          <caret line="188" column="33" selection-start-line="188" selection-start-column="8" selection-end-line="188" selection-end-column="33" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1578583358268" expanded="true" signature="7953:8069" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QSAR-UI/smilesDesigner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="196" column="8" lean-forward="true" selection-start-line="196" selection-start-column="8" selection-end-line="196" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1722#4742#0" />
+            <element signature="e#4836#5542#0" />
           </folding>
         </state>
       </provider>
