@@ -285,7 +285,7 @@ class SmilesDesigner(object):
         self.testRepr=testRet.detach().clone()
 
     def identityRatio(self):
-        """check the extent of identity learned through our vae net"""
+        """check the extent of identity in the first 100 characters learned through our vae net"""
         temp=self.trainRepr
         decoded=self.vaeNet.decode(temp,100)
         print(decoded.shape)
@@ -298,7 +298,7 @@ class SmilesDesigner(object):
             # print(orig)
             # print(trans)
             correctCount=0
-            for j in range(h):
+            for j in range(100):
                 if orig[j]==0:
                     correctCount/=j
                     correctRatios.append(correctCount)
