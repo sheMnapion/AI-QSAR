@@ -207,10 +207,10 @@ class SmilesDesigner(object):
         start=time.time()
         for epoch in range(nRounds):
             losses=[]
-            if epoch<100:
+            if epoch<400:
                 epochWeight=0
-            elif epoch>=100 and epoch<200:
-                epochWeight=(epoch-100)/10000
+            elif epoch>=400 and epoch<500:
+                epochWeight=(epoch-400)/10000
             else:
                 epochWeight=0.01
             for i, (x,y) in enumerate(trainLoader):

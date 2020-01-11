@@ -43,7 +43,7 @@ class SmilesDesignerTrainThread(QThread):
         """run training process"""
         self._signal.emit('---------------------------------Start Training------------------------------------------------')
         try:
-            self.moleculeDesigner.trainVAE(nRounds=300,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=50)
+            self.moleculeDesigner.trainVAE(nRounds=2000,lr=3e-4,batchSize=50,signal=self._signal,earlyStop=True,earlyStopEpoch=200)
             tempDict=self.moleculeDesigner.decodeDict
             tempVAE=torch.load('/tmp/tmpBestModel.pt')
             torch.save([tempVAE,tempDict],'/tmp/totalVAEModel.pt')
